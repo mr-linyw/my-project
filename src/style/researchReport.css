@@ -1,0 +1,36 @@
+.header {
+   height: 100%;
+   width: 100%;
+   background: white;
+   text-align: center;
+ }
+.left{
+  padding-left: 2%;
+  font-size: 16px;
+  width:44%;
+  margin-top: 10px;
+  float: left;
+  color: #008cff;
+  text-align: left;
+
+}
+
+.right{
+  padding-right: 2%;
+  float: right;
+  width: 44%;
+  margin-top: 10px;
+  text-align: left;
+}
+
+.header-tabs{
+  padding-left: 1.5%;
+  padding-right: 1.5%;
+}
+.left-a{
+ height: 40%;
+  width: 40%;
+}
+.el-tabs__item.is-active{
+  font-weight:bold !important;
+}

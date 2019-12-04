@@ -1,0 +1,57 @@
+
+.fofbuild{
+  text-align: left;
+  height: 100%;
+  width: 100%;
+}
+
+.fofbuild-top{
+  text-align: left;
+  background: #FFFFFF;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 14px;
+  padding-bottom: 12px;
+}
+.fofbuild-top-echartsUtil{
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+.kg{
+  height: 12px;
+}
+.btn-fof{
+  width: 100px;
+    color: #000;
+    background-color: #F56C6C;
+}
+.fofbuild-left{
+  font-size: 14px;
+  float: left;
+  width: 50%;
+}
+.fofbuild-right{
+  font-size: 14px;
+  float: right;
+  width: 50%;
+}
+.fofbuild-top .ant-collapse-header{
+  height:28px;
+  line-height: 8px !important;
+  color:	#FFFFFF !important;
+  font-size: 15px;
+  background: #868B9E ;
+
+}
+.ant-col-sm-8.ant-col-md-5{
+  margin-bottom: 12px;
+}
+.ant-col-sm-24.ant-col-md-6{
+  margin-top: 6px;
+}
+.fofbuild-top .ant-table-thead > tr > th{
+  background: #C0C4CC !important;
+}
+.table-svg svg{
+  color:#808080;
+}
