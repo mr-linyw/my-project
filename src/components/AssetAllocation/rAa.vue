@@ -6,29 +6,50 @@
 
 <script>
   import data from '@/store/testLocalData';
+  import moment from 'moment'
     export default {
         name: "rAa",
         data(){
             return {
               chart:null,
               errorMsg:"",
-              params:null
+              params:null,
+              startValue:null,
+              endValue: null,
           }
         },
         created(){
-          this.params = this.initData();
+          let _t = this;
+          $.ajax({
+            url: "http://125.208.12.66:9877/asset/allocationWeightNetvalue/allocationResult/1/1",
+            success: function (result) {
+                _t.params = _t.initData(result);
+            },
+            dataType: "json"
+          });
         },
         mounted() {
           this.drawByData(this.params);
         },
+      watch: {
+        params(val) {
+          this.drawByData(this.params);
+        },
+        endValue(val){
+          this.drawByData(this.params);
+        }
+      },
        methods:{
-            initData(){
-                  let d  = data["raa"];
+            initData(data){
+                  let d  = data;
                   console.log(d);
-                  if(d.status !== 1){
-                      this.errorMsg =  d.errmsg;
+                  if(d.length <= 0){
+                      this.errorMsg =  "暂无数据";
                       return;
                   }
+                  this.startValue = d.length-1;
+                  let sv = d[this.startValue].tradeDate;
+                  let endValueFormater = moment(sv).subtract(3, 'year').format("YYYY-MM");
                   let params = {
                     legend: {
                       data:['沪深300','国债全收益','wind商品','货币现金'],
@@ -36,11 +57,18 @@
                       right: 10,
                       top: 20,
                       bottom: 20,
+                      textStyle:{
+                        color:"#777"
+                      }
                     },
                     xAxis : [
                       {
-                        type : 'category',
-                        data : []
+                        type: 'category',
+                        data: [],
+                        axisLabel: {
+                          color: '#777',
+                          rotate: '35',
+                        }
                       }
                     ],
                     series:[
@@ -83,18 +111,40 @@
                       },
                     ]
                   };
-                  for (let item of d["data"]){
-                        params.xAxis[0].data.push(item.tradeDate);
-                        params.series[0].data.push(item.hushen);
-                        params.series[1].data.push(item.govBondTri);
-                        params.series[2].data.push(item.windCommodity);
-                        params.series[3].data.push(item.cash);
+                  let i =0;
+                  for (let item of d){
+                    moment.locale('en', {
+                      months : [
+                        "一月", "二月", "三月", "四月", "五月", "六月", "七月",
+                        "八月", "九月", "十月", "十一月", "十二月"
+                      ]
+                    });
+                        let formatM = moment(item.tradeDate).format("MMMM YYYY");
+                        if(moment(item.tradeDate).format("YYYY-MM") === endValueFormater){
+                            this.endValue = i;
+                        }
+                        params.xAxis[0].data.push(formatM);
+                        params.series[0].data.push(Number(item.hushen*100).toFixed(4));
+                        params.series[1].data.push(Number(item.govBondTri*100).toFixed(4));
+                        params.series[2].data.push(Number(item.windCommodity*100).toFixed(4));
+                        params.series[3].data.push(Number(item.cash*100).toFixed(4));
+                    i++;
                   }
+
                   return params;
             },
-           drawByData({legend,xAxis,series}){
+           drawByData(params){
+             if(!this.chart){
                let $el = this.$el, echarts = this.$echarts;
                this.chart = echarts.init($el);
+             }
+
+             if(!params){
+               return;
+             }
+
+               let {legend,xAxis,series} = params;
+               let _t = this;
                let option = {
                  tooltip : {
                    trigger: 'axis',
@@ -107,6 +157,8 @@
                    {
                      type: 'inside',
                      xAxisIndex: 0,
+                     startValue:_t.startValue,
+                     endValue:_t.endValue
                    },
                    {
                      type: 'slider',
@@ -127,14 +179,23 @@
                  grid: {
                    left: '15',
                    right: '120',
-                   bottom: '50',
+                   bottom: '30',
                    top:'20',
                    containLabel: true
                  },
                 xAxis,
                  yAxis : [
                    {
-                     type : 'value'
+                     type : 'value',
+                      min:0,
+                      max:100,
+                     nameTextStyle:{
+                         color:"#777"
+                     },
+                     axisLabel:{
+                       formatter: '{value} %'
+                     },
+                     splitNumber:2
                    }
                  ],
                 series

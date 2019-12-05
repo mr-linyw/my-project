@@ -36,7 +36,40 @@
       <an-panel panelTitle="最新大类资产配置权重"></an-panel>
     </div>
     <div class="an-content-5Row">
-      <an-panel panelTitle="可交易FOF组合构建"></an-panel>
+      <an-panel panelTitle="可交易FOF组合构建">
+        <a-collapse  v-model="activeKey" @change="changeActivekey" >
+          <template v-slot:expandIcon="props" >
+            <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
+          </template>
+          <a-collapse-panel header="股票型" key="1" >
+
+          </a-collapse-panel>
+        </a-collapse>
+        <a-collapse  v-model="activeKey" @change="changeActivekey" >
+          <template v-slot:expandIcon="props" >
+            <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
+          </template>
+          <a-collapse-panel header="债券型" key="2" >
+            1234
+          </a-collapse-panel>
+        </a-collapse>
+        <a-collapse  v-model="activeKey" @change="changeActivekey" >
+          <template v-slot:expandIcon="props" >
+            <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
+          </template>
+          <a-collapse-panel header="商品型" key="3" >
+            1234
+          </a-collapse-panel>
+        </a-collapse>
+        <a-collapse  v-model="activeKey" @change="changeActivekey" >
+          <template v-slot:expandIcon="props" >
+            <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
+          </template>
+          <a-collapse-panel header="现金型" key="4" >
+            1234
+          </a-collapse-panel>
+        </a-collapse>
+      </an-panel>
     </div>
   </div>
     <Modal :show="isShowInfoModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true" title="免责声明">
@@ -73,6 +106,7 @@
           disableYhgModel:true,
           infoContentCheckbox:false,
           isShowInfoModal:false,
+          activeKey:['1','2','3','4'],
           tnhData:[
             {text:"推荐配置",value:"3"},
             {text:"固定权重组合",value:"4"},
