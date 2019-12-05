@@ -35,12 +35,13 @@ service.interceptors.response.use(response => {//数据拿到之后
 
 
 function successfun(res){//处理后台返回的非200错误
-    if(res.code === 200){
-        return res
-    }else{
-         Message.warning(res.message);
-         return res;
-    }
+  return res;
+    // if(res.code === 200){
+    //     return res
+    // }else{
+    //      Message.warning(res.message);
+    //      return res;
+    // }
 };
 
 
@@ -60,11 +61,15 @@ export default{
             url,
             data: data,
             withCredentials: true,
-        }).then(res => {
-            return successfun(res)
-        },err => {
-            return errorfun(err);
         })
+        .then(res => {
+          cback(res);
+            //return successfun(res)
+        })
+        .catch(error => {
+              reject(error);
+              // console.log(error);
+            });
 
       })
 
@@ -77,11 +82,15 @@ export default{
             data: data,
             withCredentials: true,
 
-        }).then(res => {
-            return successfun(res)
-        },err => {
-            return errorfun(err);
         })
+        .then(res => {
+          cback(res);
+            //return successfun(res)
+        })
+        .catch(error => {
+              reject(error);
+              // console.log(error);
+            });
 
       })
 
