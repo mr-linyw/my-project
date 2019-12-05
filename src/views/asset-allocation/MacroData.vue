@@ -8,30 +8,31 @@
         </template>
         <a-collapse-panel header="大类资产" key="1" >
           <div class="macroData-left">
-             <echartsUtil :id="'1'" :data="option" style="height:200px;"></echartsUtil>
-             <echartsUtil :id="'2'" :data="option" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'1'" :data="hushenOption" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'2'" :data="windOption" style="height:200px;"></echartsUtil>
           </div>
 
           <div class="macroData-right">
-            <echartsUtil :id="'3'" :data="option" style="height:200px;"></echartsUtil>
-            <echartsUtil :id="'4'" :data="option" style="height:200px;"></echartsUtil>
+            <echartsUtil :id="'3'" :data="govOption" style="height:200px;"></echartsUtil>
+            <echartsUtil :id="'4'" :data="cashOption" style="height:200px;"></echartsUtil>
           </div>
 
 
         </a-collapse-panel>
         </a-collapse>
+        <div class="kg"></div>
         <a-collapse  v-model="activeKey" >
           <template v-slot:expandIcon="props" >
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
-        <a-collapse-panel header="宏观经济指标" key="1"  >
+        <a-collapse-panel header="宏观经济指标" key="2"  >
           <div class="macroData-left">
-             <echartsUtil :id="'5'" :data="option2" style="height:200px;"></echartsUtil>
-             <echartsUtil :id="'6'" :data="option2" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'5'" :data="GDPOption" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'6'" :data="PPIOption" style="height:200px;"></echartsUtil>
           </div>
 
           <div class="macroData-right">
-            <echartsUtil :id="'7'" :data="option2" style="height:200px;"></echartsUtil>
+            <echartsUtil :id="'7'" :data="CPIOption" style="height:200px;"></echartsUtil>
             <!-- <echartsUtil :id="'8'" :data="option" style="height:200px;"></echartsUtil> -->
           </div>
 
@@ -58,60 +59,114 @@ import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
     data() {
       return {
         moment,
-        activeKey:[1],
-        option:{},
-        option2:{},
+        activeKey:[1,2],
+        hushentext:'沪深300',
+        hushendate:[],
+        hushenOption:{},
+        windtext:'wind商品',
+        winddate:[],
+        windOption:{},
+        govtext:'国债全收益',
+        govdate:[],
+        govOption:{},
+        cashtext:'货币基金',
+        cashdate:[],
+        cashOption:{},
+        GDPtext:'GDP',
+        GDPdate:[],
+        GDPOption:{},
+        PPItext:'PPI',
+        PPIdate:[],
+        PPIOption:{},
+        CPItext:'CPI',
+        CPIdate:[],
+        CPIOption:{},
     }
   },
     created(){
-      this.$http.get(this.$url.url+"/20180101/20190101").then(res=>{
-         console.log(res);
-      })
-    let dataList=[
-      {data:"2018/01",gc:1600,sj:1567},
-      {data:"2018/02",gc:578,sj:3244},
-      {data:"2018/03",gc:1000,sj:1567},
-      {data:"2018/04",gc:0,sj:1567},
-      {data:"2018/05",gc:4366,sj:2222},
-      {data:"2018/06",gc:4624,sj:3245},
-      {data:"2018/07",gc:3689,sj:2578},
-      {data:"2018/08",gc:2467,sj:2746},
-      {data:"2018/09",gc:5109,sj:4321},
-      {data:"2018/10",gc:5444,sj:5555},
-      {data:"2018/11",gc:3412,sj:3217},
-      {data:"2018/12",gc:4590,sj:3567},
-      {data:"2019/01",gc:2456,sj:2900},
-      {data:"2019/02",gc:1645,sj:1567},
-      {data:"2019/03",gc:3498,sj:5342},
-      {data:"2019/04",gc:4532,sj:4432},
-      {data:"2019/05",gc:3333,sj:4444},
-      {data:"2019/06",gc:2345,sj:1900},
-      {data:"2019/07",gc:3479,sj:4127},
-      {data:"2019/08",gc:2346,sj:3591}
-    ]
+      let that = this;
+      //大类资产数据
+      that.$http.get(that.$url.macroUrl+"/20140101/20151101").then(res=>{
 
-      let dateMap=[];
-      let gcMap=[];
-      let sjMap=[];
+        //初始化生成折线图的数据
+        that.hushendate=res.hushen;
+        that.winddate=res.wind;
+        that.govdate=res.gov;
+        that.cashdate=res.cash;
 
-        dataList.map((item,index)=>{
-          dateMap.push(item.data);
-          gcMap.push(item.gc);
-          sjMap.push(item.sj);
+        that.hushenOption = oneOption(that.hushentext,that.assetsData(that.hushendate));
+        that.windOption = oneOption(that.windtext,that.assetsData(that.winddate));
+        that.govOption = oneOption(that.govtext,that.assetsData(that.govdate));
+        that.cashOption = oneOption(that.cashtext,that.assetsData(that.cashdate));
+      });
+
+
+      //宏观指标GDP数据
+      that.$http.get(that.$url.macroIndexUrl+"/1").then(res=>{
+        //初始化生成折线图的数据
+        that.GDPdate=res.reverse();
+        that.GDPOption = twoOption(that.GDPtext,that.macroscopicData(that.GDPdate));
+      });
+      //宏观指标CPI数据
+      that.$http.get(that.$url.macroIndexUrl+"/2").then(res=>{
+        //初始化生成折线图的数据
+        that.CPIdate=res.reverse();
+        that.CPIOption = twoOption(that.CPItext,that.macroscopicData(that.CPIdate));
+      });
+      //宏观指标PPI数据
+      that.$http.get(that.$url.macroIndexUrl+"/3").then(res=>{
+        //初始化生成折线图的数据
+        that.PPIdate=res.reverse();
+        that.PPIOption = twoOption(that.PPItext,that.macroscopicData(that.PPIdate));
+
+      });
+    },
+
+
+    methods:{
+      //大类资产数据分析
+      assetsData(dataSource){
+        let dateMap=[];
+        let blueMap=[];
+        let redMap=[];
+          dataSource.map((item,index)=>{
+           dateMap.push(moment(item.date).format('YYYY/MM/DD'));  //时间map
+           blueMap.push(item.closingPrice);  //蓝色折线map
+         //  redMap.push(item.sj);  //红色折线map
+       });
+       let data={
+         dateMap:dateMap,
+         blueMap:blueMap,
+         //redMap:redMap
+       };
+
+       return data;
+     },
+
+     //宏观数据分析
+     macroscopicData(dataSource){
+       let dateMap=[];
+       let blueMap=[];
+       let redMap=[];
+         dataSource.map((item,index)=>{
+          dateMap.push(moment(item.ecoDate).format('YYYY/MM/DD'));  //时间map
+          if(item.dataType==0){
+            blueMap.push(item.dataValue);//蓝色折线map  估测值
+            redMap.push(""); 
+          }
+          else{
+            blueMap.push("");
+            redMap.push(item.dataValue);  //红色折线map    实际值
+          }
       });
       let data={
         dateMap:dateMap,
-        gcMap:gcMap,
-        sjMap:sjMap
+        blueMap:blueMap,
+        redMap:redMap
       };
-      //初始化生成折线图的数据
-      let  text = 'GDP';
-      this.option = oneOption(text,data);
-      let  text2 = 'PPI';
-     this.option2 = twoOption(text2,data);
+     console.log(blueMap);
+      return data;
     },
-    methods:{
-
 
 
 

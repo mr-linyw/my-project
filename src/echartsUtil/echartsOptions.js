@@ -1,9 +1,3 @@
-
-
-
-
-
-
 export  function oneOption(text,data){
  let  option={
      title: {
@@ -34,7 +28,7 @@ export  function oneOption(text,data){
       series: {
             name:'当月值',
             type:'line',
-            data:data.sjMap,
+            data:data.blueMap,
             symbol: 'none',  //取消折点圆圈
             itemStyle : {
                   normal : {
@@ -66,7 +60,9 @@ let  option={
         data:data.dateMap
       },
       yAxis: {
+        name:'(%)',
         type: 'value',
+        // axisLabel:{formatter:'{value} %'},
         splitLine :{    //网格线
              lineStyle:{
                  type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
@@ -83,7 +79,7 @@ let  option={
         {
             name:'当月同比_估测值',
             type:'line',
-            data:data.gcMap,
+            data:data.blueMap,
             symbol: 'none',  //取消折点圆圈
             itemStyle : {
                   normal : {
@@ -97,7 +93,7 @@ let  option={
         {
             name:'当月同比_实际值',
             type:'line',
-            data:data.sjMap,
+            data:data.redMap,
             symbol: 'none',
             itemStyle : {
                   normal : {

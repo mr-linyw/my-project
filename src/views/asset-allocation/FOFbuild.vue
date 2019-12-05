@@ -69,7 +69,7 @@
          <template v-slot:expandIcon="props" >
            <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
          </template>
-        <a-collapse-panel header="债券型" key="1"  >
+        <a-collapse-panel header="债券型" key="2"  >
           <a-row :gutter="24">
 
 
@@ -181,7 +181,7 @@ const data = [
       return {
         data,
         moment,
-        activeKey:[1],
+        activeKey:[1,2],
         option:{},
         option2:{},
         sortedInfo:null, //table 排序
