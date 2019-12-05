@@ -80,6 +80,10 @@
 .AssetAllocation .ant-select-enabled.ant-select-open .anticon-down{
   background-image: url("../assets/an-select-up.png");
 }
+.AssetAllocation .configBtn{
+  height: 30px;width: 120px;background-color: #db534e;
+}
+
 .ant-select-selection-selected-value{
   font-size: 14px;
   color: #666;
@@ -87,8 +91,9 @@
 .ant-btn-round span{
   color: #fff;
 }
-.an-tools .ant-btn:hover{
-  border-color:transparent;
+ .AssetAllocation .ant-btn:hover{
+  border-color:transparent !important;
+   background-color: #db534e;
 }
 body .ant-select-dropdown-menu-item-selected, .ant-select-dropdown-menu-item-selected:hover{
   background-color: #f8d7d6;

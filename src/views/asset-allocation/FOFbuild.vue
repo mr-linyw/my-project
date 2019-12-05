@@ -104,12 +104,36 @@
            <echartsUtil :id="'2'" :data="option2" style="height:252px;"></echartsUtil>
         </div>
 
+        <!-- 提示 -->
+         <div class="fofbuild-footer">
+
+           <li><span style="color:#F56C6C"><strong>风险提示</strong></span></li>
+           <li><span>尊敬的客户：</span></li>
+           <li><span>
+             在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
+             但同时也可能存在着较大的证券投资风险。请务必仔细阅读本系统平台的使用说明。
+             我们将尽可能采取有效措施保护客户资料和其他各项活动的安全，本着对您负责的态度，
+             公司郑重提示，在使用时，存在且不限于以下风险：<a href="javascript:viewDetails;">查看详情</a>
+
+           </span></li>
+
+         </div>
 
         </a-collapse-panel>
       </a-collapse>
    </a-form>
     </div>
-
+    <!-- 声明modal模板 -->
+    <modal :show="isShowInfoModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true" title="免责声明">
+    <div class="infoContent" slot="body">
+      <div style="text-align: left">
+        投资有风险，本网页的任何数据及其衍生产品仅供参考。资产配置平台系统依据市场公开数据及外购数据源作为计算基础数据，本公司将会尽力但不保证基础数据的及时性、准确性、真实性和完整性，不承担因任何数据不准确或遗漏等造成的任何损失或损害的责任。投资者在依据相关信息进行投资操作时，应当进行自主判断，所导致的盈亏由投资者自行承担。浏览本页面或使用本功能即表示投资者同意所载免责声明。
+      </div>
+      <div class="infoCheckBoxContent">
+        <a-checkbox  :checked="infoContentCheckbox" @change="infoContentChange">下次不再提示</a-checkbox>
+      </div>
+    </div>
+  </modal>
   </div>
 
 
@@ -120,6 +144,7 @@
 import '@/style/fofbuild.css'
 import moment from 'moment';
 import echartsUtil from '@/echartsUtil/echartsUtil'
+import modal from '@/modal/Modal'
 
 const data = [
     {
@@ -149,7 +174,7 @@ const data = [
 
   export default {
     components : {
-      echartsUtil
+      echartsUtil,modal
     },
 
     data() {
@@ -161,6 +186,8 @@ const data = [
         option2:{},
         sortedInfo:null, //table 排序
         filteredInfo:null, //table 过滤
+        infoContentCheckbox:false,
+        isShowInfoModal:false,
     }
   },
     computed:{
@@ -276,8 +303,9 @@ const data = [
       //初始化生成折线图的数据
 
       let  text = '';
+      let  text2 = '历史表现数据';
      this.option = this.Option(text,data);
-     this.option2 = this.Option2(text,data);
+     this.option2 = this.Option2(text2,data);
     },
     methods:{
 
@@ -411,16 +439,36 @@ const data = [
 
       // FOF构建
       FOFbuild(){
-
+          this.isShowInfoModal = true;
       },
       // 下拉框选择
      handleChange(value,option){
 
      },
 
+     // 查看风险提示详情
+     viewDetails(){
 
+     },
+     modalOK(){
+          if(this.infoContentCheckbox){
+            localStorage.setItem("infoContentShow","0");
+          }
+          this.isShowInfoModal = false;
+      },
+      modalClose(){
+        this.isShowInfoModal = false;
+      },
+      configClick(){
+          if(localStorage.getItem("infoContentShow") !== "0"){
+            this.infoContentCheckbox = false;
+            this.isShowInfoModal = true;
+          }
+      },
+      infoContentChange(e){
+        this.infoContentCheckbox = e.target.checked
+      },
      Change(filters, sorter) {
-       console.log('Various parameters',  filters, sorter);
        this.filteredInfo = filters;
        this.sortedInfo = sorter;
      },

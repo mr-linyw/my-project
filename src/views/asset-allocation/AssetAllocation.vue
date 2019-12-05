@@ -14,7 +14,7 @@
           <a-select-option v-for="item in yhgData" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
         </a-select>
       </div>
-      <a-button type="round" :style="configBtnStyle" @click="configClick">配置</a-button>
+      <a-button class="configBtn" type="round" :style="configBtnStyle" @click="configClick">配置</a-button>
     </div>
     <div class="an-content-1Row">
       <an-panel panelTitle="各期资产配置结果">
@@ -50,7 +50,7 @@
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
           <a-collapse-panel header="债券型" key="2" >
-            1234
+            <grid-and-line-by-g-p></grid-and-line-by-g-p>
           </a-collapse-panel>
         </a-collapse>
         <a-collapse  v-model="activeKey" @change="changeActivekey" >
@@ -87,6 +87,7 @@
 <script>
   import '@/style/assetallocation.css'
   import anPanel from '@/components/AssetAllocation/anPanel'
+  import gridAndLineByGP from '@/components/AssetAllocation/gridAndLineByGP'
   import rAa from '@/components/AssetAllocation/rAa'
   import echartsUtil from '@/echartsUtil/echartsUtil'
   import Modal from '@/modal/Modal'
@@ -97,12 +98,13 @@
       echartsUtil,
       anPanel,
       Modal,
-      rAa
+      rAa,
+      gridAndLineByGP
     },
     data() {
       return {
           selectStyle:"width: 125px;height: 30px;",
-          configBtnStyle:" height: 30px;width: 120px;background-color: #db534e;margin-left: 65px",
+          configBtnStyle:" margin-left: 65px",
           disableYhgModel:true,
           infoContentCheckbox:false,
           isShowInfoModal:false,

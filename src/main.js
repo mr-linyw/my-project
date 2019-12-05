@@ -13,6 +13,16 @@ import 'element-ui/lib/theme-chalk/index.css'
 //自己写的样式
 import './style/theme.css'
 import './style/character.css'
+
+//引入两个文件
+import url from './api/requestUrl'
+import http from './api/axios'
+
+//挂载到VUE实例，以便全局使用
+Vue.prototype.$url = url;
+Vue.prototype.$http = http;
+
+
 Vue.use(modal)
 Vue.use(Antd)
 // 注册element-ui

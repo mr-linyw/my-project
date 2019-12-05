@@ -12,8 +12,14 @@
                 <a-list itemLayout="horizontal" :dataSource="firstData">
                   <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item)">
                      <a-list-item-meta>
-                         <span slot="title" class="contant">
-                           {{item.title}}
+                         <span slot="title" >
+                           <a-tooltip>
+                              <template slot="title">
+                                {{item.title}}
+                              </template>
+                              <span class="contant"> {{item.title}} </span>
+                            </a-tooltip>
+
                            <div class="">
                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.date}}</span>
                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.textname}}</span>
@@ -29,7 +35,12 @@
                     <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item)">
                       <a-list-item-meta>
                           <span slot="title">
-                            {{item.title}}
+                            <a-tooltip>
+                               <template slot="title">
+                                 {{item.title}}
+                               </template>
+                               <span class="contant"> {{item.title}} </span>
+                             </a-tooltip>
                             <div class="">
                               <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.date}}</span>
                               <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.textname}}</span>
@@ -50,7 +61,12 @@
                   <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item)">
                     <a-list-item-meta>
                         <span slot="title">
-                          {{item.title}}
+                          <a-tooltip>
+                             <template slot="title">
+                               {{item.title}}
+                             </template>
+                             <span class="contant"> {{item.title}} </span>
+                           </a-tooltip>
                           <div class="">
                             <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.date}}</span>
                             <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.textname}}</span>
@@ -65,7 +81,13 @@
                     <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item)">
                       <a-list-item-meta>
                           <span slot="title">
-                            {{item.title}}
+                            <a-tooltip>
+                               <template slot="title">
+                                 {{item.title}}
+                               </template>
+                               <span class="contant"> {{item.title}} </span>
+                             </a-tooltip>
+
                             <div class="">
                               <!-- moment().format('YYYY-MM-DD') -->
                               <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.date}}</span>
@@ -107,10 +129,10 @@
 <script>
 import '@/style/researchReport.css'
 import moment from 'moment'
-
+import {mouseover,mouseout,mousemove} from '@/components/utilJs/ellipsis'
   const data = [
     {
-      title: '创业板仍将引领A股年末反攻行情',
+      title: '创业板仍将引领A股年末反攻行情创业板仍将引领A股年末反攻行情创业板仍将引领A股年末反攻行情创业板仍将引领A股年末反攻行情创业板仍将引领A股年末反攻行情创业板仍将引领A股年末反攻行情',
       date:'2019-11-25',
       textname:'丁鲁明'
     },

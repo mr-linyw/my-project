@@ -25,16 +25,7 @@
     color: #000;
     background-color: #F56C6C;
 }
-.fofbuild-left{
-  font-size: 14px;
-  float: left;
-  width: 50%;
-}
-.fofbuild-right{
-  font-size: 14px;
-  float: right;
-  width: 50%;
-}
+
 .fofbuild-top .ant-collapse-header{
   height:28px;
   line-height: 8px !important;
@@ -54,4 +45,16 @@
 }
 .table-svg svg{
   color:#808080;
+}
+.fofbuild-footer{
+  text-align: left;
+  padding-left: 200px;
+  padding-right: 200px;
+}
+.infoContent{
+  text-align: left;
+}
+.infoCheckBoxContent{
+  position: relative;
+  top: 15px;
 }

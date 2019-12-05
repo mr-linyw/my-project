@@ -2,7 +2,7 @@
   <div class="macroData">
     <div class="macroData-top">
       <div class="top"></div>
-      <a-collapse  v-model="activeKey" @change="changeActivekey" >
+      <a-collapse  v-model="activeKey" >
         <template v-slot:expandIcon="props" >
           <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
         </template>
@@ -20,7 +20,7 @@
 
         </a-collapse-panel>
         </a-collapse>
-        <a-collapse  v-model="activeKey" @change="changeActivekey" >
+        <a-collapse  v-model="activeKey" >
           <template v-slot:expandIcon="props" >
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
@@ -64,6 +64,9 @@ import echartsUtil from '@/echartsUtil/echartsUtil'
     }
   },
     created(){
+      this.$http.get(this.$url.url+"/20180101/20190101").then(res=>{
+         console.log(res);
+      })
     let dataList=[
       {data:"2018/01",gc:1600,sj:1567},
       {data:"2018/02",gc:578,sj:3244},
@@ -216,9 +219,9 @@ import echartsUtil from '@/echartsUtil/echartsUtil'
              }
              return option;
       },
-      changeActivekey(key) {
-       console.log(key);
-     },
+
+
+
 
     },
   };

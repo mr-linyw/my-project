@@ -174,7 +174,7 @@ import '@/style/Details.css'
      },
      confirm(){
        this.$refs.modal.showConfirm=false
-       this.$refs.modal.showCancle=false  
+       this.$refs.modal.showCancle=false
      },
       onClick(){
 
