@@ -1,6 +1,6 @@
 <template>
     <div class="gridAndLine">
-      
+
     </div>
 </template>
 
