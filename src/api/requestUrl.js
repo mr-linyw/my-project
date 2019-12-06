@@ -12,5 +12,7 @@ export default {
   //债券历史表现
   fofHistReturnBond:"/asset/fofHistReturnBond",
   //策略风险特征pk
-  resultOfRisk:"/asset/resultOfRisk"
+  resultOfRisk:"/asset/resultOfRisk",
+  macroUrl : "/asset/allocationWeightNetvalue/co",
+  macroIndexUrl:"/asset/allocationWeightNetvalue",
 }
