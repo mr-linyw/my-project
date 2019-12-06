@@ -123,7 +123,7 @@ import '@/style/Details.css'
 
     },
     created(){
-         console.log(this.$route.params.value);
+         console.log(this.$route.query.id);
         // this.byValue.$on('getData',item=>{
         //   //this.$set(this.data,item) 赋值之后，原值不会改变
         //   console.log(item);

@@ -36,7 +36,9 @@
         drawLineGraph(id,data){
           let _this = this;
           let myChart = document.getElementById(id)
+
           this.ChartLineGraph = this.$echarts.init(myChart)
+
           this.ChartLineGraph.setOption(data);
           window.addEventListener("resize",function () {
             _this.ChartLineGraph.resize(); //网页自适应

@@ -30,6 +30,10 @@ export default {
    name: 'modal',
     // props: ['show'],
     props:{
+      typeValue: {
+          type: String,
+          default: ""
+      },
       title: {
           type: String,
           default: "modal"
@@ -68,13 +72,13 @@ export default {
       methods: {
         // 确定按钮事件
         confirm:function() {
-            this.$emit('confirm');
+            this.$emit('confirm',this.typeValue);
         },
         close: function () {
           this.$emit('close');
 
         },
-        
+
       },
       beforeDestroy () {
 

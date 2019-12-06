@@ -12,41 +12,36 @@
               <a-row :gutter="24">
                    <a-col :md="5" :sm="8">
                      <a-form-item label="风格偏好">
-                       <a-select defaultValue="jack"  @change="handleChange">
-                         <a-select-option value="jack">大盘型</a-select-option>
-                         <a-select-option value="lucy">中盘型</a-select-option>
-                         <a-select-option value="Yiminghe">小盘型</a-select-option>
+                       <a-select style="width:100px" @change="handleChange" v-model="params.stylePreference">
+                         <a-select-option v-for="item in stylePreferenceOption" :key="item.key">{{item.value}}</a-select-option>
                        </a-select>
                     </a-form-item>
                    </a-col>
 
                    <a-col :md="5" :sm="8">
                      <a-form-item label="规模偏好">
-                       <a-select defaultValue="jack"  @change="handleChange">
-                         <a-select-option value="jack">无要求</a-select-option>
-                         <a-select-option value="lucy">2亿以上</a-select-option>
-                         <a-select-option value="Yiminghe">10亿以上</a-select-option>
+                       <a-select style="width:120px" @change="handleChange" v-model="params.stockSizeRequirement">
+                         <a-select-option v-for="item in sizeRequirementOption" :key="item.key">{{item.value}}</a-select-option>
                        </a-select>
                     </a-form-item>
                    </a-col>
 
                    <a-col :md="6" :sm="8">
                      <a-form-item label="是否包含指数增强型基金">
-                       <a-select defaultValue="lucy"  @change="handleChange">
-                         <a-select-option value="lucy">是</a-select-option>
-                         <a-select-option value="Yiminghe">否</a-select-option>
+                       <a-select  style="width:100px" @change="handleChange" v-model="params.isIndexEnhanced">
+                         <a-select-option v-for="item in isIndexEnhancedOption" :key="item.key">{{item.value}}</a-select-option>
                        </a-select>
                     </a-form-item>
                    </a-col>
                    <a-col :md="6" :sm="24">
-                       <el-button size="mini" type="danger" round class="btn-fof" @click="FOFbuild">构建FOF</el-button>
+                       <el-button size="mini" type="danger" round class="btn-fof" @click="stockFOFbuild">构建FOF</el-button>
                    </a-col>
                </a-row>
 
                <!-- table -->
                <template >
                  <div class="table-svg">
-                   <a-table :columns="columns" :dataSource="data" :pagination='false' @change="handleChange" bordered>
+                   <a-table :columns="columns" :dataSource="stockTableData" :pagination='false' @change="handleChange" bordered>
 
                    </a-table>
                  </div>
@@ -56,7 +51,7 @@
                <!-- 图表 -->
 
             <div class="fofbuild-top-echartsUtil">
-               <echartsUtil :id="'1'" :data="option" style="height:252px;"></echartsUtil>
+               <echartsUtil :id="'1'" :data="stockOption" style="height:252px;"></echartsUtil>
             </div>
 
           </a-collapse-panel>
@@ -75,24 +70,22 @@
 
                <a-col :md="5" :sm="8">
                  <a-form-item label="规模偏好">
-                   <a-select defaultValue="jack"  @change="handleChange">
-                     <a-select-option value="jack">无要求</a-select-option>
-                     <a-select-option value="lucy">2亿以上</a-select-option>
-                     <a-select-option value="Yiminghe">10亿以上</a-select-option>
+                   <a-select defaultValue ="0" style="width:120px"  @change="handleChange" v-model="params.bondSizeRequirement">
+                      <a-select-option v-for="item in sizeRequirementOption" :key="item.key">{{item.value}}</a-select-option>
                    </a-select>
                 </a-form-item>
                </a-col>
 
 
                <a-col :md="6" :sm="24">
-                   <el-button size="mini" type="danger" round class="btn-fof" @click="FOFbuild">构建FOF</el-button>
+                   <el-button size="mini" type="danger" round class="btn-fof" @click="bondFOFbuild">构建FOF</el-button>
                </a-col>
            </a-row>
 
            <!-- table -->
            <template>
              <div class="table-svg">
-               <a-table :columns="columns" :dataSource="data" :pagination='false' @change="handleChange" bordered>
+               <a-table :columns="columns" :dataSource="bondTableData" :pagination='false' @change="handleChange" bordered>
 
                </a-table>
              </div>
@@ -101,7 +94,7 @@
            <!-- 图表 -->
 
         <div class="fofbuild-top-echartsUtil">
-           <echartsUtil :id="'2'" :data="option2" style="height:252px;"></echartsUtil>
+           <echartsUtil :id="'2'" :data="bondOption" style="height:252px;"></echartsUtil>
         </div>
 
         <!-- 提示 -->
@@ -124,7 +117,7 @@
    </a-form>
     </div>
     <!-- 声明modal模板 -->
-    <modal :show="isShowInfoModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true" title="免责声明">
+    <modal :typeValue="typeValue" :show="isShowInfoModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true" title="免责声明">
     <div class="infoContent" slot="body">
       <div style="text-align: left">
         投资有风险，本网页的任何数据及其衍生产品仅供参考。资产配置平台系统依据市场公开数据及外购数据源作为计算基础数据，本公司将会尽力但不保证基础数据的及时性、准确性、真实性和完整性，不承担因任何数据不准确或遗漏等造成的任何损失或损害的责任。投资者在依据相关信息进行投资操作时，应当进行自主判断，所导致的盈亏由投资者自行承担。浏览本页面或使用本功能即表示投资者同意所载免责声明。
@@ -145,31 +138,7 @@ import '@/style/fofbuild.css'
 import moment from 'moment';
 import echartsUtil from '@/echartsUtil/echartsUtil'
 import modal from '@/modal/Modal'
-
-const data = [
-    {
-      key: '1',
-      code: '163407.OF',
-      name: '兴全沪深300指数增强',
-      user: '申庆',
-      type: '增强指数型基金',
-      date: '2010-11-02',
-      result: '6.56%',
-      latestSize: '20.25',
-    },
-    {
-      key: '2',
-      code: '750005.OF',
-      name: '安信平稳增长A',
-      user: '庄园、张明',
-      type: '灵活配置型基金',
-      date: '2012-12-18',
-      result: '2.08%',
-      latestSize: '0.95',
-    },
-
-
-  ];
+import {twoOption} from '@/echartsUtil/echartsOptions'
 
 
   export default {
@@ -179,15 +148,33 @@ const data = [
 
     data() {
       return {
-        data,
+        dateMap:[],
+        blueMap:[],
+        redMap:[],
+        stylePreferenceOption:[{key:0,value:"大盘型"},{key:1,value:"中盘型"},{key:2,value:"小盘型"}],
+        sizeRequirementOption:[{key:0,value:"无要求"},{key:1,value:"2亿以上"},{key:2,value:"10亿以上"}],
+        isIndexEnhancedOption:[{key:0,value:"否"},{key:1,value:"是"}],
+        params:{   //请求参数
+          stylePreference:0,
+          stockSizeRequirement:0,
+          bondSizeRequirement:0,
+          isIndexEnhanced:1,
+         },
+        stockTableData:[],//股票型table
+        bondTableData:[],//债券型table
         moment,
         activeKey:[1,2],
-        option:{},
-        option2:{},
         sortedInfo:null, //table 排序
         filteredInfo:null, //table 过滤
         infoContentCheckbox:false,
         isShowInfoModal:false,
+        //图表数据
+        stockdata:[],
+        stockOption:{},
+
+        bonddata:[],
+        bondOption:{},
+        typeValue:'',
     }
   },
     computed:{
@@ -200,12 +187,12 @@ const data = [
         {
           title: '基金代码',
           align:'center',
-          dataIndex: 'code',
-          key: 'code',
+          dataIndex: 'fundCode',
+          key: 'fundCode',
           // filters: [{ text: 'Joe', value: 'Joe' }, { text: 'Jim', value: 'Jim' }],
           // filteredValue: filteredInfo.name || null,
           // onFilter: (value, record) => record.name.includes(value),
-          sorter: (a, b) => a.code.length - b.code.length,
+          sorter: (a, b) => a.fundCode.split(".")[0] - b.fundCode.split(".")[0],
           customRender: (text, row, index) => {
               return <a href="javascript:;">{text}</a>;
           },
@@ -213,9 +200,9 @@ const data = [
         {
           title: '基金名称',
           align:'center',
-          dataIndex: 'name',
-          key:'name',
-          sorter: (a, b) => a.name.length - b.name.length,
+          dataIndex: 'fundName',
+          key:'fundName',
+          sorter: (a, b) => a.fundName.length - b.fundName.length,
           customRender: (text, row, index) => {
               return <a href="javascript:;">{text}</a>;
           },
@@ -223,9 +210,9 @@ const data = [
         {
           title: '基金经理',
           align:'center',
-          dataIndex: 'user',
-          key: 'user',
-          sorter: (a, b) => a.user.length - b.user.length,
+          dataIndex: 'fundManager',
+          key: 'fundManager',
+          sorter: (a, b) => a.fundManager.length - b.fundManager.length,
           customRender:(text, row, index) => {
             return <a href="javascript:;">{text}</a>;
           }
@@ -233,23 +220,23 @@ const data = [
         {
           title: '基金类型',
           align:'center',
-          dataIndex: 'type',
-          key: 'type',
-          sorter: (a, b) => a.type.length - b.type.length,
+          dataIndex: 'fundType',
+          key: 'fundType',
+          sorter: (a, b) => a.fundType.length - b.fundType.length,
         },
         {
           title: '发行时间',
           align:'center',
-          dataIndex: 'date',
-          key: 'date',
-          sorter: (a, b) => a.date - b.date,
+          dataIndex: 'issueDate',
+          key: 'issueDate',
+          sorter: (a, b) => moment(a.issueDate) > moment(b.issueDate),
         },
         {
           title: '上月业绩',
           align:'center',
-          dataIndex: 'result',
-          key: 'result',
-          sorter: (a, b) => a.result - b.result,
+          dataIndex: 'lastMonthReturn',
+          key: 'lastMonthReturn',
+          sorter: (a, b) => a.lastMonthRetrun.split("%")[0] - b.lastMonthRetrun.split("%")[0],
         },
         {
           title: '最新规模(亿)',
@@ -263,183 +250,109 @@ const data = [
       }
     },
     created(){
-    let dataList=[
-      {data:"2018/01",gc:1600,sj:1567},
-      {data:"2018/02",gc:578,sj:3244},
-      {data:"2018/03",gc:1000,sj:1567},
-      {data:"2018/04",gc:0,sj:1567},
-      {data:"2018/05",gc:4366,sj:2222},
-      {data:"2018/06",gc:4624,sj:3245},
-      {data:"2018/07",gc:3689,sj:2578},
-      {data:"2018/08",gc:2467,sj:2746},
-      {data:"2018/09",gc:5109,sj:4321},
-      {data:"2018/10",gc:5444,sj:5555},
-      {data:"2018/11",gc:3412,sj:3217},
-      {data:"2018/12",gc:4590,sj:3567},
-      {data:"2019/01",gc:2456,sj:2900},
-      {data:"2019/02",gc:1645,sj:1567},
-      {data:"2019/03",gc:3498,sj:5342},
-      {data:"2019/04",gc:4532,sj:4432},
-      {data:"2019/05",gc:3333,sj:4444},
-      {data:"2019/06",gc:2345,sj:1900},
-      {data:"2019/07",gc:3479,sj:4127},
-      {data:"2019/08",gc:2346,sj:3591}
-    ]
 
-      let dateMap=[];
-      let gcMap=[];
-      let sjMap=[];
 
-        dataList.map((item,index)=>{
-          dateMap.push(item.data);
-          gcMap.push(item.gc);
-          sjMap.push(item.sj);
-      });
-      let data={
-        dateMap:dateMap,
-        gcMap:gcMap,
-        sjMap:sjMap
-      };
-      //初始化生成折线图的数据
-
-      let  text = '';
-      let  text2 = '历史表现数据';
-     this.option = this.Option(text,data);
-     this.option2 = this.Option2(text2,data);
+    },
+    mounted(){
+      let that = this;
+       that.stockloadData();
+       that.bondloadData();
     },
     methods:{
+      stockloadData(){
+        let that = this;
+        //股票型table数据
+        let stockurl = "/"+that.params.stylePreference+"/"+that.params.stockSizeRequirement+"/"+that.params.isIndexEnhanced;
+        that.$http.get(that.$url.stockTableUrl+stockurl).then(res=>{
+          //初始化table数据
+          that.stockTableData=res;
+        });
+        //股票型图表数据
+        let value = that.getParam(that.params.isIndexEnhanced,that.params.stockSizeRequirement);
+        that.$http.get(that.$url.stockFundUrl+"/"+value).then(res=>{
+          //初始化生成折线图的数据
+          that.stockdata=res;
+          that.stockOption = twoOption('',that.getEcharsData(that.stockdata),"股基FOF组合","基准组合");
+        });
+      },
+      bondloadData(){
+        let that = this;
+        //债券型table数据
+        that.$http.get(that.$url.bondTableUrl+"/"+that.params.bondSizeRequirement).then(res=>{
+          //初始化table数据
+          that.bondTableData=res;
 
-      Option(text,data){
-      let  option={
-           title: {
-              text: text,
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            legend: {
-              data:['股基FOF组合','基准组合']
-            },
-            xAxis:  {
-              type: 'category',
-              data:data.dateMap,
+        });
+        //债券型图表数据
+        that.$http.get(that.$url.bondFundUrl+"/"+that.params.bondSizeRequirement).then(res=>{
+          //初始化生成折线图的数据
+          that.bonddata=res;
+          that.bondOption = twoOption('',that.getEcharsData(that.bonddata),"股基FOF组合","基准组合");
+        });
+      },
+      //获取股票型历史表现图表的参数
+      //val1:isIndexEnhanced--包含指数是否增强 ：(0:否,1:是)
+      //val2:sizeRequirement ：(0:无要求,1:2亿以上,2:10亿以上)
+      //value:合成后的type值
+      getParam(val1,val2){
 
-            },
-            yAxis: {
-              type: 'value',
-              splitLine :{    //网格线
-                   lineStyle:{
-                       type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
-                   },
-                   show:true //隐藏或显示
-               }
+        if(val1==0 && val2==0){
+            return 3;
+          }
+        if(val1==0 && val2==1){
+            return 4;
+          }
+        if(val1==0 && val2==2){
+            return 5;
+          }
 
-            },
-            dataZoom: [{
-                type: 'inside',
-                throttle: 50
-            }],
-            series: [
-              {
-                  name:'股基FOF组合',
-                  type:'line',
-                  data:data.gcMap,
-                  symbol: 'none',  //取消折点圆圈
-                  itemStyle : {
-                        normal : {
-                        color:'#0e9cff', //改变折线点的颜色
-                        lineStyle:{
-                        color:'#0e9cff' //改变折线颜色
-                        }
-                        }
-                  },
-              },
-              {
-                  name:'基准组合',
-                  type:'line',
-                  data:data.sjMap,
-                  symbol: 'none',
-                  itemStyle : {
-                        normal : {
-                        color:'#f38143',
-                        lineStyle:{
-                        color:'#f38143'
-                        }
-                        }
-                  },
-              }
-            ]
-             }
-             return option;
+        if(val1==1 && val2==0){
+            return 0;
+          }
+        if(val2==1 && val2==1){
+          return 1;
+        }
+
+        if(val2==2  && val2==2){
+          return 2;
+        }
+      },
+      //股票型图表数据
+      getEcharsData(dataSource){
+        let that = this;
+
+          dataSource.map((item,index)=>{
+           that.dateMap.push(moment(item.tradeDate).format('YYYY/MM/DD'));  //时间map
+           if(that.params.stylePreference==0){
+             that.blueMap.push(item.largeCap);//蓝色折线map  估测值
+             that.redMap.push(item.largeCapBenchmark);
+           }
+           if(that.params.stylePreference==1){
+             that.blueMap.push(item.middleCap);
+             that.redMap.push(item.middleCapBenchmark);  //红色折线map    实际值
+           }
+           if(that.params.stylePreference==2){
+             that.blueMap.push(item.smallCap);
+             that.redMap.push(item.smallCapBenchmark);  //红色折线map    实际值
+           }
+       });
+       let data={
+         dateMap:that.dateMap,
+         blueMap:that.blueMap,
+         redMap:that.redMap
+       };
+       return data;
       },
 
-      Option2(text,data){
-      let  option={
-           title: {
-              text: text,
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            legend: {
-              data:['股基FOF组合','基准组合']
-            },
-            xAxis:  {
-              type: 'category',
-              data:data.dateMap,
-
-            },
-            yAxis: {
-              type: 'value',
-              splitLine :{    //网格线
-                   lineStyle:{
-                       type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
-                   },
-                   show:true //隐藏或显示
-               }
-
-            },
-            dataZoom: [{
-                type: 'inside',
-                throttle: 50
-            }],
-            series: [
-              {
-                  name:'股基FOF组合',
-                  type:'line',
-                  data:data.gcMap,
-                  symbol: 'none',  //取消折点圆圈
-                  itemStyle : {
-                        normal : {
-                        color:'#0e9cff', //改变折线点的颜色
-                        lineStyle:{
-                        color:'#0e9cff' //改变折线颜色
-                        }
-                        }
-                  },
-              },
-              {
-                  name:'基准组合',
-                  type:'line',
-                  data:data.sjMap,
-                  symbol: 'none',
-                  itemStyle : {
-                        normal : {
-                        color:'#f38143',
-                        lineStyle:{
-                        color:'#f38143'
-                        }
-                        }
-                  },
-              }
-            ]
-             }
-             return option;
+      // stockFOF构建
+      stockFOFbuild(){
+           this.isShowInfoModal = true;
+           this.typeValue="stock";
       },
-
-      // FOF构建
-      FOFbuild(){
+      // stockFOF构建
+      bondFOFbuild(){
           this.isShowInfoModal = true;
+          this.typeValue="bond";
       },
       // 下拉框选择
      handleChange(value,option){
@@ -450,11 +363,20 @@ const data = [
      viewDetails(){
 
      },
-     modalOK(){
+     modalOK(data){
           if(this.infoContentCheckbox){
             localStorage.setItem("infoContentShow","0");
           }
           this.isShowInfoModal = false;
+         if(data=="stock"){
+            this.stockloadData();
+         }
+         if(data=="bond"){
+            this.bondloadData();
+         }
+
+
+
       },
       modalClose(){
         this.isShowInfoModal = false;

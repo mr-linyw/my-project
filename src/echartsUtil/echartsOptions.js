@@ -44,7 +44,7 @@ export  function oneOption(text,data){
        }
        return option;
 };
-export  function twoOption(text,data){
+export  function twoOption(text,data,name1,name2){
 let  option={
      title: {
         text: text,
@@ -53,7 +53,7 @@ let  option={
         trigger: 'axis'
       },
       legend: {
-        data:['当月同比_估测值','当月同比_实际值']
+        data:[name1,name2]
       },
       xAxis:  {
         type: 'category',
@@ -77,7 +77,7 @@ let  option={
       }],
       series: [
         {
-            name:'当月同比_估测值',
+            name:name1,
             type:'line',
             data:data.blueMap,
             symbol: 'none',  //取消折点圆圈
@@ -91,7 +91,7 @@ let  option={
             },
         },
         {
-            name:'当月同比_实际值',
+            name:name2,
             type:'line',
             data:data.redMap,
             symbol: 'none',

@@ -10,7 +10,7 @@
           <el-tab-pane label="宏观政策"  name="first">
             <div class="left">
                 <a-list itemLayout="horizontal" :dataSource="firstData">
-                  <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item)">
+                  <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item.id)">
                      <a-list-item-meta>
                          <span slot="title" >
                            <a-tooltip>
@@ -21,8 +21,8 @@
                             </a-tooltip>
 
                            <div class="">
-                             <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.date}}</span>
-                             <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.textname}}</span>
+                             <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>
+                             <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.autherName}}</span>
                            </div>
 
                          </span>
@@ -32,7 +32,7 @@
             </div>
             <div class="right">
                   <a-list itemLayout="horizontal" :dataSource="secondData">
-                    <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item)">
+                    <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item.id)">
                       <a-list-item-meta>
                           <span slot="title">
                             <a-tooltip>
@@ -42,8 +42,8 @@
                                <span class="contant"> {{item.title}} </span>
                              </a-tooltip>
                             <div class="">
-                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.date}}</span>
-                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.textname}}</span>
+                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>
+                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.autherName}}</span>
                             </div>
                           </span>
                      </a-list-item-meta>
@@ -58,7 +58,7 @@
           <el-tab-pane label="量化择时" name="second">
             <div class="left">
                 <a-list itemLayout="horizontal" :dataSource="firstData">
-                  <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item)">
+                  <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item.id)">
                     <a-list-item-meta>
                         <span slot="title">
                           <a-tooltip>
@@ -68,8 +68,8 @@
                              <span class="contant"> {{item.title}} </span>
                            </a-tooltip>
                           <div class="">
-                            <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.date}}</span>
-                            <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.textname}}</span>
+                            <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>
+                            <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.autherName}}</span>
                           </div>
                         </span>
                    </a-list-item-meta>
@@ -78,7 +78,7 @@
             </div>
             <div class="right">
                   <a-list itemLayout="horizontal" :dataSource="secondData">
-                    <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item)">
+                    <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item.id)">
                       <a-list-item-meta>
                           <span slot="title">
                             <a-tooltip>
@@ -90,8 +90,8 @@
 
                             <div class="">
                               <!-- moment().format('YYYY-MM-DD') -->
-                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.date}}</span>
-                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.textname}}</span>
+                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>
+                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.autherName}}</span>
                             </div>
                           </span>
                      </a-list-item-meta>
@@ -188,6 +188,11 @@ import {mouseover,mouseout,mousemove} from '@/components/utilJs/ellipsis'
 
     data() {
       return {
+        params:{
+          "type":1,
+          "pageNo":1,
+          "pageSize":8
+        },
         moment,
         id:'1',
         firstData:[],
@@ -206,23 +211,25 @@ import {mouseover,mouseout,mousemove} from '@/components/utilJs/ellipsis'
             showSizeChanger: true,
             total: data.length,
           },
-           url: {
-            AssetAllocation : "/views/asset-allocation/AssetAllocation",
-            FOFbuild : "/views/asset-allocation/FOFbuild",
-          },
+
       };
     },
     created(){
-       // sort for  data
-       let that = this;
-      that.firstData= that.data.slice(0,4);
-      that.secondData=that.data.slice(4,8);
+
+    },
+    mounted(){
+      let that = this;
+
+     //获取列表数据
+     that.$http.post(that.$url.reportUrl,that.params).then(res=>{
+          that.firstData= res.result.records.slice(0,4);
+         that.secondData=res.result.records.slice(4,8);
+     });
     },
 
     methods:{
       jumpDetails(item){
-        this.$store.dispatch('byValue',item)
-        window.open(this.$router.resolve({ name:'Details',params:{value:item.date}}).href,"_blank");
+        window.open(this.$router.resolve({ name:'Details',query: {id:'1'}}).href,"_blank");
 
       },
     },
