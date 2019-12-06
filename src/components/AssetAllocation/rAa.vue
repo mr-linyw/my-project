@@ -153,6 +153,12 @@
              if(!this.chart){
                let $el = this.$el.children[0], echarts = this.$echarts;
                this.chart = echarts.init($el);
+               let _t = this;
+               function handlerEvent(){
+                 _t.chart.resize();
+               }
+               window.removeEventListener("chartResize",handlerEvent);
+               window.addEventListener('chartResize',handlerEvent);
              }
 
                let {legend,xAxis,series} = params;
