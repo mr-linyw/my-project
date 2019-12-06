@@ -50,7 +50,7 @@
     </div>
     <div class="an-content-5Row">
       <an-panel panelTitle="可交易FOF组合构建">
-        <a-collapse  v-model="activeKey" @change="changeActivekey" >
+        <a-collapse  v-model="activeKey"  >
           <template v-slot:expandIcon="props" >
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
@@ -58,7 +58,7 @@
             <grid-and-line-by-g-p></grid-and-line-by-g-p>
           </a-collapse-panel>
         </a-collapse>
-        <a-collapse  v-model="activeKey" @change="changeActivekey" >
+        <a-collapse  v-model="activeKey" >
           <template v-slot:expandIcon="props" >
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
@@ -66,7 +66,7 @@
             <grid-and-line-by-z-q></grid-and-line-by-z-q>
           </a-collapse-panel>
         </a-collapse>
-        <a-collapse  v-model="activeKey" @change="changeActivekey" >
+        <a-collapse  v-model="activeKey" >
           <template v-slot:expandIcon="props" >
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
@@ -74,7 +74,7 @@
               <span style="font-size: 14px;color: #4c5264">无构建商品组合</span>
           </a-collapse-panel>
         </a-collapse>
-        <a-collapse  v-model="activeKey" @change="changeActivekey" >
+        <a-collapse  v-model="activeKey" >
           <template v-slot:expandIcon="props" >
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>

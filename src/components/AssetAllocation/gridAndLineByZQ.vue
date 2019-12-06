@@ -3,7 +3,7 @@
             <div class="tools">
               <div class="group">
                 <span>规模偏好</span>
-                <a-select defaultValue="0" style="width:94px" @click="sizeRequirement_do">
+                <a-select defaultValue="0" style="width:94px" @change="sizeRequirement_do">
                   <a-select-option v-for="item in gmphData" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
                 </a-select>
               </div>
@@ -146,6 +146,7 @@
           this.chartData = params;
         },
         initData(data){
+          this.data.length = 0;
           let d = this.data;
           for (let i = 0; i < data.length; i++) {
             let dc = data[i];
