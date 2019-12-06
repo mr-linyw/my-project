@@ -64,7 +64,7 @@
          <template v-slot:expandIcon="props" >
            <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
          </template>
-        <a-collapse-panel header="债券型" key="2"  >
+        <a-collapse-panel header="债券型" key="1"  >
           <a-row :gutter="24">
 
 

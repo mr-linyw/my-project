@@ -1,14 +1,17 @@
 <template>
     <div class="rAa">
-
+        <div v-show="!noData" class="chartContent"></div>
+        <div v-show="noData" class="noData">暂无数据...</div>
     </div>
 </template>
 
 <script>
   import data from '@/store/testLocalData';
+  import api from '@/api/axios';
   import moment from 'moment'
     export default {
         name: "rAa",
+        props:["baseConfig"],
         data(){
             return {
               chart:null,
@@ -16,17 +19,8 @@
               params:null,
               startValue:null,
               endValue: null,
+              noData:true
           }
-        },
-        created(){
-          let _t = this;
-          $.ajax({
-            url: "http://125.208.12.66:9877/asset/allocationWeightNetvalue/allocationResult/1/1",
-            success: function (result) {
-                _t.params = _t.initData(result);
-            },
-            dataType: "json"
-          });
         },
         mounted() {
           this.drawByData(this.params);
@@ -37,6 +31,18 @@
         },
         endValue(val){
           this.drawByData(this.params);
+        },
+        baseConfig(){
+          if (!this.baseConfig.cm){
+            this.noData = true;
+            return;
+          }
+          let cm = this.baseConfig.cm;
+          let cl = this.baseConfig.cl;
+          this.$http.get(this.$url.allocationResult + "/"+cm+"/"+cl+"").then(result => {
+            this.noData = result.length < 1;
+            this.params = this.initData(result);
+          })
         }
       },
        methods:{
@@ -68,7 +74,12 @@
                         axisLabel: {
                           color: '#777',
                           rotate: '35',
-                        }
+                        },
+                        axisTick:{
+                          lineStyle:{
+                            color:"#cacaca"
+                          }
+                        },
                       }
                     ],
                     series:[
@@ -134,13 +145,14 @@
                   return params;
             },
            drawByData(params){
-             if(!this.chart){
-               let $el = this.$el, echarts = this.$echarts;
-               this.chart = echarts.init($el);
-             }
 
              if(!params){
                return;
+             }
+
+             if(!this.chart){
+               let $el = this.$el.children[0], echarts = this.$echarts;
+               this.chart = echarts.init($el);
              }
 
                let {legend,xAxis,series} = params;
@@ -150,7 +162,7 @@
                    trigger: 'axis',
                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
                      type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                   }
+                   },
                  },
                  legend,
                  dataZoom: [
@@ -192,8 +204,17 @@
                      nameTextStyle:{
                          color:"#777"
                      },
+                     splitLine:{
+                       show:false,
+                     },
                      axisLabel:{
-                       formatter: '{value} %'
+                       formatter: '{value} %',
+                       color: '#777',
+                     },
+                     axisTick:{
+                        lineStyle:{
+                          color:"#cacaca"
+                        }
                      },
                      splitNumber:2
                    }
@@ -201,6 +222,9 @@
                 series
                };
              this.chart.setOption(option);
+             this.$nextTick(function () {
+               this.chart.resize();
+             });
            }
        }
     }
@@ -210,5 +234,12 @@
     .rAa{
       width: 100%;
       height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
+  .rAa .chartContent{
+    width: 100%;
+    height: 100%;
+  }
 </style>

@@ -8,31 +8,30 @@
         </template>
         <a-collapse-panel header="大类资产" key="1" >
           <div class="macroData-left">
-             <echartsUtil :id="'1'" :data="hushenOption" style="height:200px;"></echartsUtil>
-             <echartsUtil :id="'2'" :data="windOption" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'1'" :data="option" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'2'" :data="option" style="height:200px;"></echartsUtil>
           </div>
 
           <div class="macroData-right">
-            <echartsUtil :id="'3'" :data="govOption" style="height:200px;"></echartsUtil>
-            <echartsUtil :id="'4'" :data="cashOption" style="height:200px;"></echartsUtil>
+            <echartsUtil :id="'3'" :data="option" style="height:200px;"></echartsUtil>
+            <echartsUtil :id="'4'" :data="option" style="height:200px;"></echartsUtil>
           </div>
 
 
         </a-collapse-panel>
         </a-collapse>
-        <div class="kg"></div>
         <a-collapse  v-model="activeKey" >
           <template v-slot:expandIcon="props" >
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
-        <a-collapse-panel header="宏观经济指标" key="2"  >
+        <a-collapse-panel header="宏观经济指标" key="1"  >
           <div class="macroData-left">
-             <echartsUtil :id="'5'" :data="GDPOption" style="height:200px;"></echartsUtil>
-             <echartsUtil :id="'6'" :data="PPIOption" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'5'" :data="option2" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'6'" :data="option2" style="height:200px;"></echartsUtil>
           </div>
 
           <div class="macroData-right">
-            <echartsUtil :id="'7'" :data="CPIOption" style="height:200px;"></echartsUtil>
+            <echartsUtil :id="'7'" :data="option2" style="height:200px;"></echartsUtil>
             <!-- <echartsUtil :id="'8'" :data="option" style="height:200px;"></echartsUtil> -->
           </div>
 
@@ -51,7 +50,7 @@
 import '@/style/macroData.css'
 import moment from 'moment';
 import echartsUtil from '@/echartsUtil/echartsUtil'
-import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
+
   export default {
     components : {
       echartsUtil
@@ -59,28 +58,9 @@ import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
     data() {
       return {
         moment,
-        activeKey:[1,2],
-        hushentext:'沪深300',
-        hushendate:[],
-        hushenOption:{},
-        windtext:'wind商品',
-        winddate:[],
-        windOption:{},
-        govtext:'国债全收益',
-        govdate:[],
-        govOption:{},
-        cashtext:'货币基金',
-        cashdate:[],
-        cashOption:{},
-        GDPtext:'GDP',
-        GDPdate:[],
-        GDPOption:{},
-        PPItext:'PPI',
-        PPIdate:[],
-        PPIOption:{},
-        CPItext:'CPI',
-        CPIdate:[],
-        CPIOption:{},
+        activeKey:[1],
+        option:{},
+        option2:{},
     }
   },
     created(){
@@ -164,12 +144,120 @@ import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
       });
       let data={
         dateMap:dateMap,
-        blueMap:blueMap,
-        redMap:redMap
+        gcMap:gcMap,
+        sjMap:sjMap
       };
       return data;
     },
+    methods:{
+      oneOption(text,data){
+      let  option={
+           title: {
+              text: text,
+              x:'center',
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            xAxis:  {
+              type: 'category',
+              data:data.dateMap
+            },
+            yAxis: {
+              type: 'value',
+              splitLine :{    //网格线
+                   lineStyle:{
+                       type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
+                   },
+                   show:true //隐藏或显示
+               }
 
+            },
+            dataZoom: [{
+                type: 'inside',
+                throttle: 50
+            }],
+            series: {
+                  name:'当月值',
+                  type:'line',
+                  data:data.sjMap,
+                  symbol: 'none',  //取消折点圆圈
+                  itemStyle : {
+                        normal : {
+                        color:'#0e9cff', //改变折线点的颜色
+                        lineStyle:{
+                        color:'#0e9cff' //改变折线颜色
+                        }
+                        }
+                  },
+
+              }
+
+             }
+             return option;
+      },
+      twoOption(text,data){
+      let  option={
+           title: {
+              text: text,
+            },
+            tooltip: {
+              trigger: 'axis'
+            },
+            legend: {
+              data:['当月同比_估测值','当月同比_实际值']
+            },
+            xAxis:  {
+              type: 'category',
+              data:data.dateMap
+            },
+            yAxis: {
+              type: 'value',
+              splitLine :{    //网格线
+                   lineStyle:{
+                       type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
+                   },
+                   show:true //隐藏或显示
+               }
+
+            },
+            dataZoom: [{
+                type: 'inside',
+                throttle: 50
+            }],
+            series: [
+              {
+                  name:'当月同比_估测值',
+                  type:'line',
+                  data:data.gcMap,
+                  symbol: 'none',  //取消折点圆圈
+                  itemStyle : {
+                        normal : {
+                        color:'#0e9cff', //改变折线点的颜色
+                        lineStyle:{
+                        color:'#0e9cff' //改变折线颜色
+                        }
+                        }
+                  },
+              },
+              {
+                  name:'当月同比_实际值',
+                  type:'line',
+                  data:data.sjMap,
+                  symbol: 'none',
+                  itemStyle : {
+                        normal : {
+                        color:'#f38143',
+                        lineStyle:{
+                        color:'#f38143'
+                        }
+                        }
+                  },
+              }
+            ]
+             }
+             return option;
+      },
 
 
 

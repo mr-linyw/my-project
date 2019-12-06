@@ -3,48 +3,220 @@
             <div class="tools">
               <div class="group">
                 <span>风格偏好</span>
-                <a-select defaultValue="4" style="width:94px">
+                <a-select defaultValue="2" style="width:94px" @change="stylePreference_do">
                   <a-select-option v-for="item in fgphData" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
                 </a-select>
               </div>
               <div class="group">
                 <span>规模偏好</span>
-                <a-select defaultValue="4" style="width:94px">
-                  <a-select-option v-for="item in tnhData" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
+                <a-select defaultValue="0" style="width:94px" @change="sizeRequirement_do">
+                  <a-select-option v-for="item in gmphData" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
                 </a-select>
               </div>
               <div class="group">
                 <span>是否包含指数增强型基金</span>
-                <a-select defaultValue="4" style="width:94px">
-                  <a-select-option v-for="item in tnhData" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
+                <a-select defaultValue="1" style="width:94px" @change="isIndexEnhanced_do">
+                  <a-select-option v-for="item in isIndexEnhancedData" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
                 </a-select>
               </div>
-              <a-button class="configBtn" type="round" style="margin-left: 20px" @click="configClick">构建FOF</a-button>
+              <a-button class="configBtn" type="round" style="margin-left: 20px" @click="buildStockFOF">构建FOF</a-button>
             </div>
             <div class="content">
-              <div class="left_c"></div>
-              <div class="right_c"></div>
+              <div class="left_c">
+                <a-table
+                  :bordered="true"
+                  :columns="columns"
+                  :dataSource="data"
+                />
+              </div>
+              <div class="right_c">
+                  <e-line :params="chartData"></e-line>
+              </div>
             </div>
 
     </div>
 </template>
 
 <script>
+  const columns = [
+    {
+      title: '基金代码',
+      dataIndex: 'fundCode',
+    },
+    {
+      title: '基金名称',
+      dataIndex: 'fundName',
+    },
+    {
+      title: '基金经理',
+      dataIndex: 'fundManager',
+    },
+    {
+      title: '上月业绩',
+      dataIndex: 'lastMonthReturn',
+    },
+    {
+      title: '基金权重',
+      dataIndex: 'latestSize',
+    },
+  ];
+    import moment from 'moment';
+    import eLine from '@/components/AssetAllocation/eLine'
     export default {
-        name: "gridAndLineByGP",
+      name: "gridAndLineByGP",
+      components:{
+        eLine
+      },
       data(){
-          return{
-            fgphData:[
-              {text:"大盘型",value:"2"},
-              {text:"中盘型",value:"1"},
-              {text:"小盘型",value:"0"},
-            ],
-            gmphData:[
-              {text:"大盘型",value:"2"},
-              {text:"中盘型",value:"1"},
-              {text:"小盘型",value:"0"},
-            ]
+        return{
+          data:[],
+          chartData:[],
+          params:{},
+          stylePreference:"2",
+          sizeRequirement:"0",
+          isIndexEnhanced:"1",
+          columns,
+          fgphData:[
+            {text:"大盘型",value:"2"},
+            {text:"中盘型",value:"1"},
+            {text:"小盘型",value:"0"},
+          ],
+          gmphData:[
+            {text:"无要求",value:"0"},
+            {text:"2亿以上",value:"1"},
+            {text:"10亿以上",value:"2"},
+          ],
+          isIndexEnhancedData:[
+            {text:"是",value:"1"},
+            {text:"否",value:"0"},
+          ]
+        }
+      },
+      created(){
+        // table数据
+        this.$http.get(this.$url.fofRecommendStockFund + "/2/0/1").then(result => {
+             this.initData(result);
+        });
+      //  折线图数据
+        this.$http.get(this.$url.fofHistReturnStock + "/0").then(result => {
+                this.doChartData(result);
+        });
+      },
+      watch:{
+        params(value){
+          let {stylePreference,isIndexEnhanced,sizeRequirement} = this.params;
+          // table数据
+          this.$http.get(this.$url.fofRecommendStockFund + "/"+stylePreference+"/"+ sizeRequirement+"/"+isIndexEnhanced+"").then(result => {
+            this.initData(result);
+          });
+          let stockParams = "";
+          if(isIndexEnhanced==="1"){
+                if(sizeRequirement === "0"){
+                  stockParams = "0";
+                }else if(sizeRequirement === "1"){
+                  stockParams = "1";
+                }else{
+                  stockParams = "2";
+                }
+          }else{
+            if(sizeRequirement === "0"){
+              stockParams = "3";
+            }else if(sizeRequirement === "1"){
+              stockParams = "4";
+            }else{
+              stockParams = "5";
+            }
           }
+          //  折线图数据
+          this.$http.get(this.$url.fofHistReturnStock + "/"+stockParams+"").then(result => {
+            this.doChartData(result);
+          });
+        }
+      },
+      methods:{
+        buildStockFOF(){
+            this.params = {stylePreference:this.stylePreference,isIndexEnhanced:this.isIndexEnhanced,sizeRequirement:this.sizeRequirement}
+        },
+        isIndexEnhanced_do(val){
+            this.isIndexEnhanced = val;
+        },
+        stylePreference_do(val){
+          this.stylePreference = val;
+        },
+        sizeRequirement_do(val){
+          this.sizeRequirement = val;
+        },
+         doChartData(result){
+           let params = {
+             legend: {
+               data:['债基组合','组合基准'],
+               right: 10,
+               top: 20,
+               bottom: 20,
+               textStyle:{
+                 color:"#777"
+               }
+             },
+             xAxis : [
+               {
+                 type: 'category',
+                 data: [],
+                 axisLabel: {
+                   color: '#777',
+                 }
+               }
+             ],
+             series:[
+               {
+                 name: '债基组合',
+                 type: 'line',
+                 symbol: 'none',
+                 data: [],
+                 itemStyle:{
+                   color:"#35acff"
+                 }
+               },
+               {
+                 name: '组合基准',
+                 type: 'line',
+                 symbol: 'none',
+                 data: [],
+                 itemStyle:{
+                   color:"#f38143"
+                 }
+               },
+             ]
+           };
+           for (let item of result){
+             let formatM = moment(item.tradeDate).format("YYYY/MM/DD");
+             params.xAxis[0].data.push(formatM);
+             if(this.stylePreference === "0"){
+               params.series[0].data.push(Number(item.smallCap).toFixed(4));
+               params.series[1].data.push(Number(item.smallCapBenchmark).toFixed(4));
+             }else if(this.stylePreference === "1"){
+               params.series[0].data.push(Number(item.middleCap).toFixed(4));
+               params.series[1].data.push(Number(item.middleCapBenchmark).toFixed(4));
+             }else{
+               params.series[0].data.push(Number(item.largeCap).toFixed(4));
+               params.series[1].data.push(Number(item.largeCapBenchmark).toFixed(4));
+             }
+           }
+           this.chartData = params;
+          },
+         initData(data){
+            this.data.length = 0;
+           let d = this.data;
+           for (let i = 0; i < data.length; i++) {
+             let dc = data[i];
+             d.push({
+               fundCode: dc["fundCode"],
+               fundName: dc["fundName"],
+               fundManager: dc["fundManager"],
+               lastMonthReturn: dc["lastMonthReturn"],
+               latestSize: dc["latestSize"]
+             });
+           }
+         }
       }
     }
 </script>
@@ -60,6 +232,7 @@
   height: 48px;
   font-size: 14px;
   color: #4c5264;
+  margin-left: 15px;
 }
   .content{
     width: 100%;

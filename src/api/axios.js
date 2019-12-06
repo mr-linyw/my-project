@@ -82,6 +82,7 @@ export default{
             data: data,
             withCredentials: true,
 
+
         })
         .then(res => {
           cback(res);
