@@ -41,7 +41,7 @@
                <!-- table -->
                <template >
                  <div class="table-svg">
-                   <a-table :columns="columns" :dataSource="stockTableData" :pagination='false' @change="handleChange" bordered>
+                   <a-table :columns="stockcolumns" :dataSource="stockTableData" :pagination='false' @change="handleChange" bordered>
 
                    </a-table>
                  </div>
@@ -85,7 +85,7 @@
            <!-- table -->
            <template>
              <div class="table-svg">
-               <a-table :columns="columns" :dataSource="bondTableData" :pagination='false' @change="handleChange" bordered>
+               <a-table :columns="bondcolumns" :dataSource="bondTableData" :pagination='false' @change="handleChange" bordered>
 
                </a-table>
              </div>
@@ -106,7 +106,7 @@
              在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
              但同时也可能存在着较大的证券投资风险。请务必仔细阅读本系统平台的使用说明。
              我们将尽可能采取有效措施保护客户资料和其他各项活动的安全，本着对您负责的态度，
-             公司郑重提示，在使用时，存在且不限于以下风险：<a href="javascript:viewDetails;">查看详情</a>
+             公司郑重提示，在使用时，存在且不限于以下风险：<a href="javascript:" @click="viewDetails">查看详情</a>
 
            </span></li>
 
@@ -127,6 +127,31 @@
       </div>
     </div>
   </modal>
+  <!-- 风险提示modal模板 -->
+  <modal  :show="isShowInfoModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true"  title="风险提示">
+  <div class="infoContent" slot="body">
+    <div style="text-align: left">
+      <li><span class="tishi">尊敬的客户：</span></li>
+      <li><span>
+        在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
+        但同时也可能存在着较大的证券投资风险。请务必仔细阅读本系统平台的使用说明。
+        我们将尽可能采取有效措施保护客户资料和其他各项活动的安全，本着对您负责的态度，
+        公司郑重提示，在使用时，存在且不限于以下风险：
+      </span></li>
+      <li><span>1、资产配置平台系统仅是建立在基础数据（数据来源包括：市场公开数据及本公司外购数据源）平台上的一个页面，它同样具有电子化系统的使用风险。</span></li>
+      <li><span>2、以下原因都可能造成您使用资产配置系统时出现中断、停顿、延迟和显示失败等情况</span></li>
+      <li><span>1）电脑病毒、黑客入侵、计算机软硬件故障；</span></li>
+      <li><span>2）您交易使用的电脑终端与行情、交易通讯线路发生故障；</span></li>
+      <li><span>3）其他因网络或您的电脑终端可能出现的故障及其他不可测因素；</span></li>
+      <li><span>4）因软件关闭、关机、繁忙或网络中断等其他原因出现延迟、中断、停顿或数据不完全，甚至出现系统故障，从而使系统显示出现延迟、中断、遗失、无法触发、数据错误</span></li>
+      <li><span>3、软件适配风险。您的计算机配置、性能或软件系统与所提供的交易系统不匹配，无法及时显示结果的风险。</span></li>
+      <li><span>4、政策变化风险。由于相关政策变化导致的风险。</span></li>
+      <li><span>5、证券监管机构确定的其他风险。</span></li>
+      <li><span>6、不可抗力及其他可能存在的风险。</span></li>
+      <li><span>7、任何系统的使用都是建立在专属密码登录的前提下，凡您使用专属账号及密码进行的交易、查询及其他行为，均视为您本人的行为，请妥善保管自己的密码，由于您管理不善造成的密码泄露所带来的损失，公司不承担任何责任</span></li>
+    </div>
+  </div>
+</modal>
   </div>
 
 
@@ -164,10 +189,10 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         bondTableData:[],//债券型table
         moment,
         activeKey:[1,2],
-        sortedInfo:null, //table 排序
-        filteredInfo:null, //table 过滤
+
         infoContentCheckbox:false,
         isShowInfoModal:false,
+
         //图表数据
         stockdata:[],
         stockOption:{},
@@ -175,15 +200,12 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         bonddata:[],
         bondOption:{},
         typeValue:'',
+
     }
   },
     computed:{
-      columns(){
-        let { sortedInfo, filteredInfo } = this;
-       sortedInfo = sortedInfo || {};
-       filteredInfo = filteredInfo || {};
-       const columns = [
-
+      stockcolumns(){
+       const stockcolumns = [
         {
           title: '基金代码',
           align:'center',
@@ -246,9 +268,79 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
           sorter: (a, b) => a.latestSize - b.latestSize,
         },
       ];
-        return columns;
-      }
-    },
+        return stockcolumns;
+      },
+
+
+    bondcolumns(){
+
+     const bondcolumns = [
+      {
+        title: '基金代码',
+        align:'center',
+        dataIndex: 'fundCode',
+        key: 'fundCode',
+        // filters: [{ text: 'Joe', value: 'Joe' }, { text: 'Jim', value: 'Jim' }],
+        // filteredValue: filteredInfo.name || null,
+        // onFilter: (value, record) => record.name.includes(value),
+        sorter: (a, b) => a.fundCode.split(".")[0] - b.fundCode.split(".")[0],
+        customRender: (text, row, index) => {
+            return <a href="javascript:;">{text}</a>;
+        },
+      },
+      {
+        title: '基金名称',
+        align:'center',
+        dataIndex: 'fundName',
+        key:'fundName',
+        sorter: (a, b) => a.fundName.length - b.fundName.length,
+        customRender: (text, row, index) => {
+            return <a href="javascript:;">{text}</a>;
+        },
+      },
+      {
+        title: '基金经理',
+        align:'center',
+        dataIndex: 'fundManager',
+        key: 'fundManager',
+        sorter: (a, b) => a.fundManager.length - b.fundManager.length,
+        customRender:(text, row, index) => {
+          return <a href="javascript:;">{text}</a>;
+        }
+      },
+      {
+        title: '基金类型',
+        align:'center',
+        dataIndex: 'fundType',
+        key: 'fundType',
+        sorter: (a, b) => a.fundType.length - b.fundType.length,
+      },
+      {
+        title: '发行时间',
+        align:'center',
+        dataIndex: 'issueDate',
+        key: 'issueDate',
+        sorter: (a, b) => moment(a.issueDate) > moment(b.issueDate),
+      },
+      {
+        title: '上月业绩',
+        align:'center',
+        dataIndex: 'lastQuarterReturn',
+        key: 'lastQuarterReturn',
+        sorter: (a, b) => a.lastQuarterReturn.split("%")[0] - b.lastQuarterReturn.split("%")[0],
+      },
+      {
+        title: '最新规模(亿)',
+        align:'center',
+        dataIndex: 'latestSize',
+        key: 'latestSize',
+        sorter: (a, b) => a.latestSize - b.latestSize,
+      },
+    ];
+      return bondcolumns;
+    }
+  },
+
     created(){
 
 
@@ -281,7 +373,6 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         that.$http.get(that.$url.bondTableUrl+"/"+that.params.bondSizeRequirement).then(res=>{
           //初始化table数据
           that.bondTableData=res;
-
         });
         //债券型图表数据
         that.$http.get(that.$url.bondFundUrl+"/"+that.params.bondSizeRequirement).then(res=>{
@@ -361,6 +452,9 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
 
      // 查看风险提示详情
      viewDetails(){
+       this.isShowInfoModal=true;
+     },
+     modalOKModal(){
 
      },
      modalOK(data){

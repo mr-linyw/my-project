@@ -54,7 +54,15 @@
 .infoContent{
   text-align: left;
 }
+.infoContent li{
+  list-style-type:none;
+}
 .infoCheckBoxContent{
   position: relative;
   top: 15px;
+}
+.tishi{
+  text-align: center;
+  font-size: 18px;
+  font-weight:bold;
 }

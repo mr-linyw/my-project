@@ -38,15 +38,15 @@
              <a-divider />
             <div class="a-layout-footer-center">
                 <div class="a-layout-footer-center-header" >
-                   <p>{{title}}</p>
+                   <p>{{dataSource.title}}</p>
                    <!-- {{moment().format('YYYY-MM-DD')}} -->
-                   <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{date}}</span>
-                   <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{textname}}</span>
+                   <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(dataSource.createTime).format('YYYY-MM-DD')}}</span>
+                   <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{name}}</span>
 
                 </div>
                 <div class="a-layout-footer-center-center">
                      <span :style="{ fontSize: '15px' }">摘要</span>
-                     <p>{{text2}}</p>
+                     <p>{{dataSource.digest}}</p>
                 </div>
             </div>
             <div class="a-layout-footer-footer">
@@ -117,19 +117,18 @@ import '@/style/Details.css'
        moment,
        showCancle:true,
        showConfirm:true,
-
+       dataSource:{ },
+       name:"",
 
       }
 
     },
     created(){
-         console.log(this.$route.query.id);
-        // this.byValue.$on('getData',item=>{
-        //   //this.$set(this.data,item) 赋值之后，原值不会改变
-        //   console.log(item);
-        //   this.dataSource = item.date;
-        //
-        // });
+         //获取数据
+         this.$http.get(this.$url.reportUrl+"/"+this.$route.query.id).then(res=>{        
+            this.dataSource = res;
+            this.name=this.$route.query.name;
+         });
       // 有时PDF文件地址会出现跨域的情况,这里最好处理一下
 　　　　this.src = pdf.createLoadingTask(this.src);
       // this.data=this.$route.params.data;
