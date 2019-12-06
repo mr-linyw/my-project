@@ -1,6 +1,8 @@
 // 统一封装所有接口路径
 export default {
   url : "/asset/allocationWeightNetvalue/co",
+  //宏观政策列表
+  reportUrl:"/asset/tReportInfo",
   //各期资产配置结果
   allocationResult:"/asset/allocationWeightNetvalue/allocationResult",
   //可交易FOF组合构建-股票型

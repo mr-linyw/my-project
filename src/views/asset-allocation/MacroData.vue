@@ -8,13 +8,13 @@
         </template>
         <a-collapse-panel header="大类资产" key="1" >
           <div class="macroData-left">
-             <echartsUtil :id="'1'" :data="option" style="height:200px;"></echartsUtil>
-             <echartsUtil :id="'2'" :data="option" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'1'" :data="hushenOption" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'2'" :data="windOption" style="height:200px;"></echartsUtil>
           </div>
 
           <div class="macroData-right">
-            <echartsUtil :id="'3'" :data="option" style="height:200px;"></echartsUtil>
-            <echartsUtil :id="'4'" :data="option" style="height:200px;"></echartsUtil>
+            <echartsUtil :id="'3'" :data="govOption" style="height:200px;"></echartsUtil>
+            <echartsUtil :id="'4'" :data="cashOption" style="height:200px;"></echartsUtil>
           </div>
 
 
@@ -26,12 +26,12 @@
           </template>
         <a-collapse-panel header="宏观经济指标" key="1"  >
           <div class="macroData-left">
-             <echartsUtil :id="'5'" :data="option2" style="height:200px;"></echartsUtil>
-             <echartsUtil :id="'6'" :data="option2" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'5'" :data="GDPOption" style="height:200px;"></echartsUtil>
+             <echartsUtil :id="'6'" :data="CPIOption" style="height:200px;"></echartsUtil>
           </div>
 
           <div class="macroData-right">
-            <echartsUtil :id="'7'" :data="option2" style="height:200px;"></echartsUtil>
+            <echartsUtil :id="'7'" :data="PPIOption" style="height:200px;"></echartsUtil>
             <!-- <echartsUtil :id="'8'" :data="option" style="height:200px;"></echartsUtil> -->
           </div>
 
@@ -50,7 +50,7 @@
 import '@/style/macroData.css'
 import moment from 'moment';
 import echartsUtil from '@/echartsUtil/echartsUtil'
-
+import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
   export default {
     components : {
       echartsUtil
@@ -144,124 +144,12 @@ import echartsUtil from '@/echartsUtil/echartsUtil'
       });
       let data={
         dateMap:dateMap,
-        gcMap:gcMap,
-        sjMap:sjMap
+        blueMap:blueMap,
+        redMap:redMap
       };
       return data;
     },
-    methods:{
-      oneOption(text,data){
-      let  option={
-           title: {
-              text: text,
-              x:'center',
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            xAxis:  {
-              type: 'category',
-              data:data.dateMap
-            },
-            yAxis: {
-              type: 'value',
-              splitLine :{    //网格线
-                   lineStyle:{
-                       type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
-                   },
-                   show:true //隐藏或显示
-               }
 
-            },
-            dataZoom: [{
-                type: 'inside',
-                throttle: 50
-            }],
-            series: {
-                  name:'当月值',
-                  type:'line',
-                  data:data.sjMap,
-                  symbol: 'none',  //取消折点圆圈
-                  itemStyle : {
-                        normal : {
-                        color:'#0e9cff', //改变折线点的颜色
-                        lineStyle:{
-                        color:'#0e9cff' //改变折线颜色
-                        }
-                        }
-                  },
-
-              }
-
-             }
-             return option;
-      },
-      twoOption(text,data){
-      let  option={
-           title: {
-              text: text,
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-            legend: {
-              data:['当月同比_估测值','当月同比_实际值']
-            },
-            xAxis:  {
-              type: 'category',
-              data:data.dateMap
-            },
-            yAxis: {
-              type: 'value',
-              splitLine :{    //网格线
-                   lineStyle:{
-                       type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
-                   },
-                   show:true //隐藏或显示
-               }
-
-            },
-            dataZoom: [{
-                type: 'inside',
-                throttle: 50
-            }],
-            series: [
-              {
-                  name:'当月同比_估测值',
-                  type:'line',
-                  data:data.gcMap,
-                  symbol: 'none',  //取消折点圆圈
-                  itemStyle : {
-                        normal : {
-                        color:'#0e9cff', //改变折线点的颜色
-                        lineStyle:{
-                        color:'#0e9cff' //改变折线颜色
-                        }
-                        }
-                  },
-              },
-              {
-                  name:'当月同比_实际值',
-                  type:'line',
-                  data:data.sjMap,
-                  symbol: 'none',
-                  itemStyle : {
-                        normal : {
-                        color:'#f38143',
-                        lineStyle:{
-                        color:'#f38143'
-                        }
-                        }
-                  },
-              }
-            ]
-             }
-             return option;
-      },
-
-
-
-
-    },
-  };
+  }
+}
 </script>
