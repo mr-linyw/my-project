@@ -37,13 +37,10 @@
           let _this = this;
           let myChart = document.getElementById(id)
           if(this.ChartLineGraph){
-            this.ChartLineGraph.clear();
+
           }
           this.ChartLineGraph = this.$echarts.init(myChart)
-
-
-
-          this.ChartLineGraph.setOption(data);
+          this.ChartLineGraph.setOption(data,true);
           window.addEventListener("resize",function () {
             _this.ChartLineGraph.resize(); //网页自适应
           })

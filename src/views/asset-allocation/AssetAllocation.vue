@@ -382,6 +382,7 @@
         this.isShowInfoModal = false;
       },
       configClick(){
+        console.log(localStorage.getItem("infoContentShow"));
           if(localStorage.getItem("infoContentShow") !== "0"){
             this.infoContentCheckbox = false;
             this.isShowInfoModal = true;
@@ -406,4 +407,3 @@
     },
   };
 </script>
-

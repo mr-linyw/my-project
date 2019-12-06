@@ -20,11 +20,12 @@
 
         </a-collapse-panel>
         </a-collapse>
+        <div class="kg"></div>
         <a-collapse  v-model="activeKey" >
           <template v-slot:expandIcon="props" >
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
-        <a-collapse-panel header="宏观经济指标" key="1"  >
+        <a-collapse-panel header="宏观经济指标" key="2"  >
           <div class="macroData-left">
              <echartsUtil :id="'5'" :data="GDPOption" style="height:200px;"></echartsUtil>
              <echartsUtil :id="'6'" :data="CPIOption" style="height:200px;"></echartsUtil>
@@ -58,9 +59,21 @@ import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
     data() {
       return {
         moment,
-        activeKey:[1],
-        option:{},
-        option2:{},
+        activeKey:[1,2],
+        hushenOption:{},
+        windOption:{},
+        govOption:{},
+        cashOption:{},
+        GDPOption:{},
+        CPIOption:{},
+        PPIOption:{},
+        hushendate:[],
+        winddate:[],
+        govdate:[],
+        cashdate:[],
+        GDPhdate:[],
+        CPIdate:[],
+        PPIdate:[],
     }
   },
     created(){

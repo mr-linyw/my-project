@@ -128,7 +128,7 @@
     </div>
   </modal>
   <!-- 风险提示modal模板 -->
-  <modal  :show="isShowInfoModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true"  title="风险提示">
+  <modal  :show="isShowModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true"  title="风险提示">
   <div class="infoContent" slot="body">
     <div style="text-align: left">
       <li><span class="tishi">尊敬的客户：</span></li>
@@ -192,7 +192,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
 
         infoContentCheckbox:false,
         isShowInfoModal:false,
-
+        isShowModal:false,
         //图表数据
         stockdata:[],
         stockOption:{},
@@ -342,8 +342,6 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
   },
 
     created(){
-
-
     },
     mounted(){
       let that = this;
@@ -437,12 +435,20 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
 
       // stockFOF构建
       stockFOFbuild(){
-           this.isShowInfoModal = true;
+        if(localStorage.getItem("infoContentShow") !== "0"){
+            this.infoContentCheckbox = false;
+            this.isShowInfoModal = true;
+          }
+
            this.typeValue="stock";
       },
       // stockFOF构建
       bondFOFbuild(){
-          this.isShowInfoModal = true;
+        if(localStorage.getItem("infoContentShow") !== "0"){
+            this.infoContentCheckbox = false;
+            this.isShowInfoModal = true;
+          }
+        
           this.typeValue="bond";
       },
       // 下拉框选择
@@ -452,7 +458,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
 
      // 查看风险提示详情
      viewDetails(){
-       this.isShowInfoModal=true;
+       this.isShowModal=true;
      },
      modalOKModal(){
 
