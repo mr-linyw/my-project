@@ -70,7 +70,7 @@ export default{
 
     },
     get(url,data){//get请求
-      return new Promise((cback, reject) => {
+      return new Promise((resolve, reject) => {
         return service({
             method:'get',
             url,
@@ -78,11 +78,11 @@ export default{
             withCredentials: true,
 
         }).then(res => {
-            return successfun(res)
+          // let r = successfun(res);
+          resolve(res);
         },err => {
             return errorfun(err);
         })
-
       })
 
     },

@@ -39,8 +39,17 @@
 }
 .an-content-5Row{
   width: 100%;
-  height: 772px;
+  height: auto;
 }
+
+.an-content-6Row{
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  margin-top: 38px;
+}
+
 .AssetAllocation-content{
   height: 100%;
   width: 100%;
@@ -84,6 +93,11 @@
   height: 30px;width: 120px;background-color: #db534e;
 }
 
+.ant-btn:hover, .ant-btn:focus, .ant-btn:active, .ant-btn.active{
+  background-color: #db534e!important;
+  border: solid 1px transparent !important;
+}
+
 .ant-select-selection-selected-value{
   font-size: 14px;
   color: #666;
@@ -119,4 +133,32 @@ body .ant-select-dropdown-menu-item{
 .infoCheckBoxContent{
   position: relative;
   top: 15px;
+}
+.AssetAllocation .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
+    padding: 12px 7px !important;
+}
+.AssetAllocation  .ant-table-pagination.ant-pagination{
+  display: none;
+}
+.AssetAllocation .pieContent{
+  width: 100%;height: 100%;display: flex;
+}
+.AssetAllocation .pieContent .Row4_left{
+      width: 60%;
+      height: 100%;
+}
+
+.AssetAllocation .pieContent .Row4_right{
+  width: 30%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  color: #444;
+  font-weight: bold;
+}
+.AssetAllocation .noData{
+  font-weight: bold;
+  font-size: 22px;
+  color: #444;
 }

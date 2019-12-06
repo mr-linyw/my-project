@@ -1,99 +1,75 @@
 <template>
-    <div class="eLine"></div>
+  <div class="ePie">
+    <div v-show="!noData" class="chartContent"></div>
+    <div v-show="noData" class="noData">暂无数据...</div>
+  </div>
 </template>
 
 <script>
-    export default {
-        name: "eLine",
-        data(){
-            return {
-              chart:null,
-              errorMsg:"",
-              params:null,
-              startValue:null,
-              endValue: null,
-          }
-        },
-      created(){
-        let _t = this;
-        $.ajax({
-          url: "http://125.208.12.66:9877/asset/allocationWeightNetvalue/allocationResult/1/1",
-          success: function (result) {
-            _t.params = _t.initData(result);
-          },
-          dataType: "json"
-        });
-      },
-        methods:{
-          initData(data){
-            let d  = data;
-            console.log(d);
-            if(d.length <= 0){
-              this.errorMsg =  "暂无数据";
-              return;
-            }
-            let params = {
-              legend: {
-                data:['沪深300','国债全收益','wind商品','货币现金'],
-                orient: 'vertical',
-                right: 10,
-                top: 20,
-                bottom: 20,
-                textStyle:{
-                  color:"#777"
-                }
-              },
-              xAxis : [
-                {
-                  type: 'category',
-                  data: [],
-                  axisLabel: {
-                    color: '#777',
-                    rotate: '35',
-                  }
-                }
-              ],
-              series:[
-                {
-                  name: '沪深300',
-                  type: 'bar',
-                  stack: '总值',
-                  data: [],
-                  itemStyle:{
-                    color:"#D42539"
-                  }
-                }
-              ]
-            };
-            return params;
-          },
-          drawByData(params){
-            if(!this.chart){
-              let $el = this.$el, echarts = this.$echarts;
-              this.chart = echarts.init($el);
-            }
-
-            if(!params){
-              return;
-            }
-            let {legend,xAxis,series} = params;
-            let option = {
-              xAxis,
-              legend,
-              yAxis: {
-                type: 'value'
-              },
-              series
-            };
-            this.chart.setOption(option);
+  export default {
+    name: "ePie",
+    props:["params"],
+    data(){
+      return {
+        chart:null,
+        errorMsg:"",
+        startValue:null,
+        endValue: null,
+        noData:true
+      }
+    },
+    watch:{
+      params(val){
+        this.noData = val.series[0].data.length <= 0;
+        this.drawByData(val);
+      }
+    },
+    methods:{
+      drawByData(params){
+        if(!this.chart){
+          let $el = this.$el.children[0], echarts = this.$echarts;
+          this.chart = echarts.init($el);
+          let _t = this;
+          window.onresize = function () {
+            _t.chart.resize();
           }
         }
+
+        if(!params){
+          return;
+        }
+        let {legend,series} = params;
+
+        let option = {
+          tooltip : {
+            trigger: 'item',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+              type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            },
+            formatter: '{b0}{c0}%'
+          },
+          legend,
+          series
+        };
+        this.chart.setOption(option);
+        this.$nextTick(function () {
+          this.chart.resize();
+        });
+      }
     }
+  }
 </script>
 
 <style scoped>
 
-  .eLine{
+  .ePie{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ePie .chartContent{
     width: 100%;
     height: 100%;
   }
