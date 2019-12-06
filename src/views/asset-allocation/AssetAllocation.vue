@@ -190,6 +190,12 @@
 
       }
     },
+    mounted(){
+      let chartResize = new Event('chartResize');
+      window.onresize = function () {
+        window.dispatchEvent(chartResize);
+      }
+    },
     created(){
       //策略风险特征PK
       this.$http.get(this.$url.resultOfRisk).then(result => {
