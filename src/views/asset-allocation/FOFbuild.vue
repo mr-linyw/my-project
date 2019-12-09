@@ -3,68 +3,65 @@
     <div class="fofbuild-top">
 
       <a-form layout="inline">
-      <a-collapse  v-model="activeKey" >
+
         <template v-slot:expandIcon="props" >
-          <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
+          <a-icon type="" :rotate="props.isActive ? 90 : 0" />
         </template>
+         <div class="span-header">&nbsp;股票型</div>
+          <div class="span-header-body">
+            <a-row :gutter="24">
+                 <a-col :md="5" :sm="8">
+                   <a-form-item label="风格偏好">
+                     <a-select style="width:100px" @change="handleChange" v-model="params.stylePreference">
+                       <a-select-option v-for="item in stylePreferenceOption" :key="item.key">{{item.value}}</a-select-option>
+                     </a-select>
+                  </a-form-item>
+                 </a-col>
 
-          <a-collapse-panel header="股票型" key="1" >
-              <a-row :gutter="24">
-                   <a-col :md="5" :sm="8">
-                     <a-form-item label="风格偏好">
-                       <a-select style="width:100px" @change="handleChange" v-model="params.stylePreference">
-                         <a-select-option v-for="item in stylePreferenceOption" :key="item.key">{{item.value}}</a-select-option>
-                       </a-select>
-                    </a-form-item>
-                   </a-col>
+                 <a-col :md="5" :sm="8">
+                   <a-form-item label="规模偏好">
+                     <a-select style="width:120px" @change="handleChange" v-model="params.stockSizeRequirement">
+                       <a-select-option v-for="item in sizeRequirementOption" :key="item.key">{{item.value}}</a-select-option>
+                     </a-select>
+                  </a-form-item>
+                 </a-col>
 
-                   <a-col :md="5" :sm="8">
-                     <a-form-item label="规模偏好">
-                       <a-select style="width:120px" @change="handleChange" v-model="params.stockSizeRequirement">
-                         <a-select-option v-for="item in sizeRequirementOption" :key="item.key">{{item.value}}</a-select-option>
-                       </a-select>
-                    </a-form-item>
-                   </a-col>
+                 <a-col :md="6" :sm="8">
+                   <a-form-item label="是否包含指数增强型基金">
+                     <a-select  style="width:100px" @change="handleChange" v-model="params.isIndexEnhanced">
+                       <a-select-option v-for="item in isIndexEnhancedOption" :key="item.key">{{item.value}}</a-select-option>
+                     </a-select>
+                  </a-form-item>
+                 </a-col>
+                 <a-col :md="6" :sm="24">
+                     <el-button size="mini" type="danger" round class="btn-fof" @click="stockFOFbuild">构建FOF</el-button>
+                 </a-col>
+             </a-row>
 
-                   <a-col :md="6" :sm="8">
-                     <a-form-item label="是否包含指数增强型基金">
-                       <a-select  style="width:100px" @change="handleChange" v-model="params.isIndexEnhanced">
-                         <a-select-option v-for="item in isIndexEnhancedOption" :key="item.key">{{item.value}}</a-select-option>
-                       </a-select>
-                    </a-form-item>
-                   </a-col>
-                   <a-col :md="6" :sm="24">
-                       <el-button size="mini" type="danger" round class="btn-fof" @click="stockFOFbuild">构建FOF</el-button>
-                   </a-col>
-               </a-row>
+             <!-- table -->
+             <template >
+               <div class="table-svg">
+                 <a-table :columns="stockcolumns" :dataSource="stockTableData" :pagination='false' @change="handleChange" bordered>
 
-               <!-- table -->
-               <template >
-                 <div class="table-svg">
-                   <a-table :columns="stockcolumns" :dataSource="stockTableData" :pagination='false' @change="handleChange" bordered>
+                 </a-table>
+               </div>
 
-                   </a-table>
-                 </div>
+              </template>
 
-                </template>
+             <!-- 图表 -->
 
-               <!-- 图表 -->
+          <div class="fofbuild-top-echartsUtil">
+             <echartsUtil :id="'1'" :data="stockOption" style="height:252px;"></echartsUtil>
+          </div>
 
-            <div class="fofbuild-top-echartsUtil">
-               <echartsUtil :id="'1'" :data="stockOption" style="height:252px;"></echartsUtil>
-            </div>
-
-          </a-collapse-panel>
+          </div>
 
 
-       </a-collapse>
+
        <div class="kg"></div>
-       <!-- @change="changeActivekey" -->
-       <a-collapse  v-model="activeKey"  >
-         <template v-slot:expandIcon="props" >
-           <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
-         </template>
-        <a-collapse-panel header="债券型" key="1"  >
+       <div class="span-header">&nbsp;债券型</div>
+        <div class="span-header-body">
+
           <a-row :gutter="24">
 
 
@@ -112,8 +109,7 @@
 
          </div>
 
-        </a-collapse-panel>
-      </a-collapse>
+      </div>
    </a-form>
     </div>
     <!-- 声明modal模板 -->
@@ -128,7 +124,7 @@
     </div>
   </modal>
   <!-- 风险提示modal模板 -->
-  <modal  :show="isShowModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true"  title="风险提示">
+  <modal  :show="isShowModals" @confirm="modalOKs" @close="modalCloses" :showConfirm="true"   title="风险提示">
   <div class="infoContent" slot="body">
     <div style="text-align: left">
       <li><span class="tishi">尊敬的客户：</span></li>
@@ -190,7 +186,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
 
         infoContentCheckbox:false,
         isShowInfoModal:false,
-        isShowModal:false,
+        isShowModals:false,
         //图表数据
         stockdata:[],
         stockOption:{},
@@ -363,7 +359,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         that.$http.get(that.$url.stockFundUrl+"/"+value).then(res=>{
           //初始化生成折线图的数据
           that.stockdata=res;
-          that.stockOption = twoOption('',that.getEcharsData(that.stockdata),"股基FOF组合","基准组合");
+          that.stockOption = twoOption('',that.getStockEcharsData(that.stockdata),"股基FOF组合","基准组合");
         });
       },
       bondloadData(){
@@ -380,7 +376,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         that.$http.get(that.$url.bondFundUrl+"/"+that.params.bondSizeRequirement).then(res=>{
           //初始化生成折线图的数据
           that.bonddata=res;
-          that.bondOption = twoOption('',that.getEcharsData(that.bonddata),"股基FOF组合","基准组合");
+          that.bondOption = twoOption('',that.getBondEcharsData(that.bonddata),"股基FOF组合","基准组合");
         });
       },
       //获取股票型历史表现图表的参数
@@ -411,7 +407,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         }
       },
       //股票型图表数据
-      getEcharsData(dataSource){
+      getStockEcharsData(dataSource){
         let that = this;
         let dateMap=[];
         let blueMap=[];
@@ -419,16 +415,16 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
           dataSource.map((item,index)=>{
            dateMap.push(moment(item.tradeDate).format('YYYY/MM/DD'));  //时间map
            if(that.params.stylePreference==0){
-             blueMap.push(item.largeCap);//蓝色折线map  估测值
-             redMap.push(item.largeCapBenchmark);
+             blueMap.push(item.largeCap);//蓝色折线map   股基FOF组合
+             redMap.push(item.largeCapBenchmark);  //红色折线map     基准组合
            }
            if(that.params.stylePreference==1){
              blueMap.push(item.middleCap);
-             redMap.push(item.middleCapBenchmark);  //红色折线map    实际值
+             redMap.push(item.middleCapBenchmark);
            }
            if(that.params.stylePreference==2){
              blueMap.push(item.smallCap);
-             redMap.push(item.smallCapBenchmark);  //红色折线map    实际值
+             redMap.push(item.smallCapBenchmark);
            }
        });
        let data={
@@ -438,6 +434,26 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
        };
        return data;
       },
+      //债券型图表数据
+      getBondEcharsData(dataSource){
+        let that = this;
+        let dateMap=[];
+        let blueMap=[];
+        let redMap=[];
+          dataSource.map((item,index)=>{
+           dateMap.push(moment(item.tradeDate).format('YYYY/MM/DD'));  //时间map
+             blueMap.push(item.benchmark); //蓝色折线map  股基FOF组合
+             redMap.push(item.protfolio);  //红色折线map     基准组合
+
+       });
+       let data={
+         dateMap:dateMap,
+         blueMap:blueMap,
+         redMap:redMap
+       };
+       return data;
+      },
+
 
       // stockFOF构建
       stockFOFbuild(){
@@ -469,7 +485,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
 
      // 查看风险提示详情
      viewDetails(){
-       this.isShowModal=true;
+       this.isShowModals=true;
      },
      modalOKModal(){
 
@@ -486,11 +502,15 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
             this.bondloadData();
          }
 
-
-
       },
       modalClose(){
         this.isShowInfoModal = false;
+      },
+      modalOKs(){
+        this.isShowModals = false;
+      },
+      modalCloses(){
+        this.isShowModals = false;
       },
       configClick(){
           if(localStorage.getItem("infoContentShow") !== "0"){

@@ -26,13 +26,21 @@
     background-color: #F56C6C;
 }
 
-.fofbuild-top .ant-collapse-header{
-  height:28px;
-  line-height: 8px !important;
-  color:	#FFFFFF !important;
+.fofbuild-top .span-header{
+
+  text-align: left;
+  width: 1537px;
+  height:30px;
+  line-height: 30px ;
+  color: rgba(0, 0, 0, 0.85);
   font-size: 15px;
   background: #868B9E ;
 
+}
+.span-header-body{
+  margin-top: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 .ant-col-sm-8.ant-col-md-5{
   margin-bottom: 12px;
