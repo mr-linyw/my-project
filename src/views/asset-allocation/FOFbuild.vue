@@ -438,18 +438,24 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         if(localStorage.getItem("infoContentShow") !== "0"){
             this.infoContentCheckbox = false;
             this.isShowInfoModal = true;
+             this.typeValue="stock";
+          }else{
+            console.log(1111);
+            this.stockloadData();
           }
 
-           this.typeValue="stock";
+
       },
       // stockFOF构建
       bondFOFbuild(){
         if(localStorage.getItem("infoContentShow") !== "0"){
             this.infoContentCheckbox = false;
             this.isShowInfoModal = true;
+             this.typeValue="bond";
+          }else{
+            this.bondloadData();
           }
-        
-          this.typeValue="bond";
+
       },
       // 下拉框选择
      handleChange(value,option){
