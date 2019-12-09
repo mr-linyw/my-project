@@ -173,9 +173,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
 
     data() {
       return {
-        dateMap:[],
-        blueMap:[],
-        redMap:[],
+
         stylePreferenceOption:[{key:0,value:"大盘型"},{key:1,value:"中盘型"},{key:2,value:"小盘型"}],
         sizeRequirementOption:[{key:0,value:"无要求"},{key:1,value:"2亿以上"},{key:2,value:"10亿以上"}],
         isIndexEnhancedOption:[{key:0,value:"否"},{key:1,value:"是"}],
@@ -409,26 +407,28 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
       //股票型图表数据
       getEcharsData(dataSource){
         let that = this;
-
+        let dateMap=[];
+        let blueMap=[];
+        let redMap=[];
           dataSource.map((item,index)=>{
-           that.dateMap.push(moment(item.tradeDate).format('YYYY/MM/DD'));  //时间map
+           dateMap.push(moment(item.tradeDate).format('YYYY/MM/DD'));  //时间map
            if(that.params.stylePreference==0){
-             that.blueMap.push(item.largeCap);//蓝色折线map  估测值
-             that.redMap.push(item.largeCapBenchmark);
+             blueMap.push(item.largeCap);//蓝色折线map  估测值
+             redMap.push(item.largeCapBenchmark);
            }
            if(that.params.stylePreference==1){
-             that.blueMap.push(item.middleCap);
-             that.redMap.push(item.middleCapBenchmark);  //红色折线map    实际值
+             blueMap.push(item.middleCap);
+             redMap.push(item.middleCapBenchmark);  //红色折线map    实际值
            }
            if(that.params.stylePreference==2){
-             that.blueMap.push(item.smallCap);
-             that.redMap.push(item.smallCapBenchmark);  //红色折线map    实际值
+             blueMap.push(item.smallCap);
+             redMap.push(item.smallCapBenchmark);  //红色折线map    实际值
            }
        });
        let data={
-         dateMap:that.dateMap,
-         blueMap:that.blueMap,
-         redMap:that.redMap
+         dateMap:dateMap,
+         blueMap:blueMap,
+         redMap:redMap
        };
        return data;
       },
