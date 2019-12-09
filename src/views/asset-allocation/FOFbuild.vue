@@ -353,6 +353,9 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         let stockurl = "/"+that.params.stylePreference+"/"+that.params.stockSizeRequirement+"/"+that.params.isIndexEnhanced;
         that.$http.get(that.$url.stockTableUrl+stockurl).then(res=>{
           //初始化table数据
+          res.forEach(item=>{
+            item.issueDate=moment().format("YYYY/MM/DD");
+          })
           that.stockTableData=res;
         });
         //股票型图表数据
@@ -368,6 +371,9 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         //债券型table数据
         that.$http.get(that.$url.bondTableUrl+"/"+that.params.bondSizeRequirement).then(res=>{
           //初始化table数据
+          res.forEach(item=>{
+            item.issueDate=moment().format("YYYY/MM/DD");
+          })
           that.bondTableData=res;
         });
         //债券型图表数据
@@ -440,7 +446,6 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
             this.isShowInfoModal = true;
              this.typeValue="stock";
           }else{
-            console.log(1111);
             this.stockloadData();
           }
 
