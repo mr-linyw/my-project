@@ -51,7 +51,14 @@
              <!-- 图表 -->
 
           <div class="fofbuild-top-echartsUtil">
-             <echartsUtil :id="'1'" :data="stockOption" style="height:252px;"></echartsUtil>
+            <div v-if="isStock">
+               <echartsUtil :id="'1'" :data="stockOption" style="height:252px;"></echartsUtil>
+            </div>
+            <div v-else class= "zwf" >
+              <img  src="@/assets/空白占位符.png">
+              <span>点击【构建FOF】按钮，加载数据</span>
+            </div>
+
           </div>
 
           </div>
@@ -91,7 +98,14 @@
            <!-- 图表 -->
 
         <div class="fofbuild-top-echartsUtil">
-           <echartsUtil :id="'2'" :data="bondOption" style="height:252px;"></echartsUtil>
+           <div v-if="isBond">
+               <echartsUtil :id="'2'" :data="bondOption" style="height:252px;"></echartsUtil>
+           </div>
+           <div v-else class= "zwf" >
+             <img  src="@/assets/空白占位符.png">
+             <span>点击【构建FOF】按钮，加载数据</span>
+           </div>
+
         </div>
 
         <!-- 提示 -->
@@ -124,7 +138,7 @@
     </div>
   </modal>
   <!-- 风险提示modal模板 -->
-  <modal  :show="isShowModals" @confirm="modalOKs" @close="modalCloses" :showConfirm="true"   title="风险提示">
+  <modal-scroll  :show="isShowModals" @confirm="modalOKs" :showConfirm="true"   title="风险提示">
   <div class="infoContent" slot="body">
     <div style="text-align: left">
       <li><span class="tishi">尊敬的客户：</span></li>
@@ -147,7 +161,7 @@
       <li><span>7、任何系统的使用都是建立在专属密码登录的前提下，凡您使用专属账号及密码进行的交易、查询及其他行为，均视为您本人的行为，请妥善保管自己的密码，由于您管理不善造成的密码泄露所带来的损失，公司不承担任何责任</span></li>
     </div>
   </div>
-</modal>
+</modal-scroll>
   </div>
 
 
@@ -159,12 +173,13 @@ import '@/style/fofbuild.css'
 import moment from 'moment';
 import echartsUtil from '@/echartsUtil/echartsUtil'
 import modal from '@/modal/Modal'
+import modalScroll from '@/modal/modalScroll'
 import {twoOption} from '@/echartsUtil/echartsOptions'
 
 
   export default {
     components : {
-      echartsUtil,modal
+      echartsUtil,modal,modalScroll
     },
 
     data() {
@@ -182,8 +197,6 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         stockTableData:[],//股票型table
         bondTableData:[],//债券型table
         moment,
-        activeKey:[1,2],
-
         infoContentCheckbox:false,
         isShowInfoModal:false,
         isShowModals:false,
@@ -194,7 +207,8 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         bonddata:[],
         bondOption:{},
         typeValue:'',
-
+        isStock:false,
+        isBond:false,
     }
   },
     computed:{
@@ -337,11 +351,11 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
 
     created(){
     },
-    mounted(){
-      let that = this;
-       that.stockloadData();
-       that.bondloadData();
-    },
+    // mounted(){
+    //   let that = this;
+    //    that.stockloadData();
+    //    that.bondloadData();
+    // },
     methods:{
       stockloadData(){
         let that = this;
@@ -350,16 +364,21 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         that.$http.get(that.$url.stockTableUrl+stockurl).then(res=>{
           //初始化table数据
           res.forEach(item=>{
-            item.issueDate=moment().format("YYYY/MM/DD");
+            item.issueDate=moment(item.issueDate).format("YYYY/MM/DD");
           })
           that.stockTableData=res;
+          if(res.length>0){
+            that.isStock=true;
+          }else{
+            that.isStock=false;
+          }
         });
         //股票型图表数据
         let value = that.getParam(that.params.isIndexEnhanced,that.params.stockSizeRequirement);
         that.$http.get(that.$url.stockFundUrl+"/"+value).then(res=>{
           //初始化生成折线图的数据
           that.stockdata=res;
-          that.stockOption = twoOption('',that.getStockEcharsData(that.stockdata),"股基FOF组合","基准组合");
+          that.stockOption = twoOption('历史表现',that.getStockEcharsData(that.stockdata),"股基FOF组合","基准组合");
         });
       },
       bondloadData(){
@@ -368,15 +387,21 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         that.$http.get(that.$url.bondTableUrl+"/"+that.params.bondSizeRequirement).then(res=>{
           //初始化table数据
           res.forEach(item=>{
-            item.issueDate=moment().format("YYYY/MM/DD");
+            item.issueDate=moment(item.issueDate).format("YYYY/MM/DD");
           })
           that.bondTableData=res;
+          that.stockTableData=res;
+          if(res.length>0){
+            that.isBond=true;
+          }else{
+            that.isBond=false;
+          }
         });
         //债券型图表数据
         that.$http.get(that.$url.bondFundUrl+"/"+that.params.bondSizeRequirement).then(res=>{
           //初始化生成折线图的数据
           that.bonddata=res;
-          that.bondOption = twoOption('',that.getBondEcharsData(that.bonddata),"股基FOF组合","基准组合");
+          that.bondOption = twoOption('历史表现',that.getBondEcharsData(that.bonddata),"股基FOF组合","基准组合");
         });
       },
       //获取股票型历史表现图表的参数
@@ -509,15 +534,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
       modalOKs(){
         this.isShowModals = false;
       },
-      modalCloses(){
-        this.isShowModals = false;
-      },
-      configClick(){
-          if(localStorage.getItem("infoContentShow") !== "0"){
-            this.infoContentCheckbox = false;
-            this.isShowInfoModal = true;
-          }
-      },
+
       infoContentChange(e){
         this.infoContentCheckbox = e.target.checked
       },

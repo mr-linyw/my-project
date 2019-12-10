@@ -1,7 +1,7 @@
 <template>
     <div class="rAa">
         <div v-show="!noData" class="chartContent"></div>
-        <div v-show="noData" class="noData">暂无数据...</div>
+        <div v-show="noData" class="noData"><img  src="@/assets/空白占位符.png"><span style="fontSize:16px">点击【配置】按钮，加载数据</span></div>
     </div>
 </template>
 
@@ -48,7 +48,6 @@
        methods:{
             initData(data){
                   let d  = data;
-                  console.log(d);
                   if(d.length <= 0){
                       this.errorMsg =  "暂无数据";
                       return;

@@ -33,7 +33,17 @@
                   <e-line :params="chartData"></e-line>
               </div>
             </div>
-
+            <!-- 声明modal模板 -->
+            <modal  :show="isShowInfoModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true" title="免责声明">
+            <div class="infoContent" slot="body">
+              <div style="text-align: left">
+                投资有风险，本网页的任何数据及其衍生产品仅供参考。资产配置平台系统依据市场公开数据及外购数据源作为计算基础数据，本公司将会尽力但不保证基础数据的及时性、准确性、真实性和完整性，不承担因任何数据不准确或遗漏等造成的任何损失或损害的责任。投资者在依据相关信息进行投资操作时，应当进行自主判断，所导致的盈亏由投资者自行承担。浏览本页面或使用本功能即表示投资者同意所载免责声明。
+              </div>
+              <div class="infoCheckBoxContent">
+                <a-checkbox  :checked="infoCheckbox" @change="infoContentChange">下次不再提示</a-checkbox>
+              </div>
+            </div>
+          </modal>
     </div>
 </template>
 
@@ -62,13 +72,16 @@
   ];
     import moment from 'moment';
     import eLine from '@/components/AssetAllocation/eLine'
+    import modal from '@/modal/Modal'
     export default {
       name: "gridAndLineByGP",
       components:{
-        eLine
+        eLine,modal
       },
       data(){
         return{
+          infoCheckbox:false,
+          isShowInfoModal:false,
           data:[],
           chartData:[],
           params:{},
@@ -134,8 +147,26 @@
         }
       },
       methods:{
-        buildStockFOF(){
+        infoContentChange(e){
+          this.infoCheckbox = e.target.checked
+        },
+        modalOK(data){
+             if(this.infoCheckbox){
+               localStorage.setItem("infoCheckbox","0");
+             }
+             this.isShowInfoModal = false;
             this.params = {stylePreference:this.stylePreference,isIndexEnhanced:this.isIndexEnhanced,sizeRequirement:this.sizeRequirement}
+         },
+         modalClose(){
+           this.isShowInfoModal = false;
+         },
+        buildStockFOF(){
+          if(localStorage.getItem("infoCheckbox") !== "0"){
+              this.infoCheckbox = false;
+              this.isShowInfoModal = true;
+            }else{
+              this.params = {stylePreference:this.stylePreference,isIndexEnhanced:this.isIndexEnhanced,sizeRequirement:this.sizeRequirement}
+            }
         },
         isIndexEnhanced_do(val){
             this.isIndexEnhanced = val;

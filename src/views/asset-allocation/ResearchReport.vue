@@ -2,15 +2,15 @@
 
     <div class="header">
       <div class="header-tabs">
-        <el-tabs  v-model="activeName" >
+        <el-tabs  v-model="activeName" @tab-click="handleClick">
           <!-- 宏观政策按钮
              class="left"
              class="right" 代表左右布局
             -->
           <el-tab-pane label="宏观政策"  name="first">
             <div class="left">
-                <a-list itemLayout="horizontal" :dataSource="firstData">
-                  <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item)">
+                <a-list itemLayout="horizontal" :dataSource="firstData" >
+                  <a-list-item  slot="renderItem" slot-scope="item, index" @click="jumpDetails(item)">
                      <a-list-item-meta>
                          <span slot="title" >
                            <a-tooltip>
@@ -31,7 +31,7 @@
                </a-list>
             </div>
             <div class="right">
-                  <a-list itemLayout="horizontal" :dataSource="secondData">
+                  <a-list itemLayout="horizontal" :dataSource="secondData" >
                     <a-list-item slot="renderItem" slot-scope="item, index" @click="jumpDetails(item)">
                       <a-list-item-meta>
                           <span slot="title">
@@ -103,27 +103,13 @@
       </div>
       <!-- 分页 -->
       <div class="footer">
-        <div  style="float:right;margin-top : 40px">
-           <template>
-              <!-- showSizeChanger   @showSizeChange="onShowSizeChange"
-               @change="changeFind"-->
-             <a-pagination
-               :pageSizeOptions="ipagination.pageSizeOptions"
-               :total="ipagination.total"
-               :pageSize="ipagination.pageSize"
-               v-model="ipagination.current"
-
-             >
-                 <!-- <template slot='buildOptionText' slot-scope='props'>
-                   <span>{{props.value}}条/页</span>
-                 </template> -->
-               </a-pagination>
-           </template>
+        <div  style="float:right;margin-top : 20px">
+               <template>
+                  <a-pagination v-model="current" :total="total"  :pageSize="20"  @change="changeFind"/>
+                </template>
         </div>
       </div>
     </div>
-
-
 </template>
 
 <script>
@@ -134,42 +120,39 @@ import {mouseover,mouseout,mousemove} from '@/components/utilJs/ellipsis'
 
     data() {
       return {
+      pageName:"first",
+       current:1,
+       total:0,
         params:{
           "type":1,
-          "pageNo":1,
-          "pageSize":8
+          "pageNo":0,
+          "pageSize":20
+        },
+        params2:{
+          "type":2,
+          "pageNo":0,
+          "pageSize":20
         },
         moment,
         id:'1',
         firstData:[],
         secondData:[],
         activeName:"first",
-
-            /* 分页参数 */
-           ipagination:{
-            current: 1,
-            pageSize: 8,
-            // pageSizeOptions: ['10', '20', '30'],
-            // showTotal: (total, range) => {
-            //   return range[0] + "-" + range[1] + " 共" + total + "条"
-            // },
-            showQuickJumper: true,
-            showSizeChanger: true,
-            total: 2,
-          },
-
       };
     },
     created(){
-
     },
     mounted(){
       let that = this;
 
      //获取列表数据
      that.$http.post(that.$url.reportUrl,that.params).then(res=>{
-          that.firstData= res.result.records.slice(0,4);
-         that.secondData=res.result.records.slice(4,8);
+         that.total = res.result.total;
+         that.current = res.result.current;
+         that.firstData=[];
+         that.secondData=[];
+         that.firstData= res.result.records.slice(0,10);
+         that.secondData=res.result.records.slice(10,20);
      });
     },
 
@@ -177,7 +160,60 @@ import {mouseover,mouseout,mousemove} from '@/components/utilJs/ellipsis'
       jumpDetails(item){
         window.open(this.$router.resolve({ name:'Details',query: {id:item.id,name:item.autherName}}).href,"_blank");
       },
+      //分页
+      changeFind(page, pageSize){
+        let that = this;
+        let data={};
+         if(that.pageName=="first"){
+           let param={
+             "type":1,
+             "pageNo":page,
+             "pageSize":pageSize
+           }
+           data = param;
+         }else{
+           let param={
+             "type":2,
+             "pageNo":page,
+             "pageSize":pageSize
+           }
+            data = param;
+         }
+         //获取列表数据
+         that.$http.post(that.$url.reportUrl,data).then(res=>{
+             that.total = res.result.total;
+             that.current = res.result.current;
+             that.firstData=[];
+             that.secondData=[];
+             that.firstData= res.result.records.slice(0,10);
+             that.secondData=res.result.records.slice(10,20);
+         });
+      },
+      handleClick(tab, event){
+        let that = this;
+        that.firstData=[];
+        that.secondData=[];
+        that.pageName=tab.name;
+        //获取列表数据
+        if(tab.name=='first'){
+          that.$http.post(that.$url.reportUrl,that.params).then(res=>{
+            that.total = res.result.total;
+            that.current = res.result.current;
+              that.firstData= res.result.records.slice(0,10);
+              that.secondData=res.result.records.slice(10,20);
+          });
+        }else{
+          that.$http.post(that.$url.reportUrl,that.params2).then(res=>{
+            that.total = res.result.total;
+            that.current = res.result.current;
+              that.firstData= res.result.records.slice(0,10);
+              that.secondData=res.result.records.slice(10,20);
+          });
+        }
+
+      },
     },
+
     destroyed() {
     // 销毁监听刷新事件
         window.removeEventListener('beforeunload', this.saveStore)

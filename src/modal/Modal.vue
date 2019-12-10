@@ -10,7 +10,10 @@
           </slot>
         </div>
         <div class="modal-body" id="modalDescription">
-          <slot name="body"></slot>
+          <div>
+              <slot name="body"></slot>
+          </div>
+
         </div>
         <div class="modal-footer">
           <slot name="footer">

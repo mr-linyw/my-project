@@ -1,7 +1,7 @@
 <template>
   <div class="ePie">
     <div v-show="!noData" class="chartContent"></div>
-    <div v-show="noData" class="noData">暂无数据...</div>
+    <div v-show="noData" class="noData"><img  src="@/assets/空白占位符.png"></div>
   </div>
 </template>
 

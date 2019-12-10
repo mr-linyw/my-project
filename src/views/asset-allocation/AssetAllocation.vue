@@ -27,14 +27,14 @@
       </an-panel>
     </div>
     <div class="an-content-3Row">
-      <div class="an-content-1Col">
+      <div  class="an-content-1Col">
         <an-panel panelTitle="策略风险特征PK-收益波动回撤">
-          <e-bar :params="resultOfRisk_l"></e-bar>
+            <e-bar :params="resultOfRisk_l"></e-bar>
         </an-panel>
       </div>
       <div class="an-content-2Col">
         <an-panel panelTitle="策略风险特征PK-风险调整后收益指标">
-          <e-bar :params="resultOfRisk_r"></e-bar>
+            <e-bar :params="resultOfRisk_r"></e-bar>
         </an-panel>
       </div>
     </div>
@@ -134,6 +134,7 @@
     },
     data() {
       return {
+        isConfig:false,
            baseConfigParams:{
               cm:null,  //资产配置方法
               cl:null   //货币现金上线
@@ -197,11 +198,7 @@
       }
     },
     created(){
-      //策略风险特征PK
-      this.$http.get(this.$url.resultOfRisk).then(result => {
-        this.do_resultOfRisk_l(result);
-        this.do_resultOfRisk_r(result);
-      });
+
     },
      watch:{
         baseConfigParams(val){
@@ -382,7 +379,6 @@
         this.isShowInfoModal = false;
       },
       configClick(){
-        console.log(localStorage.getItem("infoContentShow"));
           if(localStorage.getItem("infoContentShow") !== "0"){
             this.infoContentCheckbox = false;
             this.isShowInfoModal = true;
@@ -392,7 +388,12 @@
           }else{
             this.baseConfigParams = {cm:this.cm ,cl:this.cl};
           }
-
+          //策略风险特征PK
+          this.$http.get(this.$url.resultOfRisk).then(result => {
+            this.do_resultOfRisk_l(result);
+            this.do_resultOfRisk_r(result);
+          });
+           this.isConfig=true;
       },
       infoContentChange(e){
         this.infoContentCheckbox = e.target.checked

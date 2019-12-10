@@ -1,7 +1,7 @@
 <template>
     <div class="eLine">
       <div v-show="!noData" class="chartContent"></div>
-      <div v-show="noData" class="noData">暂无数据...</div>
+      <div v-show="noData" class="noData"> <img  src="@/assets/空白占位符.png"></div>
     </div>
 </template>
 
@@ -46,7 +46,6 @@
             let grid,dataZoom,yAxis;
             //长图模式
             if(this.type === "1"){
-              console.log(1111111111111111);
               let startValue = xAxis[0].data.length-1;
               let endValue = xAxis[0].data.length - 37;
               grid  = {

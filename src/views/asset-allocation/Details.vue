@@ -13,14 +13,14 @@
                <a-col :span="5"></a-col>
                <a-col :span="6" class="a-layout-header-box">
   　　　            <span  style="font-size:15px" >帮助中心</span>　　
-                    <a-dropdown>
+                    <!-- <a-dropdown>
                         <a class="ant-dropdown-link" href="#"><font color="white"> <span style="font-size:15px">linyawei</span> <a-icon type="down" /></font> </a>
                         <a-menu slot="overlay" @click="onClick">
                           <a-menu-item key="1">1st menu item</a-menu-item>
                           <a-menu-item key="2">2nd menu item</a-menu-item>
                           <a-menu-item key="3">3rd menu item</a-menu-item>
                         </a-menu>
-                      </a-dropdown>
+                      </a-dropdown> -->
                </a-col>
           </a-row>
         </div>
@@ -54,7 +54,7 @@
             </div>
           </div>
           <div class="a-layout-footer-right">
-            <iframe src="/static/20191125-中信建投-中信建投最新周择时观点＆20191122日报：创业板仍将引领A股年末反攻行情.pdf" width="100%" height="500px"></iframe>
+            <iframe src="./static/20191125-中信建投-中信建投最新周择时观点＆20191122日报：创业板仍将引领A股年末反攻行情.pdf" width="100%" height="500px"></iframe>
           </div>
 
         </div>
@@ -125,7 +125,7 @@ import '@/style/Details.css'
     },
     created(){
          //获取数据
-         this.$http.get(this.$url.reportUrl+"/"+this.$route.query.id).then(res=>{        
+         this.$http.get(this.$url.reportUrl+"/"+this.$route.query.id).then(res=>{
             this.dataSource = res;
             this.name=this.$route.query.name;
          });

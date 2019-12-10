@@ -1,7 +1,7 @@
 <template>
 
     <a-layout>
-        <a-layout-header class="a-layout-header">
+        <a-layout-header >
           <a-row>
                <a-col :span="12">
                  <div class="a-layout-header-img">
@@ -15,14 +15,14 @@
                <a-col :span="5"></a-col>
                <a-col :span="6" class="a-layout-header-box">
   　　　            <span  style="font-size:15px" >帮助中心</span>　　
-                    <a-dropdown>
+                    <!-- <a-dropdown>
                         <a class="ant-dropdown-link" href="#"><font color="white"> <span style="font-size:15px">linyawei</span> <a-icon type="down" /></font> </a>
                         <a-menu slot="overlay" @click="onClick">
                           <a-menu-item key="1">1st menu item</a-menu-item>
                           <a-menu-item key="2">2nd menu item</a-menu-item>
                           <a-menu-item key="3">3rd menu item</a-menu-item>
                         </a-menu>
-                      </a-dropdown>
+                      </a-dropdown> -->
                </a-col>
           </a-row>
         </a-layout-header>
@@ -126,9 +126,9 @@
 .a-layout-header-box {
    text-align: right;
  }
- .a-layout-header{
+.ant-layout-header{
     text-align: left;
-    background: #F56C6C;
+    background: #F56C6C !important;
     color: #fff;
 
   }
@@ -138,13 +138,14 @@
    height: 65px;
  }
  .a-layout-content-tabs {
-    padding-left: 3.6%;
-    padding-right: 3.5%;
+    padding-left: 3%;
+    padding-right: 3%;
     margin-top: 10px;
     height: 20px;
   }
   .a-layout-footer-router{
     margin-top: -5px;
+    height: 100%;
   }
 
 .el-tabs__item{

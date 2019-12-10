@@ -19,7 +19,7 @@ export default new Routers({
         path: '/',
         name: 'Login',
         component: Login,
-        //redirect:"/index/home",//默认跳转到首页
+        redirect:"/views/Home",//默认跳转到首页
 
       },
       {
