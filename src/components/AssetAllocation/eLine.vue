@@ -1,7 +1,10 @@
 <template>
     <div class="eLine">
       <div v-show="!noData" class="chartContent"></div>
-      <div v-show="noData" class="noData"> <img  src="@/assets/空白占位符.png"></div>
+      <div v-show="noData" class="noDataBox">
+        <span class="noDataIcon"></span>
+        <span class="noData">点击【配置】按钮，加载数据</span>
+      </div>
     </div>
 </template>
 

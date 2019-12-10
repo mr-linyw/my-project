@@ -1,5 +1,11 @@
 <template>
-  <div class="eBar"></div>
+  <div class="eBar">
+    <div v-show="!noData" class="chartContent"></div>
+    <div v-if="noData" class="noDataBox">
+      <span class="noDataIcon"></span>
+      <span class="noData">点击【配置】按钮，加载数据</span>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -12,17 +18,19 @@
         errorMsg:"",
         startValue:null,
         endValue: null,
+        noData:true
       }
     },
     watch:{
       params(val){
+        this.noData = val.series[0].data.length <= 0;
         this.drawByData(val);
       }
     },
     methods:{
       drawByData(params){
         if(!this.chart){
-          let $el = this.$el, echarts = this.$echarts;
+          let $el = this.$el.children[0], echarts = this.$echarts;
           this.chart = echarts.init($el);
         }
 
@@ -74,6 +82,9 @@
           series
         };
         this.chart.setOption(option);
+        this.$nextTick(function () {
+          this.chart.resize();
+        });
       }
     }
   }
@@ -82,6 +93,14 @@
 <style scoped>
 
   .eBar{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .eBar .chartContent{
     width: 100%;
     height: 100%;
   }

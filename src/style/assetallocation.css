@@ -159,9 +159,21 @@ body .ant-select-dropdown-menu-item{
 }
 .AssetAllocation .noData{
   font-weight: bold;
-  font-size: 22px;
+  font-size: 16px;
   color: #444;
 }
+
+.AssetAllocation .noDataIcon{
+   background-image: url("../assets/空白占位符.png");
+    width: 78px;
+    height: 86px;
+}
+
+.AssetAllocation .noDataBox{
+  display: flex;
+  align-items: center;
+}
+
 .zz{
   text-align: center;
   line-height: 200px;

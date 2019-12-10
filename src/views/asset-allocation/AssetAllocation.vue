@@ -43,7 +43,12 @@
         <div class="pieContent">
           <div class="Row4_left"><e-pie :params="pieData"></e-pie></div>
           <div class="Row4_right">
-            <span>{{newNetValue}}</span>
+            <div v-if="!newNetValue" class="noDataBox">
+              <span class="noDataIcon"></span>
+              <span class="noData">点击【配置】按钮，加载数据</span>
+            </div>
+
+            <span v-if="newNetValue">{{newNetValue}}</span>
           </div>
         </div>
       </an-panel>
@@ -161,7 +166,7 @@
               dataIndex: 'latestSize',
             },
           ],
-          newNetValue:"暂无数据...",
+          newNetValue:"",
           pieData:[], //资产净值图形最新一条数据
           resultOfRisk_l:[],//策略风险特征PK
           resultOfRisk_r:[], //策略风险特征PK
