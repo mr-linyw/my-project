@@ -3,7 +3,8 @@
       <div v-show="!noData" class="chartContent"></div>
       <div v-show="noData" class="noDataBox">
         <span class="noDataIcon"></span>
-        <span class="noData">点击【配置】按钮，加载数据</span>
+        <span v-show="FOF" class="noData">点击【配置】按钮，加载数据</span>
+          <span v-show="!FOF" class="noData">点击【构建FOF】按钮，加载数据</span>
       </div>
     </div>
 </template>
@@ -11,7 +12,7 @@
 <script>
     export default {
         name: "eLine",
-        props:["params","type"],
+        props:["params","type","FOF"],
         data(){
             return {
               chart:null,

@@ -23,7 +23,7 @@
     </div>
     <div class="an-content-2Row">
       <an-panel panelTitle="实际历史模拟净值表现">
-        <e-line type="1" :params="allocationResultData"></e-line>
+        <e-line  :FOF="true" type="1" :params="allocationResultData"></e-line>
       </an-panel>
     </div>
     <div class="an-content-3Row">

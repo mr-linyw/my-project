@@ -18,7 +18,7 @@
                 />
               </div>
               <div class="right_c">
-                <e-line :params="chartData"></e-line>
+                <e-line :FOF="false" :params="chartData"></e-line>
               </div>
             </div>
             <!-- 声明modal模板 -->
@@ -84,13 +84,13 @@
       },
       created(){
         // table数据
-        this.$http.get(this.$url.fofRecommendBondFund + "/0").then(result => {
-          this.initData(result);
-        });
+        // this.$http.get(this.$url.fofRecommendBondFund + "/0").then(result => {
+        //   this.initData(result);
+        // });
         //  折线图数据
-        this.$http.get(this.$url.fofHistReturnBond + "/0").then(result => {
-          this.doChartData(result);
-        });
+        // this.$http.get(this.$url.fofHistReturnBond + "/0").then(result => {
+        //   this.doChartData(result);
+        // });
       },
       watch:{
         params(value){
