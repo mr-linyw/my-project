@@ -1,5 +1,5 @@
 <template>
-    <div class="all" style="height: 800px; overflow-y:scroll" v-title data-title="资产配置研报-研究标题">
+    <div class="all" style="height: 900px;" v-title data-title="资产配置研报-研究标题">
         <div class="a-layout-header">
           <a-row>
                <a-col :span="12">
@@ -30,7 +30,7 @@
             <span>资产配置</span>&#12288;<a-icon type="right"  />&#12288;<span>研报详情</span>
            </div>
         </div>
-        <div class="a-layout-footer-t" style="height: 900px; overflow-y:scroll">
+        <div class="a-layout-footer-t" style="height: 800px; overflow-y:scroll">
           <div class="a-layout-footer-left">
             <div class="a-layout-footer-header">
                     <span ><a-icon type="file-text" :style="{ fontSize: '16px', color: '#08c' }"/> 宏观政策</span>
