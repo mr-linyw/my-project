@@ -12,7 +12,7 @@
 <script>
     export default {
         name: "eLine",
-        props:["params","type","FOF"],
+        props:["params","type","FOF","text"],
         data(){
             return {
               chart:null,
@@ -143,10 +143,14 @@
 
             let option = {
               grid,
+              title: {
+                 text: this.text,
+                 x:'center',
+               },
               tooltip : {
                 trigger: 'axis',
                 axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                  type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                  type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
                 }
               },
               dataZoom,

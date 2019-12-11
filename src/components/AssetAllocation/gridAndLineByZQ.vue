@@ -3,7 +3,7 @@
             <div class="tools">
               <div class="group">
                 <span>规模偏好</span>
-                <a-select defaultValue="0" style="width:94px" @change="sizeRequirement_do">
+                <a-select defaultValue="0" style="width:110px" @change="sizeRequirement_do">
                   <a-select-option v-for="item in gmphData" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
                 </a-select>
               </div>
@@ -18,7 +18,7 @@
                 />
               </div>
               <div class="right_c">
-                <e-line :FOF="false" :params="chartData"></e-line>
+                <e-line :FOF="false" :text="text" :params="chartData"></e-line>
               </div>
             </div>
             <!-- 声明modal模板 -->
@@ -65,6 +65,7 @@
       name: "gridAndLineByZQ",
       data(){
         return{
+          text:'历史表现',
           isbondCheck:false,
           isShowInfoModal:false,
           params:"",
@@ -131,6 +132,7 @@
         },
         doChartData(result){
           let params = {
+
             legend: {
               data:['债基组合','组合基准'],
               right: 10,

@@ -10,7 +10,7 @@
           </slot>
         </div>
         <div class="modal-body" id="modalDescription" style="height: 400px; overflow-y:scroll">
-          <div style="border: 1px  #000000; width: 90%; margin: 0 auto;">
+          <div >
               <slot name="body"></slot>
           </div>
 

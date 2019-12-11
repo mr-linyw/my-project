@@ -26,7 +26,7 @@ export  function oneOption(text,data){
           throttle: 50
       }],
       series: {
-            name:'当月值',
+            name:'当天值',
             type:'line',
             data:data.blueMap,
             symbol: 'none',  //取消折点圆圈

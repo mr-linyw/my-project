@@ -1,5 +1,5 @@
 <template>
-  <div class="AssetAllocation">
+  <div class="AssetAllocation" style="height: 800px; overflow-y:scroll" v-title data-title="资产配置服务-资产配置">
     <div class="AssetAllocation-content">
     <div class="an-tools">
         <div class="boxGroup">
@@ -94,7 +94,16 @@
       </an-panel>
     </div>
       <div class="an-content-6Row">
-        <warning-info></warning-info>
+        <li><span style="color:#F56C6C"><strong>风险提示</strong></span></li>
+        <li><span>尊敬的客户：</span></li>
+        <li><span>
+          在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
+          但同时也可能存在着较大的证券投资风险。请务必仔细阅读本系统平台的使用说明。
+          我们将尽可能采取有效措施保护客户资料和其他各项活动的安全，本着对您负责的态度，
+          公司郑重提示，在使用时，存在且不限于以下风险：<a href="javascript:" @click="viewDetails">查看详情</a>
+
+        </span></li>
+
       </div>
   </div>
 
@@ -108,6 +117,32 @@
         </div>
       </div>
     </Modal>
+
+            <!-- 风险提示modal模板 -->
+            <modal-scroll  :show="isShowModals" @confirm="modalOKs" @close="modalCloses" :showConfirm="true" :showCancle="true"  title="风险提示">
+            <div class="infoContent" slot="body">
+              <div style="text-align: left">
+                <li><span class="tishi">尊敬的客户：</span></li>
+                <li><span>
+                  在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
+                  但同时也可能存在着较大的证券投资风险。请务必仔细阅读本系统平台的使用说明。
+                  我们将尽可能采取有效措施保护客户资料和其他各项活动的安全，本着对您负责的态度，
+                  公司郑重提示，在使用时，存在且不限于以下风险：
+                </span></li>
+                <li><span>1、资产配置平台系统仅是建立在基础数据（数据来源包括：市场公开数据及本公司外购数据源）平台上的一个页面，它同样具有电子化系统的使用风险。</span></li>
+                <li><span>2、以下原因都可能造成您使用资产配置系统时出现中断、停顿、延迟和显示失败等情况</span></li>
+                <li><span>1）电脑病毒、黑客入侵、计算机软硬件故障；</span></li>
+                <li><span>2）您交易使用的电脑终端与行情、交易通讯线路发生故障；</span></li>
+                <li><span>3）其他因网络或您的电脑终端可能出现的故障及其他不可测因素；</span></li>
+                <li><span>4）因软件关闭、关机、繁忙或网络中断等其他原因出现延迟、中断、停顿或数据不完全，甚至出现系统故障，从而使系统显示出现延迟、中断、遗失、无法触发、数据错误</span></li>
+                <li><span>3、软件适配风险。您的计算机配置、性能或软件系统与所提供的交易系统不匹配，无法及时显示结果的风险。</span></li>
+                <li><span>4、政策变化风险。由于相关政策变化导致的风险。</span></li>
+                <li><span>5、证券监管机构确定的其他风险。</span></li>
+                <li><span>6、不可抗力及其他可能存在的风险。</span></li>
+                <li><span>7、任何系统的使用都是建立在专属密码登录的前提下，凡您使用专属账号及密码进行的交易、查询及其他行为，均视为您本人的行为，请妥善保管自己的密码，由于您管理不善造成的密码泄露所带来的损失，公司不承担任何责任</span></li>
+              </div>
+            </div>
+          </modal-scroll>
   </div>
 </template>
 <script>
@@ -124,8 +159,10 @@
   import Modal from '@/modal/Modal'
   import moment from 'moment';
   import WarningInfo from "../../components/AssetAllocation/warningInfo";
+  import modalScroll from '@/modal/modalScroll'
   export default {
     components : {
+      modalScroll,
       WarningInfo,
       eLine,
       echartsUtil,
@@ -139,6 +176,7 @@
     },
     data() {
       return {
+        isShowModals:false,
         isConfig:false,
            baseConfigParams:{
               cm:null,  //资产配置方法
@@ -376,18 +414,9 @@
       },
       modalOK(){
           if(this.infoContentCheckbox){
-            localStorage.setItem("infoContentShow","0");
+            localStorage.setItem("testContentShow","0");
           }
           this.isShowInfoModal = false;
-      },
-      modalClose(){
-        this.isShowInfoModal = false;
-      },
-      configClick(){
-          if(localStorage.getItem("infoContentShow") !== "0"){
-            this.infoContentCheckbox = false;
-            this.isShowInfoModal = true;
-          }
           if(this.cm === "3" || this.cm === "4"){
             this.baseConfigParams = {cm:this.cm ,cl:0};
           }else{
@@ -400,6 +429,28 @@
           });
            this.isConfig=true;
       },
+      modalClose(){
+        this.isShowInfoModal = false;
+      },
+      configClick(){
+          if(localStorage.getItem("testContentShow") !== "0"){
+            this.infoContentCheckbox = false;
+            this.isShowInfoModal = true;
+          }else{
+            if(this.cm === "3" || this.cm === "4"){
+              this.baseConfigParams = {cm:this.cm ,cl:0};
+            }else{
+              this.baseConfigParams = {cm:this.cm ,cl:this.cl};
+            }
+            //策略风险特征PK
+            this.$http.get(this.$url.resultOfRisk).then(result => {
+              this.do_resultOfRisk_l(result);
+              this.do_resultOfRisk_r(result);
+            });
+             this.isConfig=true;
+          }
+
+      },
       infoContentChange(e){
         this.infoContentCheckbox = e.target.checked
       },
@@ -409,7 +460,17 @@
       },
       yhgChange(value){
         this.cl = value;
-      }
+      },
+      modalOKs(){
+        this.isShowModals = false;
+      },
+      modalCloses(){
+        this.isShowModals = false;
+      },
+      // 查看风险提示详情
+      viewDetails(){
+        this.isShowModals=true;
+      },
     },
   };
 </script>

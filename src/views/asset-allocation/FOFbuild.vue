@@ -1,5 +1,5 @@
 <template>
-  <div class="fofbuild">
+  <div class="fofbuild" style="height: 800px; overflow-y:scroll" v-title data-title="资产配置服务-FOF构建">
     <div class="fofbuild-top">
 
       <a-form layout="inline">
@@ -138,7 +138,7 @@
     </div>
   </modal>
   <!-- 风险提示modal模板 -->
-  <modal-scroll  :show="isShowModals" @confirm="modalOKs" :showConfirm="true"   title="风险提示">
+  <modal-scroll  :show="isShowModals" @confirm="modalOKs" @close="modalCloses" :showConfirm="true" :showCancle="true"  title="风险提示">
   <div class="infoContent" slot="body">
     <div style="text-align: left">
       <li><span class="tishi">尊敬的客户：</span></li>
@@ -187,7 +187,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
 
         stylePreferenceOption:[{key:0,value:"大盘型"},{key:1,value:"中盘型"},{key:2,value:"小盘型"}],
         sizeRequirementOption:[{key:0,value:"无要求"},{key:1,value:"2亿以上"},{key:2,value:"10亿以上"}],
-        isIndexEnhancedOption:[{key:0,value:"否"},{key:1,value:"是"}],
+        isIndexEnhancedOption:[{key:1,value:"是"},{key:2,value:"否"}],
         params:{   //请求参数
           stylePreference:0,
           stockSizeRequirement:0,
@@ -401,7 +401,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         that.$http.get(that.$url.bondFundUrl+"/"+that.params.bondSizeRequirement).then(res=>{
           //初始化生成折线图的数据
           that.bonddata=res;
-          that.bondOption = twoOption('历史表现',that.getBondEcharsData(that.bonddata),"股基FOF组合","基准组合");
+          that.bondOption = twoOption('历史表现',that.getBondEcharsData(that.bonddata),"债基FOF组合","基准组合");
         });
       },
       //获取股票型历史表现图表的参数
@@ -534,7 +534,9 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
       modalOKs(){
         this.isShowModals = false;
       },
-
+      modalCloses(){
+        this.isShowModals = false;
+      },
       infoContentChange(e){
         this.infoContentCheckbox = e.target.checked
       },

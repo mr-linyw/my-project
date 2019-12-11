@@ -1,6 +1,6 @@
 <template>
 
-    <div class="header">
+    <div class="header" style="height: 800px; overflow-y:scroll" v-title data-title="资产配置服务-研究报告">
       <div class="header-tabs">
         <el-tabs  v-model="activeName" @tab-click="handleClick">
           <!-- 宏观政策按钮
@@ -103,11 +103,11 @@
       </div>
       <!-- 分页 -->
       <div class="footer">
-        <div  style="float:right;margin-top : 20px">
+
                <template>
                   <a-pagination v-model="current" :total="total"  :pageSize="20"  @change="changeFind"/>
                 </template>
-        </div>
+
       </div>
     </div>
 </template>
@@ -131,7 +131,7 @@ import {mouseover,mouseout,mousemove} from '@/components/utilJs/ellipsis'
         params2:{
           "type":2,
           "pageNo":0,
-          "pageSize":20
+          "pageSize":16
         },
         moment,
         id:'1',
@@ -151,8 +151,8 @@ import {mouseover,mouseout,mousemove} from '@/components/utilJs/ellipsis'
          that.current = res.result.current;
          that.firstData=[];
          that.secondData=[];
-         that.firstData= res.result.records.slice(0,10);
-         that.secondData=res.result.records.slice(10,20);
+         that.firstData= res.result.records.slice(0,8);
+         that.secondData=res.result.records.slice(8,16);
      });
     },
 

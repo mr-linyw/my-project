@@ -43,4 +43,9 @@ new Vue({
   components: { App },
   template: '<App/>',
 
+});
+Vue.directive('title', {
+  inserted: function (el, binding) {
+    document.title = el.dataset.title
+  }
 })

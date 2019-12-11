@@ -27,10 +27,16 @@
   /* height:800px; */
   padding-left: 1.5%;
   padding-right: 1.5%;
+  height: 800px;
 }
 .left-a{
  height: 40%;
   width: 40%;
+}
+.footer{
+  float: right;
+  margin-top: 20px;
+  height: 30px;
 }
 .el-tabs__item.is-active{
   font-weight:bold !important;
@@ -46,4 +52,5 @@ display: -webkit-box;
 }
 .ant-list-item :hover{
   background-color: #e7ecf0;
+  cursor: pointer;
 }

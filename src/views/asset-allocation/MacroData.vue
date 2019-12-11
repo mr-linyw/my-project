@@ -1,5 +1,5 @@
 <template>
-  <div class="macroData">
+  <div class="macroData" style="height: 800px; overflow-y:scroll" v-title data-title="资产配置服务-宏观数据">
     <div class="macroData-top">
       <div class="top"></div>
       <a-collapse  v-model="activeKey" >

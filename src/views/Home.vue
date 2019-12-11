@@ -14,7 +14,7 @@
                </a-col>
                <a-col :span="5"></a-col>
                <a-col :span="6" class="a-layout-header-box">
-  　　　            <span  style="font-size:15px" >帮助中心</span>　　
+  　　　            <!-- <span  style="font-size:15px" >帮助中心</span>　　 -->
                     <!-- <a-dropdown>
                         <a class="ant-dropdown-link" href="#"><font color="white"> <span style="font-size:15px">linyawei</span> <a-icon type="down" /></font> </a>
                         <a-menu slot="overlay" @click="onClick">
@@ -123,6 +123,9 @@
 }
 </script>
 <style>
+.a-layout{
+  height: 876px;
+}
 .a-layout-header-box {
    text-align: right;
  }

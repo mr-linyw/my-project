@@ -1,5 +1,5 @@
 <template>
-    <div class="all">
+    <div class="all" style="height: 800px; overflow-y:scroll" v-title data-title="资产配置研报-研究标题">
         <div class="a-layout-header">
           <a-row>
                <a-col :span="12">
@@ -12,8 +12,8 @@
                </a-col>
                <a-col :span="5"></a-col>
                <a-col :span="6" class="a-layout-header-box">
-  　　　            <span  style="font-size:15px" >帮助中心</span>　　
-                    <!-- <a-dropdown>
+  　　　            <!-- <span  style="font-size:15px" >帮助中心</span>　　
+                    <a-dropdown>
                         <a class="ant-dropdown-link" href="#"><font color="white"> <span style="font-size:15px">linyawei</span> <a-icon type="down" /></font> </a>
                         <a-menu slot="overlay" @click="onClick">
                           <a-menu-item key="1">1st menu item</a-menu-item>
@@ -30,7 +30,7 @@
             <span>资产配置</span>&#12288;<a-icon type="right"  />&#12288;<span>研报详情</span>
            </div>
         </div>
-        <div class="a-layout-footer">
+        <div class="a-layout-footer-t" style="height: 900px; overflow-y:scroll">
           <div class="a-layout-footer-left">
             <div class="a-layout-footer-header">
                     <span ><a-icon type="file-text" :style="{ fontSize: '16px', color: '#08c' }"/> 宏观政策</span>
@@ -54,7 +54,7 @@
             </div>
           </div>
           <div class="a-layout-footer-right">
-            <iframe src="./static/20191125-中信建投-中信建投最新周择时观点＆20191122日报：创业板仍将引领A股年末反攻行情.pdf" width="100%" height="500px"></iframe>
+            <iframe style="height:850px;" src="./static/20191125-中信建投-中信建投最新周择时观点＆20191122日报：创业板仍将引领A股年末反攻行情.pdf" width="100%" height="500px"></iframe>
           </div>
 
         </div>
