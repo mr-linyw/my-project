@@ -4,14 +4,14 @@
     <div class="an-tools">
         <div class="boxGroup">
           <span>资产配置方法</span>
-          <a-select defaultValue="3" :style="selectStyle"  @change="tnhChange">
-            <a-select-option v-for="item in tnhData" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
+          <a-select defaultValue="3" :style="selectStyle" v-model="params.zcpz"  @change="tnhChange">
+            <a-select-option v-for="item in tnhData" :key="item.key" >{{item.value}}</a-select-option>
           </a-select>
         </div>
       <div class="boxGroup">
         <span>货币现金上限</span>
-        <a-select defaultValue="1" :style="selectStyle" :disabled="disableYhgModel" @change="yhgChange">
-          <a-select-option v-for="item in yhgData" :key="item.value" :value="item.value">{{item.text}}</a-select-option>
+        <a-select defaultValue="1" :style="selectStyle" :disabled="disableYhgModel" v-model="params.xjsx" @change="yhgChange">
+          <a-select-option v-for="item in yhgData" :key="item.value" >{{item.text}}</a-select-option>
         </a-select>
       </div>
       <a-button class="configBtn" type="round" :style="configBtnStyle" @click="configClick">配置</a-button>
@@ -87,13 +87,13 @@
             <a-table
               :bordered="true"
               :columns="cashColume"
-              :dataSource="[{fundCode:'070008.OF',fundName:'嘉实货币基金',fundManager:'庄园、张明',lastMonthReturn:'2.55%',latestSize:'100%'}]"
+              :dataSource="tableSource"
             />
           </a-collapse-panel>
         </a-collapse>
       </an-panel>
     </div>
-      <div class="an-content-6Row">
+      <div class="an-content-6Row" style="list-style:none;" >
         <li><span style="color:#F56C6C"><strong>风险提示</strong></span></li>
         <li><span>尊敬的客户：</span></li>
         <li><span>
@@ -121,7 +121,7 @@
             <!-- 风险提示modal模板 -->
             <modal-scroll  :show="isShowModals" @confirm="modalOKs" @close="modalCloses" :showConfirm="true" :showCancle="true"  title="风险提示">
             <div class="infoContent" slot="body">
-              <div style="text-align: left">
+              <div style="text-align: left;">
                 <li><span class="tishi">尊敬的客户：</span></li>
                 <li><span>
                   在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
@@ -176,6 +176,10 @@
     },
     data() {
       return {
+        params:{   //请求参数
+          zcpz:3,
+          xjsx:2,
+         },
         isShowModals:false,
         isConfig:false,
            baseConfigParams:{
@@ -209,29 +213,30 @@
           resultOfRisk_l:[],//策略风险特征PK
           resultOfRisk_r:[], //策略风险特征PK
           allocationResultData:[],  //资产净值图形数据
-          selectStyle:"width: 125px;height: 30px;",
+          selectStyle:"width: 130px;height: 30px;",
           configBtnStyle:" margin-left: 35px",
           disableYhgModel:true,
           infoContentCheckbox:false,
           isShowInfoModal:false,
           activeKey:['1','2','3','4'],
-          cm:"3",
-          cl:"1",
+          cm:3,
+          cl:1,
           tnhData:[
-            {text:"推荐配置",value:"3"},
-            {text:"固定权重组合",value:"4"},
-            {text:"最大收益",value:"0"},
-            {text:"最大夏普",value:"1"},
-            {text:"最小方差",value:"2"},
+            {value:"推荐配置",key:3},
+            {value:"固定权重组合",key:4},
+            {value:"最大收益",key:0},
+            {value:"最大夏普",key:1},
+            {value:"最小方差",key:2},
           ],
         yhgData:[
-          {text:"0%",value:"0"},
-          {text:"20%",value:"0.2"},
-          {text:"40%",value:"0.4"},
-          {text:"50%",value:"0.5"},
-          {text:"100%",value:"1"},
-        ]
-
+          {text:"0%",value:0},
+          {text:"20%",value:0.2},
+          {text:"40%",value:0.4},
+          {text:"50%",value:0.5},
+          {text:"100%",value:1},
+          {text:"-",value:2},
+        ],
+        tableSource:[{fundCode:'070008.OF',fundName:'嘉实货币基金',fundManager:'庄园、张明',lastMonthReturn:'2.55%',latestSize:'-'}],
       }
     },
     mounted(){
@@ -417,7 +422,7 @@
             localStorage.setItem("testContentShow","0");
           }
           this.isShowInfoModal = false;
-          if(this.cm === "3" || this.cm === "4"){
+          if(this.cm ==3 || this.cm ==4){
             this.baseConfigParams = {cm:this.cm ,cl:0};
           }else{
             this.baseConfigParams = {cm:this.cm ,cl:this.cl};
@@ -437,7 +442,7 @@
             this.infoContentCheckbox = false;
             this.isShowInfoModal = true;
           }else{
-            if(this.cm === "3" || this.cm === "4"){
+            if(this.cm ==3 || this.cm ==4){
               this.baseConfigParams = {cm:this.cm ,cl:0};
             }else{
               this.baseConfigParams = {cm:this.cm ,cl:this.cl};
@@ -455,11 +460,27 @@
         this.infoContentCheckbox = e.target.checked
       },
       tnhChange(value){
-        this.disableYhgModel = value === "3" || value === "4";
+        this.disableYhgModel = value == 3 || value == 4;
         this.cm = value;
+        if(this.disableYhgModel){
+          this.params.xjsx=2;
+        }else{
+          this.params.xjsx=1;
+        }
+       this.yhgChange(this.params.xjsx);
+
       },
       yhgChange(value){
         this.cl = value;
+        this.yhgData.map(item=>{
+          if(item.value==value){
+            let source={
+              fundCode:'070008.OF',fundName:'嘉实货币基金',
+              fundManager:'庄园、张明',lastMonthReturn:'2.55%',latestSize:item.text
+            }
+          }
+        })
+        this.$set(this.tableSource,0,source)
       },
       modalOKs(){
         this.isShowModals = false;

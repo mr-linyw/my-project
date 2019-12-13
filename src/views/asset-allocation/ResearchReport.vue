@@ -1,7 +1,7 @@
 <template>
 
-    <div class="header" style="height: 800px; overflow-y:scroll" v-title data-title="资产配置服务-研究报告">
-      <div class="header-tabs">
+    <div class="header"  v-title data-title="资产配置服务-研究报告">
+      <div class="header-tabs" style="height: 780px; overflow-y:scroll">
         <el-tabs  v-model="activeName" @tab-click="handleClick">
           <!-- 宏观政策按钮
              class="left"
@@ -17,11 +17,11 @@
                               <template slot="title">
                                 {{item.title}}
                               </template>
-                              <span class="contant"> {{item.title}} </span>
+                              <span class="contant">{{item.title}} </span>
                             </a-tooltip>
 
                            <div class="">
-                             <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>
+                             <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>&emsp;
                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.autherName}}</span>
                            </div>
 
@@ -42,7 +42,7 @@
                                <span class="contant"> {{item.title}} </span>
                              </a-tooltip>
                             <div class="">
-                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>
+                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>&emsp;
                               <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.autherName}}</span>
                             </div>
                           </span>
@@ -68,7 +68,7 @@
                              <span class="contant"> {{item.title}} </span>
                            </a-tooltip>
                           <div class="">
-                            <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>
+                            <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>&emsp;
                             <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.autherName}}</span>
                           </div>
                         </span>
@@ -90,7 +90,7 @@
 
                             <div class="">
                               <!-- moment().format('YYYY-MM-DD') -->
-                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>
+                              <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(item.createTime).format('YYYY-MM-DD')}}</span>&emsp;
                               <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{item.autherName}}</span>
                             </div>
                           </span>
@@ -123,10 +123,11 @@ import {mouseover,mouseout,mousemove} from '@/components/utilJs/ellipsis'
       pageName:"first",
        current:1,
        total:0,
+       pageSize:16,
         params:{
           "type":1,
           "pageNo":0,
-          "pageSize":20
+          "pageSize":16
         },
         params2:{
           "type":2,
@@ -144,50 +145,57 @@ import {mouseover,mouseout,mousemove} from '@/components/utilJs/ellipsis'
     },
     mounted(){
       let that = this;
+      that.initData(that.params);
 
-     //获取列表数据
-     that.$http.post(that.$url.reportUrl,that.params).then(res=>{
-         that.total = res.result.total;
-         that.current = res.result.current;
-         that.firstData=[];
-         that.secondData=[];
-         that.firstData= res.result.records.slice(0,8);
-         that.secondData=res.result.records.slice(8,16);
-     });
     },
 
     methods:{
+        //获取列表数据
+      initData(params){
+        let that = this;
+        that.$http.post(that.$url.reportUrl,params).then(res=>{
+            that.total = res.result.total;
+            that.current = res.result.current;
+            that.firstData=[];
+            that.secondData=[];
+             const compare = function(a, b) {
+               return moment(a.createTime)>moment(b.createTime);
+           };
+             res.result.records.sort(compare);
+             res.result.records.map((item,index)=>{
+               if(index%2==0){
+                  that.firstData.push(item);
+               }else{
+                 that.secondData.push(item);
+               }
+
+             });
+        });
+      },
+
       jumpDetails(item){
         window.open(this.$router.resolve({ name:'Details',query: {id:item.id,name:item.autherName}}).href,"_blank");
       },
       //分页
-      changeFind(page, pageSize){
+      changeFind(page){
         let that = this;
         let data={};
          if(that.pageName=="first"){
            let param={
              "type":1,
              "pageNo":page,
-             "pageSize":pageSize
+             "pageSize":that.pageSize
            }
            data = param;
          }else{
            let param={
              "type":2,
              "pageNo":page,
-             "pageSize":pageSize
+             "pageSize":that.pageSize
            }
             data = param;
          }
-         //获取列表数据
-         that.$http.post(that.$url.reportUrl,data).then(res=>{
-             that.total = res.result.total;
-             that.current = res.result.current;
-             that.firstData=[];
-             that.secondData=[];
-             that.firstData= res.result.records.slice(0,10);
-             that.secondData=res.result.records.slice(10,20);
-         });
+        that.initData(data);
       },
       handleClick(tab, event){
         let that = this;
@@ -196,19 +204,10 @@ import {mouseover,mouseout,mousemove} from '@/components/utilJs/ellipsis'
         that.pageName=tab.name;
         //获取列表数据
         if(tab.name=='first'){
-          that.$http.post(that.$url.reportUrl,that.params).then(res=>{
-            that.total = res.result.total;
-            that.current = res.result.current;
-              that.firstData= res.result.records.slice(0,10);
-              that.secondData=res.result.records.slice(10,20);
-          });
+        that.initData(that.params);
         }else{
-          that.$http.post(that.$url.reportUrl,that.params2).then(res=>{
-            that.total = res.result.total;
-            that.current = res.result.current;
-              that.firstData= res.result.records.slice(0,10);
-              that.secondData=res.result.records.slice(10,20);
-          });
+          that.initData(that.params2);
+
         }
 
       },

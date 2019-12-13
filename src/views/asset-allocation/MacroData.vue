@@ -86,6 +86,10 @@ import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
         let that = this;
         let name1="当月同比_估测值";
         let name2="当月同比_实际值";
+        let hushentext = "沪深300";
+        let windtext = "wind商品";
+        let govtext = "国债全收益";
+        let cashtext = "货币基金";
         //大类资产数据
         that.$http.get(that.$url.macroUrl+"/20140101/20151101").then(res=>{
 
@@ -95,10 +99,10 @@ import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
           that.govdate=res.gov;
           that.cashdate=res.cash;
 
-          that.hushenOption = oneOption(that.hushentext,that.assetsData(that.hushendate));
-          that.windOption = oneOption(that.windtext,that.assetsData(that.winddate));
-          that.govOption = oneOption(that.govtext,that.assetsData(that.govdate));
-          that.cashOption = oneOption(that.cashtext,that.assetsData(that.cashdate));
+          that.hushenOption = oneOption(hushentext,that.assetsData(that.hushendate));
+          that.windOption = oneOption(windtext,that.assetsData(that.winddate));
+          that.govOption = oneOption(govtext,that.assetsData(that.govdate));
+          that.cashOption = oneOption(cashtext,that.assetsData(that.cashdate));
         });
 
 
@@ -106,19 +110,28 @@ import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
         that.$http.get(that.$url.macroIndexUrl+"/1").then(res=>{
           //初始化生成折线图的数据
           that.GDPdate=res.reverse();
-          that.GDPOption = twoOption(that.GDPtext,that.macroscopicData(that.GDPdate),name1,name2);
+          var startValue = moment(res.slice(-1)[0].ecoDate).subtract(3, "years").format("YYYY/MM/DD");
+
+          let GDPtext="GDP";
+          that.GDPOption = twoOption(GDPtext,that.macroscopicData(that.GDPdate),name1,name2,startValue,"(%)");
         });
         //宏观指标CPI数据
         that.$http.get(that.$url.macroIndexUrl+"/2").then(res=>{
           //初始化生成折线图的数据
           that.CPIdate=res.reverse();
-          that.CPIOption = twoOption(that.CPItext,that.macroscopicData(that.CPIdate),name1,name2);
+          let startValue = moment(res.slice(-1)[0].ecoDate).subtract(3, "years").format("YYYY/MM/DD");
+
+          let CPItext="CPI";
+          that.CPIOption = twoOption(CPItext,that.macroscopicData(that.CPIdate),name1,name2,startValue,"(%)");
         });
         //宏观指标PPI数据
         that.$http.get(that.$url.macroIndexUrl+"/3").then(res=>{
           //初始化生成折线图的数据
           that.PPIdate=res.reverse();
-          that.PPIOption = twoOption(that.PPItext,that.macroscopicData(that.PPIdate),name1,name2);
+          let startValue = moment(res.slice(-1)[0].ecoDate).subtract(3, "years").format("YYYY/MM/DD");
+
+          let PPItext="PPI";
+          that.PPIOption = twoOption(PPItext,that.macroscopicData(that.PPIdate),name1,name2,startValue,"(%)");
 
         });
       },

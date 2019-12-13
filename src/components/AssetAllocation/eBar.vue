@@ -52,7 +52,7 @@
             axisPointer : {            // 坐标轴指示器，坐标轴触发有效
               type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
             },
-            formatter: '{b0}: {c0}%'
+            formatter: '{b0}: {c0}'
           },
           xAxis,
           legend,
@@ -63,7 +63,7 @@
               }
             },
             axisLabel:{
-              formatter: '{value} %',
+              formatter: '{value}',
               color: '#777',
             },
             axisTick:{

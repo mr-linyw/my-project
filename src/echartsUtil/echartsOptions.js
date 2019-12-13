@@ -44,7 +44,7 @@ export  function oneOption(text,data){
        }
        return option;
 };
-export  function twoOption(text,data,name1,name2){
+export  function twoOption(text,data,name1,name2,startValue,yname){
 let  option={
      title: {
         text: text,
@@ -60,7 +60,7 @@ let  option={
         data:data.dateMap
       },
       yAxis: {
-        name:'(%)',
+        name:yname,
         type: 'value',
         // axisLabel:{formatter:'{value} %'},
         splitLine :{    //网格线
@@ -73,6 +73,8 @@ let  option={
       },
       dataZoom: [{
           type: 'inside',
+          startValue:startValue,
+
           throttle: 50
       }],
       series: [

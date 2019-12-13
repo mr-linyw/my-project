@@ -73,6 +73,7 @@
     import moment from 'moment';
     import eLine from '@/components/AssetAllocation/eLine'
     import modal from '@/modal/Modal'
+    import _ from 'lodash'
     export default {
       name: "gridAndLineByGP",
       components:{
@@ -224,14 +225,15 @@
              let formatM = moment(item.tradeDate).format("YYYY/MM/DD");
              params.xAxis[0].data.push(formatM);
              if(this.stylePreference === "0"){
-               params.series[0].data.push(Number(item.smallCap).toFixed(4));
-               params.series[1].data.push(Number(item.smallCapBenchmark).toFixed(4));
+               // _.round(parseFloat(item.smallCap*100), 2)
+               params.series[0].data.push(Number(item.smallCap*100).toFixed(2));
+               params.series[1].data.push(Number(item.smallCapBenchmark*100).toFixed(2));
              }else if(this.stylePreference === "1"){
-               params.series[0].data.push(Number(item.middleCap).toFixed(4));
-               params.series[1].data.push(Number(item.middleCapBenchmark).toFixed(4));
+               params.series[0].data.push(Number(item.middleCap*100).toFixed(2));
+               params.series[1].data.push(Number(item.middleCapBenchmark*100).toFixed(2));
              }else{
-               params.series[0].data.push(Number(item.largeCap).toFixed(4));
-               params.series[1].data.push(Number(item.largeCapBenchmark).toFixed(4));
+               params.series[0].data.push(Number(item.largeCap*100).toFixed(2));
+               params.series[1].data.push(Number(item.largeCapBenchmark*100).toFixed(2));
              }
            }
            this.chartData = params;

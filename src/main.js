@@ -17,7 +17,9 @@ import './style/character.css'
 //引入两个文件
 import url from './api/requestUrl'
 import http from './api/axios'
+import VueClipboard from 'vue-clipboard2'
 
+Vue.use(VueClipboard)
 //挂载到VUE实例，以便全局使用
 Vue.prototype.$url = url;
 Vue.prototype.$http = http;

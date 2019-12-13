@@ -73,7 +73,7 @@
               <span ><a-icon type="mail" :style="{ fontSize: '16px', color: '#08c' }"/> 发送至邮箱</span>
             </div>
             <div class="modal-text-two" @click="copy">
-              <span ><a-icon type="copy" :style="{ fontSize: '16px', color: '#08c' }"/> 复制下载链接</span>
+              <span class="copy-btn" v-clipboard:copy="f" v-clipboard:success="onCopy" v-clipboard:error="onError"><a-icon type="copy" :style="{ fontSize: '16px', color: '#08c' }"/> 复制下载链接</span>
             </div>
           </div>
          <!-- 点击发送至邮箱填充modal的slot -->
@@ -108,7 +108,7 @@ import '@/style/Details.css'
     data(){
       return{
        email:'',
-
+       f:"222222222222",
        dataSource:{},
        modalType:"",
        isModalVisible:false,
@@ -176,8 +176,15 @@ import '@/style/Details.css'
        this.$refs.modal.showCancle=false
      },
       onClick(){
-
       },
+      // 复制成功时的回调函数
+      onCopy (e) {
+         this.$message.success("内容已复制到剪切板！")
+      },
+      // 复制失败时的回调函数
+      onError (e) {
+         this.$message.error("抱歉，复制失败！")
+      }
 
       },
 

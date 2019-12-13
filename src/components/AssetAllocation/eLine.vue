@@ -53,7 +53,7 @@
               let startValue = xAxis[0].data.length-1;
               let endValue = xAxis[0].data.length - 37;
               grid  = {
-                left: '15',
+                left: '20',
                 right: '120',
                 bottom: '30',
                 top:'20',

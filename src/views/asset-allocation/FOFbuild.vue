@@ -7,123 +7,126 @@
         <template v-slot:expandIcon="props" >
           <a-icon type="" :rotate="props.isActive ? 90 : 0" />
         </template>
-         <div class="span-header">&nbsp;股票型</div>
-          <div class="span-header-body">
-            <a-row :gutter="24">
-                 <a-col :md="5" :sm="8">
-                   <a-form-item label="风格偏好">
-                     <a-select style="width:100px" @change="handleChange" v-model="params.stylePreference">
-                       <a-select-option v-for="item in stylePreferenceOption" :key="item.key">{{item.value}}</a-select-option>
-                     </a-select>
-                  </a-form-item>
-                 </a-col>
+      <div style=" border:1px solid #DDDDDD">
+        <div class="span-header">&nbsp;股票型</div>
+         <div class="span-header-body">
+           <div class="select-row">
+             <a-row :gutter="24">
+                  <a-col :md="4" :sm="8">
+                    <a-form-item label="风格偏好" >
+                      <a-select style="width:100px" @change="handleChange" v-model="params.stylePreference">
+                        <a-select-option v-for="item in stylePreferenceOption" :key="item.key">{{item.value}}</a-select-option>
+                      </a-select>
+                   </a-form-item>
+                  </a-col>
 
-                 <a-col :md="5" :sm="8">
-                   <a-form-item label="规模偏好">
-                     <a-select style="width:120px" @change="handleChange" v-model="params.stockSizeRequirement">
-                       <a-select-option v-for="item in sizeRequirementOption" :key="item.key">{{item.value}}</a-select-option>
-                     </a-select>
-                  </a-form-item>
-                 </a-col>
+                  <a-col :md="4" :sm="8">
+                    <a-form-item label="规模偏好" >
+                      <a-select style="width:120px" @change="handleChange" v-model="params.stockSizeRequirement">
+                        <a-select-option v-for="item in sizeRequirementOption" :key="item.key">{{item.value}}</a-select-option>
+                      </a-select>
+                   </a-form-item>
+                  </a-col>
 
-                 <a-col :md="6" :sm="8">
-                   <a-form-item label="是否包含指数增强型基金">
-                     <a-select  style="width:100px" @change="handleChange" v-model="params.isIndexEnhanced">
-                       <a-select-option v-for="item in isIndexEnhancedOption" :key="item.key">{{item.value}}</a-select-option>
-                     </a-select>
-                  </a-form-item>
-                 </a-col>
-                 <a-col :md="6" :sm="24">
-                     <el-button size="mini" type="danger" round class="btn-fof" @click="stockFOFbuild">构建FOF</el-button>
-                 </a-col>
-             </a-row>
+                  <a-col :md="6" :sm="10">
+                    <a-form-item label="是否包含指数增强型基金">
+                      <a-select  style="width:100px" @change="handleChange" v-model="params.isIndexEnhanced">
+                        <a-select-option v-for="item in isIndexEnhancedOption" :key="item.key">{{item.value}}</a-select-option>
+                      </a-select>
+                   </a-form-item>
+                  </a-col>
+                  <a-col :md="6" :sm="24">
+                      <el-button size="mini" type="danger" round class="btn-fof" @click="stockFOFbuild">构建FOF</el-button>
+                  </a-col>
+              </a-row>
 
-             <!-- table -->
-             <template >
-               <div class="table-svg">
-                 <a-table :columns="stockcolumns" :dataSource="stockTableData" :pagination='false' @change="handleChange" bordered>
+           </div>
 
-                 </a-table>
-               </div>
+            <!-- table -->
+            <template >
+              <div class="table-svg">
+                <a-table :columns="stockcolumns" :dataSource="stockTableData" :pagination='false' @change="handleChange" bordered>
 
-              </template>
+                </a-table>
+              </div>
 
-             <!-- 图表 -->
+             </template>
 
-          <div class="fofbuild-top-echartsUtil">
-            <div v-if="isStock">
-               <echartsUtil :id="'1'" :data="stockOption" style="height:252px;"></echartsUtil>
-            </div>
-            <div v-else class= "zwf" >
-              <img  src="@/assets/空白占位符.png">
-              <span>点击【构建FOF】按钮，加载数据</span>
-            </div>
+            <!-- 图表 -->
 
-          </div>
-
-          </div>
-
-
-
-       <div class="kg"></div>
-       <div class="span-header">&nbsp;债券型</div>
-        <div class="span-header-body">
-
-          <a-row :gutter="24">
-
-
-               <a-col :md="5" :sm="8">
-                 <a-form-item label="规模偏好">
-                   <a-select defaultValue ="0" style="width:120px"  @change="handleChange" v-model="params.bondSizeRequirement">
-                      <a-select-option v-for="item in sizeRequirementOption" :key="item.key">{{item.value}}</a-select-option>
-                   </a-select>
-                </a-form-item>
-               </a-col>
-
-
-               <a-col :md="6" :sm="24">
-                   <el-button size="mini" type="danger" round class="btn-fof" @click="bondFOFbuild">构建FOF</el-button>
-               </a-col>
-           </a-row>
-
-           <!-- table -->
-           <template>
-             <div class="table-svg">
-               <a-table :columns="bondcolumns" :dataSource="bondTableData" :pagination='false' @change="handleChange" bordered>
-
-               </a-table>
-             </div>
-            </template>
-
-           <!-- 图表 -->
-
-        <div class="fofbuild-top-echartsUtil">
-           <div v-if="isBond">
-               <echartsUtil :id="'2'" :data="bondOption" style="height:252px;"></echartsUtil>
+         <div class="fofbuild-top-echartsUtil">
+           <div v-if="isStock">
+              <echartsUtil :id="'1'" :data="stockOption" style="height:252px;"></echartsUtil>
            </div>
            <div v-else class= "zwf" >
              <img  src="@/assets/空白占位符.png">
              <span>点击【构建FOF】按钮，加载数据</span>
            </div>
 
-        </div>
-
-        <!-- 提示 -->
-         <div class="fofbuild-footer">
-
-           <li><span style="color:#F56C6C"><strong>风险提示</strong></span></li>
-           <li><span>尊敬的客户：</span></li>
-           <li><span>
-             在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
-             但同时也可能存在着较大的证券投资风险。请务必仔细阅读本系统平台的使用说明。
-             我们将尽可能采取有效措施保护客户资料和其他各项活动的安全，本着对您负责的态度，
-             公司郑重提示，在使用时，存在且不限于以下风险：<a href="javascript:" @click="viewDetails">查看详情</a>
-
-           </span></li>
-
          </div>
 
+         </div>
       </div>
+
+
+
+       <div class="kg"></div>
+       <div style=" border:1px solid #DDDDDD">
+         <div class="span-header">&nbsp;债券型</div>
+          <div class="span-header-body">
+            <a-row :gutter="24">
+                 <a-col :md="5" :sm="8">
+                   <a-form-item label="规模偏好">
+                     <a-select defaultValue ="0" style="width:120px"  @change="handleChange" v-model="params.bondSizeRequirement">
+                        <a-select-option v-for="item in sizeRequirementOption" :key="item.key">{{item.value}}</a-select-option>
+                     </a-select>
+                  </a-form-item>
+                 </a-col>
+                 <a-col :md="6" :sm="24">
+                     <el-button size="mini" type="danger" round class="btn-fof" @click="bondFOFbuild">构建FOF</el-button>
+                 </a-col>
+             </a-row>
+
+             <!-- table -->
+             <template>
+               <div class="table-svg">
+                 <a-table :columns="bondcolumns" :dataSource="bondTableData" :pagination='false' @change="handleChange" bordered>
+
+                 </a-table>
+               </div>
+              </template>
+
+             <!-- 图表 -->
+
+          <div class="fofbuild-top-echartsUtil">
+             <div v-if="isBond">
+                 <echartsUtil :id="'2'" :data="bondOption" style="height:252px;"></echartsUtil>
+             </div>
+             <div v-else class= "zwf" >
+               <img  src="@/assets/空白占位符.png">
+               <span>点击【构建FOF】按钮，加载数据</span>
+             </div>
+
+          </div>
+
+          <!-- 提示 -->
+           <div class="fofbuild-footer">
+
+             <li><span style="color:#F56C6C"><strong>风险提示</strong></span></li>
+             <li><span>尊敬的客户：</span></li>
+             <li><span>
+               在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
+               但同时也可能存在着较大的证券投资风险。请务必仔细阅读本系统平台的使用说明。
+               我们将尽可能采取有效措施保护客户资料和其他各项活动的安全，本着对您负责的态度，
+               公司郑重提示，在使用时，存在且不限于以下风险：<a href="javascript:" @click="viewDetails">查看详情</a>
+
+             </span></li>
+
+           </div>
+
+        </div>
+       </div>
+
    </a-form>
     </div>
     <!-- 声明modal模板 -->
@@ -184,7 +187,6 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
 
     data() {
       return {
-
         stylePreferenceOption:[{key:0,value:"大盘型"},{key:1,value:"中盘型"},{key:2,value:"小盘型"}],
         sizeRequirementOption:[{key:0,value:"无要求"},{key:1,value:"2亿以上"},{key:2,value:"10亿以上"}],
         isIndexEnhancedOption:[{key:1,value:"是"},{key:2,value:"否"}],
@@ -232,7 +234,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
           align:'center',
           dataIndex: 'fundName',
           key:'fundName',
-          sorter: (a, b) => a.fundName.length - b.fundName.length,
+          sorter: (a, b) => (a.fundName + '').localeCompare(b.fundName + ''),
           customRender: (text, row, index) => {
               return <a href="javascript:;">{text}</a>;
           },
@@ -242,7 +244,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
           align:'center',
           dataIndex: 'fundManager',
           key: 'fundManager',
-          sorter: (a, b) => a.fundManager.length - b.fundManager.length,
+          sorter: (a, b) =>   (a.fundManager + '').localeCompare(b.fundManager + '') ,
           customRender:(text, row, index) => {
             return <a href="javascript:;">{text}</a>;
           }
@@ -252,7 +254,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
           align:'center',
           dataIndex: 'fundType',
           key: 'fundType',
-          sorter: (a, b) => a.fundType.length - b.fundType.length,
+          sorter: (a, b) => (a.fundType + '').localeCompare(b.fundType + ''),
         },
         {
           title: '发行时间',
@@ -390,7 +392,6 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
             item.issueDate=moment(item.issueDate).format("YYYY/MM/DD");
           })
           that.bondTableData=res;
-          that.stockTableData=res;
           if(res.length>0){
             that.isBond=true;
           }else{
@@ -482,10 +483,10 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
 
       // stockFOF构建
       stockFOFbuild(){
+         this.typeValue="stock";
         if(localStorage.getItem("infoContentShow") !== "0"){
             this.infoContentCheckbox = false;
             this.isShowInfoModal = true;
-             this.typeValue="stock";
           }else{
             this.stockloadData();
           }
@@ -494,10 +495,10 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
       },
       // stockFOF构建
       bondFOFbuild(){
+        this.typeValue="bond";
         if(localStorage.getItem("infoContentShow") !== "0"){
             this.infoContentCheckbox = false;
             this.isShowInfoModal = true;
-             this.typeValue="bond";
           }else{
             this.bondloadData();
           }

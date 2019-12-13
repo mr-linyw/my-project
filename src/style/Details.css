@@ -85,6 +85,12 @@ text-align:left;
 background:#FFFFFF;
 height: 38px;
 }
+.modal-text-two :hover{
+  cursor: pointer;
+}
+.modal-text :hover{
+  cursor: pointer;
+}
 .text{
 padding-left: 2%;
 

@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
   export default {
     name: "ePie",
     props:["params"],
@@ -51,7 +52,7 @@
             axisPointer : {            // 坐标轴指示器，坐标轴触发有效
               type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
             },
-            formatter: '{b0}{c0}%'
+            formatter: '{b0}{d0}%',
           },
           legend,
           series
