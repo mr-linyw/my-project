@@ -63,6 +63,7 @@
     import modal from '@/modal/Modal'
     export default {
       name: "gridAndLineByZQ",
+      props: ['isQuery','govBondTriData'],
       data(){
         return{
           text:'历史表现',
@@ -119,13 +120,14 @@
            this.isShowInfoModal = false;
          },
         buildBound(){
-          if(localStorage.getItem("isbondCheck") !== "0"){
-              this.isbondCheck = false;
-              this.isShowInfoModal = true;
-            }else{
-              this.params = this.sizeRequirement;
-            }
-
+          if(this.isQuery==true){
+            if(localStorage.getItem("isbondCheck") !== "0"){
+                this.isbondCheck = false;
+                this.isShowInfoModal = true;
+              }else{
+                this.params = this.sizeRequirement;
+              }
+          }else{this.$message.error('请先配置');}
         },
         sizeRequirement_do(val){
            this.sizeRequirement = val;
@@ -175,12 +177,20 @@
           for (let item of result){
             let formatM = moment(item.tradeDate).format("YYYY/MM/DD");
             params.xAxis[0].data.push(formatM);
-            params.series[0].data.push(Number(item.protfolio).toFixed(4));
-            params.series[1].data.push(Number(item.benchmark).toFixed(4));
+            params.series[0].data.push(Number(item.protfolio*100).toFixed(4));
+            params.series[1].data.push(Number(item.benchmark*100).toFixed(4));
           }
           this.chartData = params;
         },
         initData(data){
+          let num="";
+          //计算权重平均值
+          if(this.govBondTriData!=0){
+            num =   Number((this.govBondTriData/5)*100).toFixed(2)+'%';      
+         }else {
+            num = "0%";
+         }
+         //处理table数据
           this.data.length = 0;
           let d = this.data;
           for (let i = 0; i < data.length; i++) {
@@ -190,7 +200,7 @@
               fundName: dc["fundName"],
               fundManager: dc["fundManager"],
               lastMonthReturn: dc["lastMonthReturn"],
-              latestSize: dc["latestSize"]
+              latestSize:  num
             });
           }
         }

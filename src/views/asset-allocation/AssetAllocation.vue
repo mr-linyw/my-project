@@ -60,7 +60,7 @@
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
           <a-collapse-panel header="股票型" key="1" >
-            <grid-and-line-by-g-p></grid-and-line-by-g-p>
+            <grid-and-line-by-g-p :isQuery="isQuery" :hushenData="hushenData"></grid-and-line-by-g-p>
           </a-collapse-panel>
         </a-collapse>
         <a-collapse  v-model="activeKey" >
@@ -68,7 +68,7 @@
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
           <a-collapse-panel header="债券型" key="2" >
-            <grid-and-line-by-z-q></grid-and-line-by-z-q>
+            <grid-and-line-by-z-q :isQuery="isQuery" :govBondTriData="govBondTriData"></grid-and-line-by-z-q>
           </a-collapse-panel>
         </a-collapse>
         <a-collapse  v-model="activeKey" >
@@ -237,7 +237,11 @@
           {text:"-",value:2},
         ],
         tableSource:[{fundCode:'070008.OF',fundName:'嘉实货币基金',fundManager:'庄园、张明',lastMonthReturn:'2.55%',latestSize:'-'}],
-      }
+        hushenData:0,
+        govBondTriData:0,
+        windCommodity:0,
+        isQuery:false,//点击FOF构建的权限控制
+       }
     },
     mounted(){
       let chartResize = new Event('chartResize');
@@ -254,6 +258,7 @@
           let cm = this.baseConfigParams.cm;
           let cl = this.baseConfigParams.cl;
           this.$http.get(this.$url.allocationResult + "/"+cm+"/"+cl+"").then(result => {
+
             this.do_allocationResultData(result);
             this.do_pieData(result[result.length-1]);
           });
@@ -261,6 +266,9 @@
      },
     methods:{
       do_pieData(result){
+        this.hushenData=result['hushen'];//股票
+        this.govBondTriData= result["govBondTri"];//债券
+        this.windCommodity= result["windCommodity"];//商品
         let params = {
           legend: null,
           series:[
@@ -438,6 +446,7 @@
         this.isShowInfoModal = false;
       },
       configClick(){
+        this.isQuery=true;//设置构建FOF权限
           if(localStorage.getItem("testContentShow") !== "0"){
             this.infoContentCheckbox = false;
             this.isShowInfoModal = true;

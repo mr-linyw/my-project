@@ -75,6 +75,8 @@
     import modal from '@/modal/Modal'
     import _ from 'lodash'
     export default {
+
+      props: ['isQuery','hushenData'],
       name: "gridAndLineByGP",
       components:{
         eLine,modal
@@ -108,6 +110,7 @@
         }
       },
       created(){
+
         // table数据
         // this.$http.get(this.$url.fofRecommendStockFund + "/2/0/1").then(result => {
         //      this.initData(result);
@@ -163,12 +166,17 @@
            this.isShowInfoModal = false;
          },
         buildStockFOF(){
-          if(localStorage.getItem("infoCheckbox") !== "0"){
-              this.infoCheckbox = false;
-              this.isShowInfoModal = true;
-            }else{
-              this.params = {stylePreference:this.stylePreference,isIndexEnhanced:this.isIndexEnhanced,sizeRequirement:this.sizeRequirement}
-            }
+          if(this.isQuery==true){
+            if(localStorage.getItem("infoCheckbox") !== "0"){
+                this.infoCheckbox = false;
+                this.isShowInfoModal = true;
+              }else{
+                this.params = {stylePreference:this.stylePreference,isIndexEnhanced:this.isIndexEnhanced,sizeRequirement:this.sizeRequirement}
+              }
+          }else{
+            this.$message.error('请先配置');
+          }
+
         },
         isIndexEnhanced_do(val){
             this.isIndexEnhanced = val;
@@ -200,6 +208,7 @@
                  }
                }
              ],
+
              series:[
                {
                  name: '股基组合',
@@ -226,19 +235,27 @@
              params.xAxis[0].data.push(formatM);
              if(this.stylePreference === "0"){
                // _.round(parseFloat(item.smallCap*100), 2)
-               params.series[0].data.push(Number(item.smallCap*100).toFixed(2));
-               params.series[1].data.push(Number(item.smallCapBenchmark*100).toFixed(2));
+               params.series[0].data.push(Number(item.smallCap*100).toFixed(4));
+               params.series[1].data.push(Number(item.smallCapBenchmark*100).toFixed(4));
              }else if(this.stylePreference === "1"){
-               params.series[0].data.push(Number(item.middleCap*100).toFixed(2));
-               params.series[1].data.push(Number(item.middleCapBenchmark*100).toFixed(2));
+               params.series[0].data.push(Number(item.middleCap*100).toFixed(4));
+               params.series[1].data.push(Number(item.middleCapBenchmark*100).toFixed(4));
              }else{
-               params.series[0].data.push(Number(item.largeCap*100).toFixed(2));
-               params.series[1].data.push(Number(item.largeCapBenchmark*100).toFixed(2));
+               params.series[0].data.push(Number(item.largeCap*100).toFixed(4));
+               params.series[1].data.push(Number(item.largeCapBenchmark*100).toFixed(4));
              }
            }
            this.chartData = params;
           },
          initData(data){
+           let num="";
+           //计算权重平均值
+           if(this.hushenData!=0){
+            num =   Number((this.hushenData/5)*100).toFixed(2)+'%';      
+          }else {
+             num = "0%";
+          }
+           //处理table数据
             this.data.length = 0;
            let d = this.data;
            for (let i = 0; i < data.length; i++) {
@@ -248,7 +265,7 @@
                fundName: dc["fundName"],
                fundManager: dc["fundManager"],
                lastMonthReturn: dc["lastMonthReturn"],
-               latestSize: dc["latestSize"]
+               latestSize:  num
              });
            }
          }

@@ -179,7 +179,7 @@ import '@/style/Details.css'
       },
       // 复制成功时的回调函数
       onCopy (e) {
-         this.$message.success("内容已复制到剪切板！")
+         this.$message.success("研报地址已复制到剪切板！")
       },
       // 复制失败时的回调函数
       onError (e) {

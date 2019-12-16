@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { Message } from 'element-ui';
+import { Message,Loading } from 'element-ui';
+import router from '@/router'
 
 
 axios.defaults.withCredentials = true;// 跨域携带cookie
@@ -14,11 +15,37 @@ var service = axios.create({
 });
 
 
+
+
+let loading;
+//内存中正在请求的数量
+let loadingNum=0;
+function startLoading() {
+	if(loadingNum==0){
+		loading = Loading.service({
+		  lock: true,
+		  text: '拼命加载中...',
+		  background:'rgba(255,255,255,0.5)',
+		})
+	}
+	//请求数量加1
+	loadingNum++;
+};
+function endLoading() {
+    //请求数量减1
+	loadingNum--
+	if(loadingNum<=0){
+		loading.close()
+	}
+};
+
+
 service.interceptors.request.use(config => {//请求之前(可以设置token)
   if (config.method === 'post' || config.method === 'put') {
     // post、put 提交时，将对象转换为string, 为处理Java后台解析问题
     config.data = JSON.stringify(config.data)
   }
+   startLoading();
     return config
 },error =>{
     Message.error(error)
@@ -27,31 +54,31 @@ service.interceptors.request.use(config => {//请求之前(可以设置token)
 
 
 service.interceptors.response.use(response => {//数据拿到之后
+  endLoading();
     return response.data
-},error => {
-    Message.error('Http请求失败，请联系管理员');
-    return Promise.reject(error.response);;
+},err => {
+  endLoading();
+ if (err && err.response) {
+   switch (err.response.status) {
+     case 400: err.message = '请求错误(400)'; break;
+     case 401: router.push('/Login'); break;
+     case 403: err.message = '拒绝访问(403)'; break;
+     case 404: err.message = '请求出错(404)'; break;
+     case 408: err.message = '请求超时(408)'; break;
+     case 500: err.message = '服务器错误(500)'; break;
+     case 501: err.message = '服务未实现(501)'; break;
+     case 502: err.message = '网络错误(502)'; break;
+     case 503: err.message = '服务不可用(503)'; break;
+     case 504: err.message = '网络超时(504)'; break;
+     case 505: err.message = 'HTTP版本不受支持(505)'; break;
+     default: err.message = `连接出错(${err.response.status})!`;
+   }
+ } else {
+   err.message = '连接服务器失败!'
+ }
+    Message.error(err.message);
+    return Promise.reject(err);
 });
-
-
-function successfun(res){//处理后台返回的非200错误
-  return res;
-    // if(res.code === 200){
-    //     return res
-    // }else{
-    //      Message.warning(res.message);
-    //      return res;
-    // }
-};
-
-
-function errorfun(res){
-    if(res.code != 200){
-        Message.error(res.message);
-        return res;
-    }
-}
-
 
 export default{
     post(url,data){//post请求

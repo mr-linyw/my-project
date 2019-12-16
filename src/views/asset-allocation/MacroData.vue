@@ -111,27 +111,28 @@ import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
           //初始化生成折线图的数据
           that.GDPdate=res.reverse();
           var startValue = moment(res.slice(-1)[0].ecoDate).subtract(3, "years").format("YYYY/MM/DD");
-
+          var endValue = moment(res.slice(-1)[0].ecoDate).format("YYYY/MM/DD");
           let GDPtext="GDP";
-          that.GDPOption = twoOption(GDPtext,that.macroscopicData(that.GDPdate),name1,name2,startValue,"(%)");
+          that.GDPOption = twoOption(GDPtext,that.macroscopicData(that.GDPdate),name1,name2,startValue,endValue,"(%)");
         });
         //宏观指标CPI数据
         that.$http.get(that.$url.macroIndexUrl+"/2").then(res=>{
           //初始化生成折线图的数据
           that.CPIdate=res.reverse();
           let startValue = moment(res.slice(-1)[0].ecoDate).subtract(3, "years").format("YYYY/MM/DD");
+          var endValue = moment(res.slice(-1)[0].ecoDate).format("YYYY/MM/DD");
 
           let CPItext="CPI";
-          that.CPIOption = twoOption(CPItext,that.macroscopicData(that.CPIdate),name1,name2,startValue,"(%)");
+          that.CPIOption = twoOption(CPItext,that.macroscopicData(that.CPIdate),name1,name2,startValue,endValue,"(%)");
         });
         //宏观指标PPI数据
         that.$http.get(that.$url.macroIndexUrl+"/3").then(res=>{
           //初始化生成折线图的数据
           that.PPIdate=res.reverse();
           let startValue = moment(res.slice(-1)[0].ecoDate).subtract(3, "years").format("YYYY/MM/DD");
-
+          var endValue = moment(res.slice(-1)[0].ecoDate).format("YYYY/MM/DD");
           let PPItext="PPI";
-          that.PPIOption = twoOption(PPItext,that.macroscopicData(that.PPIdate),name1,name2,startValue,"(%)");
+          that.PPIOption = twoOption(PPItext,that.macroscopicData(that.PPIdate),name1,name2,startValue,endValue,"(%)");
 
         });
       },

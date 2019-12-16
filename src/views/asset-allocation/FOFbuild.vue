@@ -380,7 +380,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         that.$http.get(that.$url.stockFundUrl+"/"+value).then(res=>{
           //初始化生成折线图的数据
           that.stockdata=res;
-          that.stockOption = twoOption('历史表现',that.getStockEcharsData(that.stockdata),"股基FOF组合","基准组合");
+          that.stockOption = twoOption('历史表现',that.getStockEcharsData(that.stockdata),"股基FOF组合","基准组合","","","","FOF");
         });
       },
       bondloadData(){
@@ -402,7 +402,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         that.$http.get(that.$url.bondFundUrl+"/"+that.params.bondSizeRequirement).then(res=>{
           //初始化生成折线图的数据
           that.bonddata=res;
-          that.bondOption = twoOption('历史表现',that.getBondEcharsData(that.bonddata),"债基FOF组合","基准组合");
+          that.bondOption = twoOption('历史表现',that.getBondEcharsData(that.bonddata),"债基FOF组合","基准组合","","","","FOF");
         });
       },
       //获取股票型历史表现图表的参数
@@ -441,6 +441,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
           dataSource.map((item,index)=>{
            dateMap.push(moment(item.tradeDate).format('YYYY/MM/DD'));  //时间map
            if(that.params.stylePreference==0){
+
              blueMap.push(item.largeCap);//蓝色折线map   股基FOF组合
              redMap.push(item.largeCapBenchmark);  //红色折线map     基准组合
            }

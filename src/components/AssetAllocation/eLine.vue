@@ -87,7 +87,11 @@
                   type: 'value',
                   axisLabel: {
                   color: '#777',
+                  formatter:function (value, index) {           
+                         return value.toFixed(2) +'%';      
+                        }
                 },
+
                 axisLine:{
                   lineStyle:{
                     color:"#ccc"
@@ -122,6 +126,9 @@
                 type: 'value',
                 axisLabel: {
                   color: '#777',
+                  formatter:function (value, index) {           
+                         return value.toFixed(2)+'%';  
+                        }
                 },
                 axisLine:{
                   show: false
