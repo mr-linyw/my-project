@@ -2,18 +2,12 @@
 
     <a-layout>
         <a-layout-header >
-          <a-row>
-               <a-col :span="12">
-                 <div class="a-layout-header-img">
-                   <img  src="@/assets/logo4.png">
-                    <strong style="font-size:20px" >资产配置服务</strong>　
-                 </div>
+          <div class="a-layout-header-img">
+            <img  src="@/assets/顶部-中信建投LOGO.png">&#12288;
+            <img  src="@/assets/顶部-分割线.png">&#12288;
+             <strong style="font-size:17px" >资产配置服务</strong>　
+          </div>
 
-               </a-col>
-               <a-col :span="1">　　　           　
-               </a-col>
-               <a-col :span="5"></a-col>
-               <a-col :span="6" class="a-layout-header-box">
   　　　            <!-- <span  style="font-size:15px" >帮助中心</span>　　 -->
                     <!-- <a-dropdown>
                         <a class="ant-dropdown-link" href="#"><font color="white"> <span style="font-size:15px">linyawei</span> <a-icon type="down" /></font> </a>
@@ -23,10 +17,9 @@
                           <a-menu-item key="3">3rd menu item</a-menu-item>
                         </a-menu>
                       </a-dropdown> -->
-               </a-col>
-          </a-row>
+
         </a-layout-header>
-        <a-layout-content class="a-layout-content-tabs">
+        <a-layout-content >
 
           <div class="a-layout-content-div">
             <a-tabs v-model="activeKey" size="small" :tabBarGutter=10 type="card" @change="handleClick">
@@ -40,8 +33,8 @@
            </div>
         </a-layout-content>
 
-        <a-layout-footer class="a-layout-footer-router">
-            <router-view />
+        <a-layout-footer>
+            <router-view v-wechat-title="$route.meta.title"/>
         </a-layout-footer>
     </a-layout>
 
@@ -49,6 +42,7 @@
 </template>
 
 <script>
+
   export default {
     data() {
       return {
@@ -126,41 +120,65 @@
 .a-layout{
   height: 876px;
 }
+
 .a-layout-header-box {
-   text-align: right;
- }
+ text-align: right;
+}
 .ant-layout-header{
-    text-align: left;
-    background: #F56C6C !important;
-    color: #fff;
-
-  }
- .a-layout-header-img{
-   text-align: left;
-
-   height: 65px;
- }
- .a-layout-content-tabs {
-    padding-left: 3%;
-    padding-right: 3%;
-    margin-top: 10px;
-    height: 20px;
-  }
-  .a-layout-footer-router{
-    margin-top: -5px;
-    height: 100%;
-  }
-
+  padding: 0px 10px;
+  height: 42px;
+  text-align: left;
+  /* background: #F56C6C !important; */
+  color: #fff;
+  background-image: url('../assets//顶部BG切图.png');
+}
+.a-layout-header-img{
+ line-height: 42px;
+ text-align: left;
+ height: 42px;
+}
+.ant-layout-content{
+  padding: 0px 10px;
+  height: 37px;
+}
+.ant-tabs .ant-tabs-top .ant-tabs-small .ant-tabs-card .ant-tabs-no-animation{
+  height: 37px !important;
+}
 .el-tabs__item{
 height: 38px !important;
 color:#000000 !important;
 }
-  .ant-tabs-tab-active.ant-tabs-tab{
-  background:#F56C6C !important;
-  color: #fff !important;
-  }
-  .ant-tabs-nav-scroll{
-    height: 38px !important;
+.ant-tabs-nav-wrap .ant-tabs-tab{
+  background: #E5E5EA !important;
+}
+.ant-tabs-nav-wrap .ant-tabs-tab:hover{
+  color: #696969 !important;
+}
+.ant-tabs-tab-active.ant-tabs-tab{
+background:#CD3833 !important;
+/* background-image: url('../assets//顶部BG切图.png') !important; */
+color: #fff !important;
+}
+.ant-tabs-nav-container{
+    height: 30px !important;
+}
+.ant-tabs{
+  height: 30px;
+}
+.ant-tabs-tab{
+line-height: 30px !important;
+}
+.ant-tabs-nav-scroll{
+  height: 30px !important;
+}
+.a-layout-content-div{
+  height: 30px;
+  margin-top: 7px;
+}
+.ant-layout-footer{
+  height: 890px;
+  padding: 0px 10px;
+}
 
-  }
+
 </style>

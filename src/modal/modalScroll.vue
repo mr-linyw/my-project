@@ -9,7 +9,7 @@
               <a-icon type="close-circle" class="modal-header-title" :style="{ fontSize: '16px', color: '#111111'}" @click="close" aria-label="Close modal"/>
           </slot>
         </div>
-        <div class="modal-body" id="modalDescription" style="height: 400px; overflow-y:scroll">
+        <div class="modal-body" id="modalDescription" style="height: 300px; overflow-y:scroll">
           <div >
               <slot name="body"></slot>
           </div>

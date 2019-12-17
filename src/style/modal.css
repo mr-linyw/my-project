@@ -64,15 +64,15 @@
 
 }
 .btn-close {
-   width:150px;
+   width:120px;
     color: #313131;
     background-color: #C0C4CC;
 }
 .btn-confirm {
-  width: 150px;
+  width: 120px;
     color: #000;
     /* background-color: #2d8cf0; */
-    background-color: #F56C6C;
+    background:#CD3833 !important;
 }
 .modal-header-title {
   float: right;

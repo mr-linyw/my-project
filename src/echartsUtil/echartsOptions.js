@@ -1,4 +1,4 @@
-export  function oneOption(text,data){
+export  function oneOption(text,data,startValue,endValue){
  let  option={
      title: {
         text: text,
@@ -23,6 +23,8 @@ export  function oneOption(text,data){
       },
       dataZoom: [{
           type: 'inside',
+          startValue:startValue,
+          endValue:endValue,
           throttle: 50
       }],
       series: {
@@ -47,6 +49,7 @@ export  function oneOption(text,data){
 export  function twoOption(text,data,name1,name2,startValue,endValue,yname,type){
 let yAxis;
 let series;
+let dataZoom;
 if(type==='FOF'){
   yAxis={
     name:yname,
@@ -94,7 +97,11 @@ if(type==='FOF'){
              }
        },
    }
- ]
+ ];
+ dataZoom= [{
+     type: 'inside',
+     throttle: 50
+ }]
 }else {
   yAxis={
     name:yname,
@@ -136,7 +143,13 @@ if(type==='FOF'){
               }
         },
     }
-  ]
+  ];
+  dataZoom= [{
+      type: 'inside',
+      startValue:startValue,
+      endValue :endValue,
+      throttle: 50
+  }]
 };
 let  option={
      title: {
@@ -153,12 +166,7 @@ let  option={
         data:data.dateMap
       },
       yAxis,
-      dataZoom: [{
-          type: 'inside',
-          startValue:startValue,
-
-          throttle: 50
-      }],
+      dataZoom,
       series,
        }
        return option;

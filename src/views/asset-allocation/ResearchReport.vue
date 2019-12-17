@@ -1,6 +1,6 @@
 <template>
 
-    <div class="header"  v-title data-title="资产配置服务-研究报告">
+    <div class="header">
       <div class="header-tabs" style="height: 780px; overflow-y:scroll">
         <el-tabs  v-model="activeName" @tab-click="handleClick">
           <!-- 宏观政策按钮

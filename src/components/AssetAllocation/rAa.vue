@@ -175,7 +175,9 @@
                      type: 'inside',
                      xAxisIndex: 0,
                      startValue:_t.startValue,
-                     endValue:_t.endValue
+                     endValue:_t.endValue,
+                     minValueSpan :6,
+                     maxValueSpan :20
                    },
                    {
                      type: 'slider',

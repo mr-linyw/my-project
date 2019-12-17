@@ -1,5 +1,5 @@
 <template>
-  <div class="AssetAllocation" style="height: 800px; overflow-y:scroll" v-title data-title="资产配置服务-资产配置">
+  <div class="AssetAllocation" style="height: 850px; overflow-y:scroll" >
     <div class="AssetAllocation-content">
     <div class="an-tools">
         <div class="boxGroup">
@@ -483,13 +483,9 @@
         this.cl = value;
         this.yhgData.map(item=>{
           if(item.value==value){
-            let source={
-              fundCode:'070008.OF',fundName:'嘉实货币基金',
-              fundManager:'庄园、张明',lastMonthReturn:'2.55%',latestSize:item.text
-            }
+              this.$set(this.tableSource[0],"latestSize",item.text)
           }
         })
-        this.$set(this.tableSource,0,source)
       },
       modalOKs(){
         this.isShowModals = false;

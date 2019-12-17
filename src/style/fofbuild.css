@@ -6,6 +6,7 @@
 }
 
 .fofbuild-top{
+  height: 984px;
   text-align: left;
   background: #FFFFFF;
   padding-left: 12px;
@@ -27,13 +28,11 @@
 .btn-fof{
   width: 100px;
     color: #000;
-    background-color: #F56C6C;
+    background:#CD3833 !important;
 }
 
 .fofbuild-top .span-header{
-
   text-align: left;
-  width: 1537px;
   height:30px;
   line-height: 30px ;
   color: rgba(0, 0, 0, 0.85);
@@ -53,11 +52,12 @@
   margin-top: 6px;
 }
 .fofbuild-top .ant-table-thead > tr > th{
-  background: #C0C4CC !important;
+  /* background: #C0C4CC !important; */
+  background: #E5E5EA !important;
 }
-.table-svg svg{
+/* .table-svg svg{
   color:#808080;
-}
+} */
 .fofbuild-footer{
   text-align: left;
   padding-left: 200px;

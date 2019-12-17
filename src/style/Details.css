@@ -8,31 +8,33 @@
  text-align: right;
 }
 .a-layout-header{
-  padding-left: 3.5%;
-  padding-right: 3.5%;
-  line-height: 64px;
+  padding: 0px 10px;
+  height: 42px;
+  line-height: 42px;
   text-align: left;
-  background: #F56C6C;
+  background-image: url('../assets//顶部BG切图.png');
   color: #fff;
 }
 .a-layout-header-img{
  text-align: left;
- height: 65px;
+}
+.all-text{
+  height: 800px;
+   background: #DCDCDC;
 }
 .a-layout-content-tabs-d {
- height: 38px;
- line-height: 40px;
- font-size: 16px;
-  padding-left: 3.5%;
-  padding-right: 3.5%;
- background: #DCDCDC;
-
+ line-height: 43px;
+ font-size: 15px;
+ padding: 0px 10px;
+ height: 37px;
+}
+.all-text-center{
+  padding: 0px 10px;
 }
 .a-layout-footer-t {
   font-size: 15px;
-   padding-left: 3.5%;
-   padding-right: 3.5%;
-   height:100%;
+   padding: 0px 10px;
+   height:880px;
    background: #FFFFFF;
  }
  .a-layout-footer-header {
@@ -40,26 +42,42 @@
    padding-right:1%;
    font-size: 16px;
    font-weight:bold;
-   height: 38px;
-   line-height: 60px;
+   height: 37px;
+   line-height: 37px;
+  }
+  .ant-divider-horizontal{
+    margin: 0px 0px !important;
   }
 .a-layout-footer-center-header {
-  margin-top: 20px;
-  padding-left: 3%;
-  padding-right:3%;
-  font-size: 16px;
+  padding: 0px 28px;
   font-weight:bold;
 }
 .a-layout-footer-center-center {
-  margin-top: 40px;
-  padding-left: 3%;
-  padding-right:3%;
+  margin-top: 10px;
+  padding:0px 28px;
   background: #EBF0F3;
+}
+.center-header-p{
+  font-size: 16px;
+  line-height: 26px;
+  margin-top: 20px;
+}
+.center-header-p p{
+  margin: 0px 0px 0px;
+}
+.center-header-s{
+  margin: 0px 0px;
+  line-height: 36px;
+}
+.zhaiyao{
+  margin-top: 12px;
+  padding-top: 12px;
 }
 .a-layout-footer-footer {
 text-align: right;
 }
 .a-layout-footer-left {
+  height: 900px;
   float: left;
   width: 38%;
 }

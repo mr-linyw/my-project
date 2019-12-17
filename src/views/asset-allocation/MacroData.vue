@@ -1,5 +1,5 @@
 <template>
-  <div class="macroData" style="height: 800px; overflow-y:scroll" v-title data-title="资产配置服务-宏观数据">
+  <div class="macroData" style="height: 850px; overflow-y:scroll">
     <div class="macroData-top">
       <div class="top"></div>
       <a-collapse  v-model="activeKey" >
@@ -95,14 +95,22 @@ import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
 
           //初始化生成折线图的数据
           that.hushendate=res.hushen;
+          var hstartValue = moment(res.hushen.slice(-1)[0].date).subtract(3, "years").format("YYYY/MM/DD");
+          var hendValue = moment(res.hushen.slice(-1)[0].date).format("YYYY/MM/DD");
           that.winddate=res.wind;
+          var wstartValue = moment(res.wind.slice(-1)[0].date).subtract(3, "years").format("YYYY/MM/DD");
+          var wendValue = moment(res.wind.slice(-1)[0].date).format("YYYY/MM/DD");
           that.govdate=res.gov;
+          var gstartValue = moment(res.gov.slice(-1)[0].date).subtract(3, "years").format("YYYY/MM/DD");
+          var gendValue = moment(res.gov.slice(-1)[0].date).format("YYYY/MM/DD");
           that.cashdate=res.cash;
+          var cstartValue = moment(res.cash.slice(-1)[0].date).subtract(3, "years").format("YYYY/MM/DD");
+          var cendValue = moment(res.cash.slice(-1)[0].date).format("YYYY/MM/DD");
 
-          that.hushenOption = oneOption(hushentext,that.assetsData(that.hushendate));
-          that.windOption = oneOption(windtext,that.assetsData(that.winddate));
-          that.govOption = oneOption(govtext,that.assetsData(that.govdate));
-          that.cashOption = oneOption(cashtext,that.assetsData(that.cashdate));
+          that.hushenOption = oneOption(hushentext,that.assetsData(that.hushendate),hstartValue,hendValue);
+          that.windOption = oneOption(windtext,that.assetsData(that.winddate),wstartValue,wendValue);
+          that.govOption = oneOption(govtext,that.assetsData(that.govdate),gstartValue,gendValue);
+          that.cashOption = oneOption(cashtext,that.assetsData(that.cashdate),cstartValue,cendValue);
         });
 
 

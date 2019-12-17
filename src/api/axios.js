@@ -76,7 +76,7 @@ service.interceptors.response.use(response => {//数据拿到之后
  } else {
    err.message = '连接服务器失败!'
  }
-    Message.error(err.message);
+    Message.error("网络或系统错误，请稍后重试。");
     return Promise.reject(err);
 });
 

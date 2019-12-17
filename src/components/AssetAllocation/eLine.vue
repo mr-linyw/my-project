@@ -64,7 +64,9 @@
                   type: 'inside',
                   xAxisIndex: 0,
                   startValue:startValue,
-                  endValue:endValue
+                  endValue:endValue,
+                  minValueSpan :6,
+                  maxValueSpan :20
                 },
                 {
                   type: 'slider',

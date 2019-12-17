@@ -1,5 +1,5 @@
 <template>
-  <div class="fofbuild" style="height: 800px; overflow-y:scroll" v-title data-title="资产配置服务-FOF构建">
+  <div class="fofbuild" style="height: 850px; overflow-y:scroll">
     <div class="fofbuild-top">
 
       <a-form layout="inline">
@@ -14,7 +14,7 @@
              <a-row :gutter="24">
                   <a-col :md="4" :sm="8">
                     <a-form-item label="风格偏好" >
-                      <a-select style="width:100px" @change="handleChange" v-model="params.stylePreference">
+                      <a-select style="width:90px" @change="handleChange" v-model="params.stylePreference">
                         <a-select-option v-for="item in stylePreferenceOption" :key="item.key">{{item.value}}</a-select-option>
                       </a-select>
                    </a-form-item>
@@ -22,7 +22,7 @@
 
                   <a-col :md="4" :sm="8">
                     <a-form-item label="规模偏好" >
-                      <a-select style="width:120px" @change="handleChange" v-model="params.stockSizeRequirement">
+                      <a-select style="width:110px" @change="handleChange" v-model="params.stockSizeRequirement">
                         <a-select-option v-for="item in sizeRequirementOption" :key="item.key">{{item.value}}</a-select-option>
                       </a-select>
                    </a-form-item>
@@ -30,7 +30,7 @@
 
                   <a-col :md="6" :sm="10">
                     <a-form-item label="是否包含指数增强型基金">
-                      <a-select  style="width:100px" @change="handleChange" v-model="params.isIndexEnhanced">
+                      <a-select  style="width:70px" @change="handleChange" v-model="params.isIndexEnhanced">
                         <a-select-option v-for="item in isIndexEnhancedOption" :key="item.key">{{item.value}}</a-select-option>
                       </a-select>
                    </a-form-item>
@@ -77,7 +77,7 @@
             <a-row :gutter="24">
                  <a-col :md="5" :sm="8">
                    <a-form-item label="规模偏好">
-                     <a-select defaultValue ="0" style="width:120px"  @change="handleChange" v-model="params.bondSizeRequirement">
+                     <a-select defaultValue ="0" style="width:110px"  @change="handleChange" v-model="params.bondSizeRequirement">
                         <a-select-option v-for="item in sizeRequirementOption" :key="item.key">{{item.value}}</a-select-option>
                      </a-select>
                   </a-form-item>

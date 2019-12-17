@@ -17,7 +17,8 @@ import './style/character.css'
 import url from './api/requestUrl'
 import http from './api/axios'
 import VueClipboard from 'vue-clipboard2'
-
+import VueWechatTitle from 'vue-wechat-title';
+Vue.use(VueWechatTitle)
 Vue.use(VueClipboard)
 Vue.use(Antd)
 // Vue.use(message)
@@ -41,8 +42,8 @@ new Vue({
   template: '<App/>',
 
 });
-Vue.directive('title', {
-  inserted: function (el, binding) {
-    document.title = el.dataset.title
-  }
-})
+// Vue.directive('title', {
+//   inserted: function (el, binding) {
+//     document.title = el.dataset.title
+//   }
+// })

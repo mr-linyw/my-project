@@ -1,63 +1,58 @@
 <template>
-    <div class="all" style="height: 900px;" v-title data-title="资产配置研报-研究标题">
+    <div class="all"style="height: 900px;" >
         <div class="a-layout-header">
-          <a-row>
-               <a-col :span="12">
-                 <div class="a-layout-header-img">
-                   <img  src="@/assets/logo4.png">
-                    <strong style="font-size:20px" >资产配置服务</strong>　
-                 </div>
-               </a-col>
-               <a-col :span="1">　　　           　
-               </a-col>
-               <a-col :span="5"></a-col>
-               <a-col :span="6" class="a-layout-header-box">
-  　　　            <!-- <span  style="font-size:15px" >帮助中心</span>　　
-                    <a-dropdown>
-                        <a class="ant-dropdown-link" href="#"><font color="white"> <span style="font-size:15px">linyawei</span> <a-icon type="down" /></font> </a>
-                        <a-menu slot="overlay" @click="onClick">
-                          <a-menu-item key="1">1st menu item</a-menu-item>
-                          <a-menu-item key="2">2nd menu item</a-menu-item>
-                          <a-menu-item key="3">3rd menu item</a-menu-item>
-                        </a-menu>
-                      </a-dropdown> -->
-               </a-col>
-          </a-row>
-        </div>
-        <div class="a-layout-content-tabs-d">
 
-          <div class="a-layout-content-div">
-            <span>资产配置</span>&#12288;<a-icon type="right"  />&#12288;<span>研报详情</span>
-           </div>
-        </div>
-        <div class="a-layout-footer-t" style="height: 800px; overflow-y:scroll">
-          <div class="a-layout-footer-left">
-            <div class="a-layout-footer-header">
-                    <span ><a-icon type="file-text" :style="{ fontSize: '16px', color: '#08c' }"/> 宏观政策</span>
-            </div>
-             <a-divider />
-            <div class="a-layout-footer-center">
-                <div class="a-layout-footer-center-header" >
-                   <p>{{dataSource.title}}</p>
-                   <!-- {{moment().format('YYYY-MM-DD')}} -->
-                   <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{moment(dataSource.createTime).format('YYYY-MM-DD')}}</span>
-                   <span :style="{ fontSize: '14px', color: '#C0C0C0' }">{{name}}</span>
-
-                </div>
-                <div class="a-layout-footer-center-center">
-                     <span :style="{ fontSize: '15px' }">摘要</span>
-                     <p>{{dataSource.digest}}</p>
-                </div>
-            </div>
-            <div class="a-layout-footer-footer">
-                <el-button size="mini" round @click="showModal"><a-icon type="cloud-download" :style="{ fontSize: '16px', color: '#08c' }"/>下载</el-button>
-            </div>
+          <div class="a-layout-header-img">
+            <img  src="@/assets/顶部-中信建投LOGO.png">&#12288;
+            <img  src="@/assets/顶部-分割线.png">&#12288;
+             <strong style="font-size:17px" >资产配置服务</strong>　
           </div>
-          <div class="a-layout-footer-right">
-            <iframe style="height:850px;" src="./static/20191125-中信建投-中信建投最新周择时观点＆20191122日报：创业板仍将引领A股年末反攻行情.pdf" width="100%" height="500px"></iframe>
+        </div>
+        <div class="all-text">
+          <div class="a-layout-content-tabs-d">
+              <span>资产配置</span>&#12288;<a-icon type="right"  />&#12288;<span>研报详情</span>
+          </div>
+          <div class="all-text-center"  style="height: 800px; overflow-y:scroll">
+            <div class="a-layout-footer-t">
+              <div class="a-layout-footer-left">
+                <div class="a-layout-footer-header">
+                        <span ><a-icon type="file-text" :style="{ fontSize: '16px', color: '#08c' }"/> 宏观政策</span>
+                </div>
+                <div class="all-divider">
+                   <a-divider />
+                </div>
+                <div class="a-layout-footer-center">
+                    <div class="a-layout-footer-center-header" >
+                      <div class="center-header-p">
+                        <p>{{dataSource.title}}</p>
+                        <!-- {{moment().format('YYYY-MM-DD')}} -->
+                      </div>
+                      <div class="center-header-s">
+                        <span :style="{ fontSize: '15px', color: '#C0C0C0' }">{{moment(dataSource.createTime).format('YYYY-MM-DD')}}</span>
+                        <span :style="{ fontSize: '15px', color: '#C0C0C0' }">{{name}}</span>
+                      </div>
+
+                    </div>
+                    <div class="a-layout-footer-center-center">
+                      <div class="zhaiyao">
+                        <span :style="{ fontSize: '15px' }">摘要</span>
+                        <p>{{dataSource.digest}}</p>
+                      </div>
+                    </div>
+                </div>
+                <div class="a-layout-footer-footer">
+                    <el-button size="mini" round @click="showModal"><a-icon type="cloud-download" :style="{ fontSize: '16px', color: '#08c' }"/>下载</el-button>
+                </div>
+              </div>
+              <div class="a-layout-footer-right">
+                <iframe style="height:850px;" src="./static/20191125-中信建投-中信建投最新周择时观点＆20191122日报：创业板仍将引领A股年末反攻行情.pdf" width="100%" height="500px"></iframe>
+              </div>
+
+            </div>
           </div>
 
         </div>
+
       <!-- modal模板 -->
         <!--  :showConfirm='false'
           :showCancle='false'  -->
