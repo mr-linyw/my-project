@@ -60,7 +60,7 @@
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
           <a-collapse-panel header="股票型" key="1" >
-            <grid-and-line-by-g-p :isQuery="isQuery" :hushenData="hushenData"></grid-and-line-by-g-p>
+            <grid-and-line-by-g-p v-if="reFresh" :isQuery="isQuery" :hushenData="hushenData"></grid-and-line-by-g-p>
           </a-collapse-panel>
         </a-collapse>
         <a-collapse  v-model="activeKey" >
@@ -68,7 +68,7 @@
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
           <a-collapse-panel header="债券型" key="2" >
-            <grid-and-line-by-z-q :isQuery="isQuery" :govBondTriData="govBondTriData"></grid-and-line-by-z-q>
+            <grid-and-line-by-z-q v-if="reFresh" :isQuery="isQuery" :govBondTriData="govBondTriData"></grid-and-line-by-z-q>
           </a-collapse-panel>
         </a-collapse>
         <a-collapse  v-model="activeKey" >
@@ -176,6 +176,8 @@
     },
     data() {
       return {
+        reFresh:true,
+        zhikong:0,
         params:{   //请求参数
           zcpz:3,
           xjsx:2,
@@ -234,15 +236,17 @@
           {text:"40%",value:0.4},
           {text:"50%",value:0.5},
           {text:"100%",value:1},
-          {text:"-",value:2},
+          {text:"--",value:2},
         ],
-        tableSource:[{fundCode:'070008.OF',fundName:'嘉实货币基金',fundManager:'庄园、张明',lastMonthReturn:'2.55%',latestSize:'-'}],
+        tableSource:[{fundCode:'070008.OF',fundName:'嘉实货币基金',fundManager:'庄园、张明',lastMonthReturn:'2.55%',latestSize:'--'}],
         hushenData:0,
         govBondTriData:0,
         windCommodity:0,
+        cashData:0,
         isQuery:false,//点击FOF构建的权限控制
        }
     },
+
     mounted(){
       let chartResize = new Event('chartResize');
       window.onresize = function () {
@@ -262,13 +266,26 @@
             this.do_allocationResultData(result);
             this.do_pieData(result[result.length-1]);
           });
-        }
+        },
+        zhikong(){
+
+             this.reFresh= false
+             this.$nextTick(()=>{
+
+               this.reFresh = true
+           })
+       }
      },
     methods:{
       do_pieData(result){
         this.hushenData=result['hushen'];//股票
         this.govBondTriData= result["govBondTri"];//债券
         this.windCommodity= result["windCommodity"];//商品
+        //设置现金权重
+        this.cashData= result["cash"];//现金
+        let latestSize = Number(this.cashData*100).toFixed(2)+'%';
+       this.$set(this.tableSource[0],"latestSize",latestSize);
+
         let params = {
           legend: null,
           series:[
@@ -446,6 +463,8 @@
         this.isShowInfoModal = false;
       },
       configClick(){
+        this.zhikong++;
+        this.$set(this,'zhikong',this.zhikong); //置空FOF组合
         this.isQuery=true;//设置构建FOF权限
           if(localStorage.getItem("testContentShow") !== "0"){
             this.infoContentCheckbox = false;
@@ -481,11 +500,11 @@
       },
       yhgChange(value){
         this.cl = value;
-        this.yhgData.map(item=>{
-          if(item.value==value){
-              this.$set(this.tableSource[0],"latestSize",item.text)
-          }
-        })
+        // this.yhgData.map(item=>{
+        //   if(item.value==value){
+        //       this.$set(this.tableSource[0],"latestSize",item.text)
+        //   }
+        // })
       },
       modalOKs(){
         this.isShowModals = false;
@@ -498,5 +517,8 @@
         this.isShowModals=true;
       },
     },
+    beforeDestroy () {
+     this.zhikong=0;
+    }
   };
 </script>

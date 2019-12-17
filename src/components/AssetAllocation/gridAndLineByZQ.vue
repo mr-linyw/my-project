@@ -95,6 +95,7 @@
         // });
       },
       watch:{
+
         params(value){
           this.$http.get(this.$url.fofRecommendBondFund + "/"+value+"").then(result => {
             this.initData(result);
@@ -103,7 +104,8 @@
           this.$http.get(this.$url.fofHistReturnBond + "/"+value+"").then(result => {
             this.doChartData(result);
           });
-        }
+        },
+
       },
       methods:{
         infoContentChange(e){
