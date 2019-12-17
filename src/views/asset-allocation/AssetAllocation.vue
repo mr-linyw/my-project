@@ -268,10 +268,8 @@
           });
         },
         zhikong(){
-
              this.reFresh= false
              this.$nextTick(()=>{
-
                this.reFresh = true
            })
        }
