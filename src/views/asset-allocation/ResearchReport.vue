@@ -1,6 +1,6 @@
 <template>
 
-    <div class="header">
+    <div class="header" v-wechat-title="this.title">
       <div class="header-tabs" style="height: 780px; overflow-y:scroll">
         <el-tabs  v-model="activeName" @tab-click="handleClick">
           <!-- 宏观政策按钮
@@ -120,6 +120,7 @@ import {mouseover,mouseout,mousemove} from '@/components/utilJs/ellipsis'
 
     data() {
       return {
+        title:'资产配置服务-研究报告',
       pageName:"first",
        current:1,
        total:0,

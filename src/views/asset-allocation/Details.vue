@@ -1,5 +1,5 @@
 <template>
-    <div class="all"style="height: 900px;" >
+    <div class="all"style="height: 900px;"  v-wechat-title="this.title" >
         <div class="a-layout-header">
 
           <div class="a-layout-header-img">
@@ -102,6 +102,7 @@ import '@/style/Details.css'
   },
     data(){
       return{
+       title:'',
        email:'',
        f:"222222222222",
        dataSource:{},
@@ -122,6 +123,7 @@ import '@/style/Details.css'
          //获取数据
          this.$http.get(this.$url.reportUrl+"/"+this.$route.query.id).then(res=>{
             this.dataSource = res;
+            this.title = "资产配置研报-"+res.title
             this.name=this.$route.query.name;
          });
       // 有时PDF文件地址会出现跨域的情况,这里最好处理一下

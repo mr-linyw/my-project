@@ -25,7 +25,6 @@ export default new Routers({
             path:"/views/Home",
             name:'Home',
             component:Home,
-            meta: { title: "个人中心" }
       },
 
       {
@@ -43,25 +42,21 @@ export default new Routers({
                     path:"AssetAllocation",
                     name:'AssetAllocation',
                     component:AssetAllocation,
-                    meta: { title: "资产配置服务-资产配置" }
               },
               {
                     path:"FOFbuild",
                     name:'FOFbuild',
                     component:FOFbuild,
-                    meta: { title: "资产配置服务-FOF构建" }
               },
               {
                     path:"ResearchReport",
                     name:'ResearchReport',
                     component:ResearchReport,
-                    meta: { title: "资产配置服务-研究报告" }
               },
               {
                     path:"MacroData",
                     name:'MacroData',
                     component:MacroData,
-                    meta: { title: "资产配置服务-宏观数据" }
               },
 
             ]
@@ -71,21 +66,6 @@ export default new Routers({
 
         path: '/404',
         component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404'),
-        meta: { title: "错误页面" }
       }
   ]
-
-
-  // routes: [
-  //   {
-  //     path: '/',
-  //     name: 'Login',
-  //     component: Login
-  //   },
-  //   {
-  //     path: 'Home',
-  //     name: 'Home',
-  //     component: Home
-  //   },
-  // ]
 })

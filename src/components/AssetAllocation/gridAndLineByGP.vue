@@ -216,8 +216,9 @@
                  symbol: 'none',
                  data: [],
                  itemStyle:{
-                   color:"#35acff"
-                 }
+                   color:"#35acff",
+               }
+
                },
                {
                  name: '组合基准',
@@ -235,14 +236,14 @@
              params.xAxis[0].data.push(formatM);
              if(this.stylePreference === "0"){
                // _.round(parseFloat(item.smallCap*100), 2)
-               params.series[0].data.push(Number(item.smallCap*100).toFixed(4));
-               params.series[1].data.push(Number(item.smallCapBenchmark*100).toFixed(4));
+               params.series[0].data.push(Number(item.smallCap*100).toFixed(2));
+               params.series[1].data.push(Number(item.smallCapBenchmark*100).toFixed(2));
              }else if(this.stylePreference === "1"){
-               params.series[0].data.push(Number(item.middleCap*100).toFixed(4));
-               params.series[1].data.push(Number(item.middleCapBenchmark*100).toFixed(4));
+               params.series[0].data.push(Number(item.middleCap*100).toFixed(2));
+               params.series[1].data.push(Number(item.middleCapBenchmark*100).toFixed(2));
              }else{
-               params.series[0].data.push(Number(item.largeCap*100).toFixed(4));
-               params.series[1].data.push(Number(item.largeCapBenchmark*100).toFixed(4));
+               params.series[0].data.push(Number(item.largeCap*100).toFixed(2));
+               params.series[1].data.push(Number(item.largeCapBenchmark*100).toFixed(2));
              }
            }
            this.chartData = params;
@@ -264,7 +265,7 @@
                fundCode: dc["fundCode"],
                fundName: dc["fundName"],
                fundManager: dc["fundManager"],
-               lastMonthReturn: dc["lastMonthReturn"],
+               lastMonthReturn: Number(dc["lastMonthReturn"]*100).toFixed(2)+'%',
                latestSize:  num
              });
            }

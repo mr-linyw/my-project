@@ -50,8 +50,8 @@
       dataIndex: 'fundManager',
     },
     {
-      title: '上月业绩',
-      dataIndex: 'lastMonthReturn',
+      title: '上季度业绩',
+      dataIndex: 'lastQuarterReturn',
     },
     {
       title: '基金权重',
@@ -179,8 +179,8 @@
           for (let item of result){
             let formatM = moment(item.tradeDate).format("YYYY/MM/DD");
             params.xAxis[0].data.push(formatM);
-            params.series[0].data.push(Number(item.protfolio*100).toFixed(4));
-            params.series[1].data.push(Number(item.benchmark*100).toFixed(4));
+            params.series[0].data.push(Number(item.protfolio*100).toFixed(2));
+            params.series[1].data.push(Number(item.benchmark*100).toFixed(2));
           }
           this.chartData = params;
         },
@@ -201,7 +201,7 @@
               fundCode: dc["fundCode"],
               fundName: dc["fundName"],
               fundManager: dc["fundManager"],
-              lastMonthReturn: dc["lastMonthReturn"],
+              lastQuarterReturn: Number(dc["lastQuarterReturn"]*100).toFixed(2)+'%',
               latestSize:  num
             });
           }

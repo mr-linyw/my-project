@@ -1,5 +1,5 @@
 <template>
-  <div class="fofbuild" style="height: 850px; overflow-y:scroll">
+  <div class="fofbuild" style="height: 850px; overflow-y:scroll" v-wechat-title="this.title" >
     <div class="fofbuild-top">
 
       <a-form layout="inline">
@@ -37,6 +37,13 @@
                   </a-col>
                   <a-col :md="6" :sm="24">
                       <el-button size="mini" type="danger" round class="btn-fof" @click="stockFOFbuild">构建FOF</el-button>
+
+
+
+                     <!-- <InputNumber :InputNumberData="InputNumber" :max="10" :min="0"></InputNumber> -->
+
+
+
                   </a-col>
               </a-row>
 
@@ -179,14 +186,17 @@ import modal from '@/modal/Modal'
 import modalScroll from '@/modal/modalScroll'
 import {twoOption} from '@/echartsUtil/echartsOptions'
 
+import InputNumber from '@/components/utiljs/inputNumber'
 
   export default {
     components : {
-      echartsUtil,modal,modalScroll
+      echartsUtil,modal,modalScroll,InputNumber
     },
 
     data() {
       return {
+        title:'资产配置服务-FOF构建',
+        InputNumber:1,
         stylePreferenceOption:[{key:0,value:"大盘型"},{key:1,value:"中盘型"},{key:2,value:"小盘型"}],
         sizeRequirementOption:[{key:0,value:"无要求"},{key:1,value:"2亿以上"},{key:2,value:"10亿以上"}],
         isIndexEnhancedOption:[{key:1,value:"是"},{key:2,value:"否"}],
@@ -261,14 +271,20 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
           align:'center',
           dataIndex: 'issueDate',
           key: 'issueDate',
-          sorter: (a, b) => moment(a.issueDate) > moment(b.issueDate),
+          sorter: (a, b) => {
+            if(moment(a.issueDate) > moment(b.issueDate)){
+              return 1
+            }else{
+              return -1
+            }
+          }
         },
         {
           title: '上月业绩',
           align:'center',
           dataIndex: 'lastMonthReturn',
           key: 'lastMonthReturn',
-          sorter: (a, b) => a.lastMonthRetrun.split("%")[0] - b.lastMonthRetrun.split("%")[0],
+          sorter: (a, b) => Number(a.lastMonthReturn.split("%")[0]) - Number(b.lastMonthReturn.split("%")[0]),
         },
         {
           title: '最新规模(亿)',
@@ -303,7 +319,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         align:'center',
         dataIndex: 'fundName',
         key:'fundName',
-        sorter: (a, b) => a.fundName.length - b.fundName.length,
+        sorter: (a, b) => (a.fundName + '').localeCompare(b.fundName + ''),
         customRender: (text, row, index) => {
             return <a href="javascript:;">{text}</a>;
         },
@@ -313,7 +329,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         align:'center',
         dataIndex: 'fundManager',
         key: 'fundManager',
-        sorter: (a, b) => a.fundManager.length - b.fundManager.length,
+        sorter: (a, b) =>  (a.fundManager + '').localeCompare(b.fundManager + '') ,
         customRender:(text, row, index) => {
           return <a href="javascript:;">{text}</a>;
         }
@@ -323,21 +339,27 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         align:'center',
         dataIndex: 'fundType',
         key: 'fundType',
-        sorter: (a, b) => a.fundType.length - b.fundType.length,
+        sorter: (a, b) => (a.fundType + '').localeCompare(b.fundType + ''),
       },
       {
         title: '发行时间',
         align:'center',
         dataIndex: 'issueDate',
         key: 'issueDate',
-        sorter: (a, b) => moment(a.issueDate) > moment(b.issueDate),
+        sorter: (a, b) =>{
+          if(moment(a.issueDate) > moment(b.issueDate)){
+            return 1
+          }else{
+            return -1
+          }
+        }
       },
       {
-        title: '上月业绩',
+        title: '上季度业绩',
         align:'center',
         dataIndex: 'lastQuarterReturn',
         key: 'lastQuarterReturn',
-        sorter: (a, b) => a.lastQuarterReturn.split("%")[0] - b.lastQuarterReturn.split("%")[0],
+        sorter: (a, b) => Number(a.lastQuarterReturn.split("%")[0]) - Number(b.lastQuarterReturn.split("%")[0]),
       },
       {
         title: '最新规模(亿)',
@@ -366,6 +388,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         that.$http.get(that.$url.stockTableUrl+stockurl).then(res=>{
           //初始化table数据
           res.forEach(item=>{
+            item.lastMonthReturn=Number(item.lastMonthReturn*100).toFixed(2)+'%'
             item.issueDate=moment(item.issueDate).format("YYYY/MM/DD");
           })
           that.stockTableData=res;
@@ -389,6 +412,7 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         that.$http.get(that.$url.bondTableUrl+"/"+that.params.bondSizeRequirement).then(res=>{
           //初始化table数据
           res.forEach(item=>{
+            item.lastQuarterReturn=Number(item.lastQuarterReturn*100).toFixed(2)+'%'
             item.issueDate=moment(item.issueDate).format("YYYY/MM/DD");
           })
           that.bondTableData=res;
@@ -442,16 +466,16 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
            dateMap.push(moment(item.tradeDate).format('YYYY/MM/DD'));  //时间map
            if(that.params.stylePreference==0){
 
-             blueMap.push(item.largeCap);//蓝色折线map   股基FOF组合
-             redMap.push(item.largeCapBenchmark);  //红色折线map     基准组合
+             blueMap.push(Number(item.largeCap*100).toFixed(2));//蓝色折线map   股基FOF组合
+             redMap.push(Number(item.largeCapBenchmark*100).toFixed(2));  //红色折线map     基准组合
            }
            if(that.params.stylePreference==1){
-             blueMap.push(item.middleCap);
-             redMap.push(item.middleCapBenchmark);
+             blueMap.push(Number(item.middleCap*100).toFixed(2));
+             redMap.push(Number(item.middleCapBenchmark*100).toFixed(2));
            }
            if(that.params.stylePreference==2){
-             blueMap.push(item.smallCap);
-             redMap.push(item.smallCapBenchmark);
+             blueMap.push(Number(item.smallCap*100).toFixed(2));
+             redMap.push(Number(item.smallCapBenchmark*100).toFixed(2));
            }
        });
        let data={
@@ -469,8 +493,8 @@ import {twoOption} from '@/echartsUtil/echartsOptions'
         let redMap=[];
           dataSource.map((item,index)=>{
            dateMap.push(moment(item.tradeDate).format('YYYY/MM/DD'));  //时间map
-             blueMap.push(item.benchmark); //蓝色折线map  股基FOF组合
-             redMap.push(item.protfolio);  //红色折线map     基准组合
+             blueMap.push(Number(item.benchmark*100).toFixed(2)); //蓝色折线map  股基FOF组合
+             redMap.push(Number(item.protfolio*100).toFixed(2));  //红色折线map     基准组合
 
        });
        let data={

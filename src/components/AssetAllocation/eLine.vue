@@ -65,8 +65,8 @@
                   xAxisIndex: 0,
                   startValue:startValue,
                   endValue:endValue,
-                  minValueSpan :6,
-                  maxValueSpan :20
+                  minValueSpan :5,
+                  maxValueSpan :19
                 },
                 {
                   type: 'slider',
@@ -120,6 +120,8 @@
                 {
                   type: 'inside',
                   xAxisIndex: 0,
+                  minValueSpan :5,
+                  maxValueSpan :19
                 }
               ];
 
@@ -155,9 +157,11 @@
               title: {
                  text: this.text,
                  x:'center',
+
                },
               tooltip : {
                 trigger: 'axis',
+                formatter:'{b}<br />{a0}:\n{c0}%<br />{a1}:\n{c1}%',
                 axisPointer : {            // 坐标轴指示器，坐标轴触发有效
                   type : 'line'        // 默认为直线，可选为：'line' | 'shadow'
                 }

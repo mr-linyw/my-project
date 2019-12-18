@@ -1,5 +1,5 @@
 <template>
-  <div class="AssetAllocation" style="height: 850px; overflow-y:scroll" >
+  <div class="AssetAllocation" style="height: 850px; overflow-y:scroll" v-wechat-title="this.title">
     <div class="AssetAllocation-content">
     <div class="an-tools">
         <div class="boxGroup">
@@ -34,7 +34,7 @@
       </div>
       <div class="an-content-2Col">
         <an-panel panelTitle="策略风险特征PK-风险调整后收益指标">
-            <e-bar :params="resultOfRisk_r"></e-bar>
+            <e-bars :params="resultOfRisk_r"></e-bars>
         </an-panel>
       </div>
     </div>
@@ -153,6 +153,7 @@
   import warningInfo from '@/components/AssetAllocation/warningInfo'
   import eLine from '@/components/AssetAllocation/eLine'
   import eBar from '@/components/AssetAllocation/eBar'
+    import eBars from '@/components/AssetAllocation/eBars'
   import ePie from '@/components/AssetAllocation/ePie'
   import rAa from '@/components/AssetAllocation/rAa'
   import echartsUtil from '@/echartsUtil/echartsUtil'
@@ -170,12 +171,14 @@
       Modal,
       rAa,
       eBar,
+      eBars,
       ePie,
       gridAndLineByGP,
       gridAndLineByZQ
     },
     data() {
       return {
+        title:"资产配置服务-资产配置",
         reFresh:true,
         zhikong:0,
         params:{   //请求参数
@@ -345,13 +348,28 @@
               data: [],
               barMaxWidth:158,
               itemStyle:{
+                normal: {
                 color:"#35acff",
+								label: {
+									show: true, //开启显示
+									position: 'top', //在上方显示
+                  formatter:'{c}',   
+                      
+									textStyle: { //数值样式
+										color: 'black',
+										fontSize: 16,
+
+
+									}
+								}
+							}
+
               }
             },
           ]
         };
-        params.series[0].data.push(result[0]["sr"]*100);
-        params.series[0].data.push(result[0]["rmax"]*100);
+        params.series[0].data.push(result[0]["sr"].toFixed(2));
+        params.series[0].data.push(result[0]["rmax"].toFixed(2));
         this.resultOfRisk_r = params;
       },
       do_resultOfRisk_l(result){
@@ -378,14 +396,28 @@
               barMaxWidth:158,
               data: [],
               itemStyle:{
-                color:"#35acff"
+                normal: {
+                color:"#35acff",
+                label: {
+                  show: true, //开启显示
+                  position: 'top', //在上方显示
+                  formatter:'{c}%',   
+                      
+                  textStyle: { //数值样式
+                    color: 'black',
+                    fontSize: 16,
+
+
+                  }
+                }
+              }
               }
             },
           ]
         };
-        params.series[0].data.push(result[0]["rann"]*100);
-        params.series[0].data.push(result[0]["vol"]*100);
-        params.series[0].data.push(result[0]["maxdd"]*100);
+        params.series[0].data.push((result[0]["rann"]*100).toFixed(2));
+        params.series[0].data.push((result[0]["vol"]*100).toFixed(2));
+        params.series[0].data.push((result[0]["maxdd"]*100).toFixed(2));
         this.resultOfRisk_l = params;
       },
       do_allocationResultData(result){

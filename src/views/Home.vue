@@ -34,7 +34,7 @@
         </a-layout-content>
 
         <a-layout-footer>
-            <router-view v-wechat-title="$route.meta.title"/>
+            <router-view />
         </a-layout-footer>
     </a-layout>
 

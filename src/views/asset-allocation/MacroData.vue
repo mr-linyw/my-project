@@ -1,5 +1,5 @@
 <template>
-  <div class="macroData" style="height: 850px; overflow-y:scroll">
+  <div class="macroData" style="height: 850px; overflow-y:scroll" v-wechat-title="this.title">
     <div class="macroData-top">
       <div class="top"></div>
       <a-collapse  v-model="activeKey" >
@@ -58,6 +58,7 @@ import {oneOption,twoOption} from '@/echartsUtil/echartsOptions'
     },
     data() {
       return {
+        title:'资产配置服务-宏观数据',
         moment,
         activeKey:[1,2],
         hushenOption:{},

@@ -32,11 +32,7 @@
         endValue(val){
           this.drawByData(this.params);
         },
-        baseConfig(){
-          if (!this.baseConfig.cm){
-            this.noData = true;
-            return;
-          }
+        baseConfig(){      
           let cm = this.baseConfig.cm;
           let cl = this.baseConfig.cl;
           this.$http.get(this.$url.allocationResult + "/"+cm+"/"+cl+"").then(result => {
@@ -176,8 +172,8 @@
                      xAxisIndex: 0,
                      startValue:_t.startValue,
                      endValue:_t.endValue,
-                     minValueSpan :6,
-                     maxValueSpan :20
+                     minValueSpan :5,
+                     maxValueSpan :19
                    },
                    {
                      type: 'slider',

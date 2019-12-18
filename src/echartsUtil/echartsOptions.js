@@ -25,7 +25,9 @@ export  function oneOption(text,data,startValue,endValue){
           type: 'inside',
           startValue:startValue,
           endValue:endValue,
-          throttle: 50
+          throttle: 50,
+          minValueSpan :5,
+          maxValueSpan :19
       }],
       series: {
             name:'当天值',
@@ -63,7 +65,7 @@ if(type==='FOF'){
      },
      axisLabel: {
      formatter:function (value, index) {           
-                         return Number(value*100).toFixed(2)+'%';      
+                         return Number(value).toFixed(2)+'%';      
                         }
    },
 
@@ -78,7 +80,7 @@ if(type==='FOF'){
              normal : {
              color:'#0e9cff', //改变折线点的颜色
              lineStyle:{
-             color:'#0e9cff' //改变折线颜色
+               color:'#0e9cff' //改变折线颜色
              }
              }
        },
@@ -92,7 +94,7 @@ if(type==='FOF'){
              normal : {
              color:'#f38143',
              lineStyle:{
-             color:'#f38143'
+              color:'#f38143'
              }
              }
        },
@@ -100,7 +102,9 @@ if(type==='FOF'){
  ];
  dataZoom= [{
      type: 'inside',
-     throttle: 50
+     throttle: 20,
+     minValueSpan :5,
+     maxValueSpan :19
  }]
 }else {
   yAxis={
@@ -148,7 +152,9 @@ if(type==='FOF'){
       type: 'inside',
       startValue:startValue,
       endValue :endValue,
-      throttle: 50
+      throttle: 20,
+      minValueSpan :5,
+      maxValueSpan :19
   }]
 };
 let  option={
@@ -156,7 +162,8 @@ let  option={
         text: text,
       },
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis',
+        formatter:'{b}<br />{a0}:\n{c0}%<br />{a1}:\n{c1}%',
       },
       legend: {
         data:[name1,name2]
