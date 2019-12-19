@@ -122,3 +122,12 @@ text-align:left;
 text-align:left;
 
 }
+.annotationLayer{
+  height: 900px !important;
+  width: 800px !important;
+}
+.pdf-set{
+  display: inline-block;
+  text-align: center;
+  width:100%;
+}

@@ -23,4 +23,5 @@ export default {
 
   bondFundUrl:"/asset/fofHistReturnBond",//债券型图表
   bondTableUrl:"/asset/fofRecommendBondFund",//债券型table
+  toKenUrl:"",
 }

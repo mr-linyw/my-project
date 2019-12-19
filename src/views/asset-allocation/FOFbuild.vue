@@ -37,30 +37,18 @@
                   </a-col>
                   <a-col :md="6" :sm="24">
                       <el-button size="mini" type="danger" round class="btn-fof" @click="stockFOFbuild">构建FOF</el-button>
-
-
-
-                     <!-- <InputNumber :InputNumberData="InputNumber" :max="10" :min="0"></InputNumber> -->
-
-
-
                   </a-col>
               </a-row>
-
            </div>
-
             <!-- table -->
             <template >
               <div class="table-svg">
                 <a-table :columns="stockcolumns" :dataSource="stockTableData" :pagination='false' @change="handleChange" bordered>
-
                 </a-table>
               </div>
-
              </template>
 
             <!-- 图表 -->
-
          <div class="fofbuild-top-echartsUtil">
            <div v-if="isStock">
               <echartsUtil :id="'1'" :data="stockOption" style="height:252px;"></echartsUtil>
@@ -69,13 +57,9 @@
              <img  src="@/assets/空白占位符.png">
              <span>点击【构建FOF】按钮，加载数据</span>
            </div>
-
          </div>
-
          </div>
       </div>
-
-
 
        <div class="kg"></div>
        <div style=" border:1px solid #DDDDDD">
@@ -98,7 +82,6 @@
              <template>
                <div class="table-svg">
                  <a-table :columns="bondcolumns" :dataSource="bondTableData" :pagination='false' @change="handleChange" bordered>
-
                  </a-table>
                </div>
               </template>
@@ -115,27 +98,31 @@
              </div>
 
           </div>
-
-          <!-- 提示 -->
-           <div class="fofbuild-footer">
-
-             <li><span style="color:#F56C6C"><strong>风险提示</strong></span></li>
-             <li><span>尊敬的客户：</span></li>
-             <li><span>
-               在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
-               但同时也可能存在着较大的证券投资风险。请务必仔细阅读本系统平台的使用说明。
-               我们将尽可能采取有效措施保护客户资料和其他各项活动的安全，本着对您负责的态度，
-               公司郑重提示，在使用时，存在且不限于以下风险：<a href="javascript:" @click="viewDetails">查看详情</a>
-
-             </span></li>
-
-           </div>
-
         </div>
        </div>
+       <div class="fof-order" >
+           <el-button size="mini" type="danger" style="width:200px;" class="btn-fof" @click="order">下单</el-button>
+           <p><span style="color:gray;">点击'下单按钮'，可调整资产组合权重</span></p>
+       </div>
+       <!-- 提示 -->
+        <div class="fofbuild-footer">
 
+          <li><span style="color:#F56C6C"><strong>风险提示</strong></span></li>
+          <li><span>尊敬的客户：</span></li>
+          <li><span>
+            在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
+            但同时也可能存在着较大的证券投资风险。请务必仔细阅读本系统平台的使用说明。
+            我们将尽可能采取有效措施保护客户资料和其他各项活动的安全，本着对您负责的态度，
+            公司郑重提示，在使用时，存在且不限于以下风险：<a href="javascript:" @click="viewDetails">查看详情</a>
+
+          </span></li>
+
+        </div>
    </a-form>
     </div>
+    <!-- 下单模板 -->
+    <FOForder :typeValue="typeValue" :orderData="orderData" :show="orderShow" @confirm="orderOk" @close="orderClose" @reset="orderReset">
+    </FOForder>
     <!-- 声明modal模板 -->
     <modal :typeValue="typeValue" :show="isShowInfoModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true" title="免责声明">
     <div class="infoContent" slot="body">
@@ -148,34 +135,31 @@
     </div>
   </modal>
   <!-- 风险提示modal模板 -->
-  <modal-scroll  :show="isShowModals" @confirm="modalOKs" @close="modalCloses" :showConfirm="true" :showCancle="true"  title="风险提示">
-  <div class="infoContent" slot="body">
-    <div style="text-align: left">
-      <li><span class="tishi">尊敬的客户：</span></li>
-      <li><span>
-        在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
-        但同时也可能存在着较大的证券投资风险。请务必仔细阅读本系统平台的使用说明。
-        我们将尽可能采取有效措施保护客户资料和其他各项活动的安全，本着对您负责的态度，
-        公司郑重提示，在使用时，存在且不限于以下风险：
-      </span></li>
-      <li><span>1、资产配置平台系统仅是建立在基础数据（数据来源包括：市场公开数据及本公司外购数据源）平台上的一个页面，它同样具有电子化系统的使用风险。</span></li>
-      <li><span>2、以下原因都可能造成您使用资产配置系统时出现中断、停顿、延迟和显示失败等情况</span></li>
-      <li><span>1）电脑病毒、黑客入侵、计算机软硬件故障；</span></li>
-      <li><span>2）您交易使用的电脑终端与行情、交易通讯线路发生故障；</span></li>
-      <li><span>3）其他因网络或您的电脑终端可能出现的故障及其他不可测因素；</span></li>
-      <li><span>4）因软件关闭、关机、繁忙或网络中断等其他原因出现延迟、中断、停顿或数据不完全，甚至出现系统故障，从而使系统显示出现延迟、中断、遗失、无法触发、数据错误</span></li>
-      <li><span>3、软件适配风险。您的计算机配置、性能或软件系统与所提供的交易系统不匹配，无法及时显示结果的风险。</span></li>
-      <li><span>4、政策变化风险。由于相关政策变化导致的风险。</span></li>
-      <li><span>5、证券监管机构确定的其他风险。</span></li>
-      <li><span>6、不可抗力及其他可能存在的风险。</span></li>
-      <li><span>7、任何系统的使用都是建立在专属密码登录的前提下，凡您使用专属账号及密码进行的交易、查询及其他行为，均视为您本人的行为，请妥善保管自己的密码，由于您管理不善造成的密码泄露所带来的损失，公司不承担任何责任</span></li>
+    <modal-scroll  :show="isShowModals" @confirm="modalOKs" @close="modalCloses" :showConfirm="true" :showCancle="true"  title="风险提示">
+      <div class="infoContent" slot="body">
+      <div style="text-align: left">
+        <li><span class="tishi">尊敬的客户：</span></li>
+        <li><span>
+          在您获得本资产配置平台系统结论并用于实际投资时，可能会获得较高的投资收益，
+          但同时也可能存在着较大的证券投资风险。请务必仔细阅读本系统平台的使用说明。
+          我们将尽可能采取有效措施保护客户资料和其他各项活动的安全，本着对您负责的态度，
+          公司郑重提示，在使用时，存在且不限于以下风险：
+        </span></li>
+        <li><span>1、资产配置平台系统仅是建立在基础数据（数据来源包括：市场公开数据及本公司外购数据源）平台上的一个页面，它同样具有电子化系统的使用风险。</span></li>
+        <li><span>2、以下原因都可能造成您使用资产配置系统时出现中断、停顿、延迟和显示失败等情况</span></li>
+        <li><span>1）电脑病毒、黑客入侵、计算机软硬件故障；</span></li>
+        <li><span>2）您交易使用的电脑终端与行情、交易通讯线路发生故障；</span></li>
+        <li><span>3）其他因网络或您的电脑终端可能出现的故障及其他不可测因素；</span></li>
+        <li><span>4）因软件关闭、关机、繁忙或网络中断等其他原因出现延迟、中断、停顿或数据不完全，甚至出现系统故障，从而使系统显示出现延迟、中断、遗失、无法触发、数据错误</span></li>
+        <li><span>3、软件适配风险。您的计算机配置、性能或软件系统与所提供的交易系统不匹配，无法及时显示结果的风险。</span></li>
+        <li><span>4、政策变化风险。由于相关政策变化导致的风险。</span></li>
+        <li><span>5、证券监管机构确定的其他风险。</span></li>
+        <li><span>6、不可抗力及其他可能存在的风险。</span></li>
+        <li><span>7、任何系统的使用都是建立在专属密码登录的前提下，凡您使用专属账号及密码进行的交易、查询及其他行为，均视为您本人的行为，请妥善保管自己的密码，由于您管理不善造成的密码泄露所带来的损失，公司不承担任何责任</span></li>
+      </div>
     </div>
+    </modal-scroll>
   </div>
-</modal-scroll>
-  </div>
-
-
-
 </template>
 
 <script>
@@ -184,18 +168,22 @@ import moment from 'moment';
 import echartsUtil from '@/echartsUtil/echartsUtil'
 import modal from '@/modal/Modal'
 import modalScroll from '@/modal/modalScroll'
+import FOForder from '@/components/Order/FOForder'
 import {twoOption} from '@/echartsUtil/echartsOptions'
-
 import InputNumber from '@/components/utiljs/inputNumber'
-
   export default {
     components : {
-      echartsUtil,modal,modalScroll,InputNumber
+      echartsUtil,modal,modalScroll,InputNumber,FOForder
     },
 
     data() {
       return {
         title:'资产配置服务-FOF构建',
+        //下单
+        orderData:{},
+        orderShow:false,
+        typeValue:'FOF',
+
         InputNumber:1,
         stylePreferenceOption:[{key:0,value:"大盘型"},{key:1,value:"中盘型"},{key:2,value:"小盘型"}],
         sizeRequirementOption:[{key:0,value:"无要求"},{key:1,value:"2亿以上"},{key:2,value:"10亿以上"}],
@@ -215,7 +203,6 @@ import InputNumber from '@/components/utiljs/inputNumber'
         //图表数据
         stockdata:[],
         stockOption:{},
-
         bonddata:[],
         bondOption:{},
         typeValue:'',
@@ -296,8 +283,6 @@ import InputNumber from '@/components/utiljs/inputNumber'
       ];
         return stockcolumns;
       },
-
-
     bondcolumns(){
 
      const bondcolumns = [
@@ -375,11 +360,6 @@ import InputNumber from '@/components/utiljs/inputNumber'
 
     created(){
     },
-    // mounted(){
-    //   let that = this;
-    //    that.stockloadData();
-    //    that.bondloadData();
-    // },
     methods:{
       stockloadData(){
         let that = this;
@@ -504,8 +484,6 @@ import InputNumber from '@/components/utiljs/inputNumber'
        };
        return data;
       },
-
-
       // stockFOF构建
       stockFOFbuild(){
          this.typeValue="stock";
@@ -531,16 +509,12 @@ import InputNumber from '@/components/utiljs/inputNumber'
       },
       // 下拉框选择
      handleChange(value,option){
-
      },
-
      // 查看风险提示详情
      viewDetails(){
        this.isShowModals=true;
      },
-     modalOKModal(){
-
-     },
+     //免责声明操作
      modalOK(data){
           if(this.infoContentCheckbox){
             localStorage.setItem("infoContentShow","0");
@@ -557,6 +531,7 @@ import InputNumber from '@/components/utiljs/inputNumber'
       modalClose(){
         this.isShowInfoModal = false;
       },
+      //风险提示操作
       modalOKs(){
         this.isShowModals = false;
       },
@@ -570,7 +545,17 @@ import InputNumber from '@/components/utiljs/inputNumber'
        this.filteredInfo = filters;
        this.sortedInfo = sorter;
      },
-
+     //下单操作
+     order(){
+       this.orderShow=true;
+     },
+    orderClose(){
+      this.orderShow=false;
+    },
+    orderOk(){
+      this.orderShow=false;
+    },
+    orderReset(){},
 
 
    },

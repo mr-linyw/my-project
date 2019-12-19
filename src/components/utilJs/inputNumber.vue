@@ -1,8 +1,6 @@
 <template>
   <div style="margin-bottom: 16px">
-     <a-input class="text" v-model.number="number" οnpaste="value => value.replace('%', '')"
-      οnkeyup="value => value+'%'"
-
+     <a-input class="text" v-model.number="number"
       style="width:100px;">
 
     <a-icon type="caret-left" slot="prefix" @click="number--"/>
@@ -36,7 +34,7 @@ export default {
     outInput () {
       if (this.number > this.max) this.number = this.max
       if (this.number < this.min) this.number = this.min
-    }
+    },
   }
 }
 </script>

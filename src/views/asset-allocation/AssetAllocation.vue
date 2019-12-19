@@ -93,6 +93,10 @@
         </a-collapse>
       </an-panel>
     </div>
+    <div class="fof-order" >
+        <el-button size="mini" type="danger" style="width:200px;" class="btn-fof" @click="order">下单</el-button>
+        <p><span style="color:gray;">点击'下单按钮'，可调整资产组合权重</span></p>
+    </div>
       <div class="an-content-6Row" style="list-style:none;" >
         <li><span style="color:#F56C6C"><strong>风险提示</strong></span></li>
         <li><span>尊敬的客户：</span></li>
@@ -106,17 +110,20 @@
 
       </div>
   </div>
-
-    <Modal :show="isShowInfoModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true" title="免责声明">
-      <div class="infoContent" slot="body">
-        <div style="text-align: left">
-          投资有风险，本网页的任何数据及其衍生产品仅供参考。资产配置平台系统依据市场公开数据及外购数据源作为计算基础数据，本公司将会尽力但不保证基础数据的及时性、准确性、真实性和完整性，不承担因任何数据不准确或遗漏等造成的任何损失或损害的责任。投资者在依据相关信息进行投资操作时，应当进行自主判断，所导致的盈亏由投资者自行承担。浏览本页面或使用本功能即表示投资者同意所载免责声明。
-        </div>
-        <div class="infoCheckBoxContent">
-          <a-checkbox  :checked="infoContentCheckbox" @change="infoContentChange">下次不再提示</a-checkbox>
-        </div>
-      </div>
-    </Modal>
+          <!-- 下单模板 -->
+          <order :typeValue="typeValue" :orderData="orderData" :show="orderShow" @confirm="orderOk" @close="orderClose" @reset="orderReset">
+          </order>
+          <!-- 免责声明模板 -->
+            <Modal :show="isShowInfoModal" @confirm="modalOK" @close="modalClose" :showConfirm="true" :showCancle="true" title="免责声明">
+              <div class="infoContent" slot="body">
+                <div style="text-align: left">
+                  投资有风险，本网页的任何数据及其衍生产品仅供参考。资产配置平台系统依据市场公开数据及外购数据源作为计算基础数据，本公司将会尽力但不保证基础数据的及时性、准确性、真实性和完整性，不承担因任何数据不准确或遗漏等造成的任何损失或损害的责任。投资者在依据相关信息进行投资操作时，应当进行自主判断，所导致的盈亏由投资者自行承担。浏览本页面或使用本功能即表示投资者同意所载免责声明。
+                </div>
+                <div class="infoCheckBoxContent">
+                  <a-checkbox  :checked="infoContentCheckbox" @change="infoContentChange">下次不再提示</a-checkbox>
+                </div>
+              </div>
+            </Modal>
 
             <!-- 风险提示modal模板 -->
             <modal-scroll  :show="isShowModals" @confirm="modalOKs" @close="modalCloses" :showConfirm="true" :showCancle="true"  title="风险提示">
@@ -153,7 +160,7 @@
   import warningInfo from '@/components/AssetAllocation/warningInfo'
   import eLine from '@/components/AssetAllocation/eLine'
   import eBar from '@/components/AssetAllocation/eBar'
-    import eBars from '@/components/AssetAllocation/eBars'
+  import eBars from '@/components/AssetAllocation/eBars'
   import ePie from '@/components/AssetAllocation/ePie'
   import rAa from '@/components/AssetAllocation/rAa'
   import echartsUtil from '@/echartsUtil/echartsUtil'
@@ -161,9 +168,11 @@
   import moment from 'moment';
   import WarningInfo from "../../components/AssetAllocation/warningInfo";
   import modalScroll from '@/modal/modalScroll'
+  import order from '@/components/Order/order'
   export default {
     components : {
       modalScroll,
+      order,
       WarningInfo,
       eLine,
       echartsUtil,
@@ -179,6 +188,10 @@
     data() {
       return {
         title:"资产配置服务-资产配置",
+        //下单
+        orderData:{},
+        orderShow:false,
+        typeValue:'zc',
         reFresh:true,
         zhikong:0,
         params:{   //请求参数
@@ -278,6 +291,7 @@
        }
      },
     methods:{
+      //数据处理操作
       do_pieData(result){
         this.hushenData=result['hushen'];//股票
         this.govBondTriData= result["govBondTri"];//债券
@@ -472,26 +486,7 @@
         }
         this.allocationResultData = params;
       },
-      modalOK(){
-          if(this.infoContentCheckbox){
-            localStorage.setItem("testContentShow","0");
-          }
-          this.isShowInfoModal = false;
-          if(this.cm ==3 || this.cm ==4){
-            this.baseConfigParams = {cm:this.cm ,cl:0};
-          }else{
-            this.baseConfigParams = {cm:this.cm ,cl:this.cl};
-          }
-          //策略风险特征PK
-          this.$http.get(this.$url.resultOfRisk).then(result => {
-            this.do_resultOfRisk_l(result);
-            this.do_resultOfRisk_r(result);
-          });
-           this.isConfig=true;
-      },
-      modalClose(){
-        this.isShowInfoModal = false;
-      },
+      //配置按钮操作
       configClick(){
         this.zhikong++;
         this.$set(this,'zhikong',this.zhikong); //置空FOF组合
@@ -514,9 +509,33 @@
           }
 
       },
+      //chechbox操作
       infoContentChange(e){
         this.infoContentCheckbox = e.target.checked
       },
+      //免责声明操作
+      modalOK(){
+          if(this.infoContentCheckbox){
+            localStorage.setItem("testContentShow","0");
+          }
+          this.isShowInfoModal = false;
+          if(this.cm ==3 || this.cm ==4){
+            this.baseConfigParams = {cm:this.cm ,cl:0};
+          }else{
+            this.baseConfigParams = {cm:this.cm ,cl:this.cl};
+          }
+          //策略风险特征PK
+          this.$http.get(this.$url.resultOfRisk).then(result => {
+            this.do_resultOfRisk_l(result);
+            this.do_resultOfRisk_r(result);
+          });
+           this.isConfig=true;
+      },
+      modalClose(){
+        this.isShowInfoModal = false;
+      },
+
+      //下拉框操作
       tnhChange(value){
         this.disableYhgModel = value == 3 || value == 4;
         this.cm = value;
@@ -536,16 +555,27 @@
         //   }
         // })
       },
+      // 查看风险提示详情
+      viewDetails(){
+        this.isShowModals=true;
+      },
       modalOKs(){
         this.isShowModals = false;
       },
       modalCloses(){
         this.isShowModals = false;
       },
-      // 查看风险提示详情
-      viewDetails(){
-        this.isShowModals=true;
+      //下单操作
+      order(){
+        this.orderShow=true;
       },
+     orderClose(){
+       this.orderShow=false;
+     },
+     orderOk(){
+       this.orderShow=false;
+     },
+     orderReset(){},
     },
     beforeDestroy () {
      this.zhikong=0;

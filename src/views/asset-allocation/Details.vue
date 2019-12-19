@@ -1,7 +1,6 @@
 <template>
     <div class="all"style="height: 900px;"  v-wechat-title="this.title" >
         <div class="a-layout-header">
-
           <div class="a-layout-header-img">
             <img  src="@/assets/顶部-中信建投LOGO.png">&#12288;
             <img  src="@/assets/顶部-分割线.png">&#12288;
@@ -44,19 +43,18 @@
                     <el-button size="mini" round @click="showModal"><a-icon type="cloud-download" :style="{ fontSize: '16px', color: '#08c' }"/>下载</el-button>
                 </div>
               </div>
-              <div class="a-layout-footer-right">
-                <iframe style="height:850px;" src="./static/20191125-中信建投-中信建投最新周择时观点＆20191122日报：创业板仍将引领A股年末反攻行情.pdf" width="100%" height="500px"></iframe>
+              <div class="a-layout-footer-right" style="height: 800px; overflow-y:scroll">
+                <pdf
+                    v-for="i in numPages"
+                    :key="i"
+                    :src="src"
+                    :page="i"
+                    class="pdf-set"
+                ></pdf>
               </div>
-
             </div>
           </div>
-
         </div>
-
-      <!-- modal模板 -->
-        <!--  :showConfirm='false'
-          :showCancle='false'  -->
-
         <modal
           ref="modal"
           @close="close"
@@ -84,10 +82,8 @@
             </div>
 
           </div>
-
       </modal>
     </div>
-
 </template>
 
 <script>
@@ -102,19 +98,19 @@ import '@/style/Details.css'
   },
     data(){
       return{
+        numPages: undefined,
+        src: pdf.createLoadingTask('/static/20191125-中信建投-中信建投最新周择时观点＆20191122日报：创业板仍将引领A股年末反攻行情.pdf'), // pdf文件地址
        title:'',
        email:'',
-       f:"222222222222",
        dataSource:{},
        modalType:"",
        isModalVisible:false,
-       text:"创业板仍将引领A股年末反攻行情",
-       text2:"主要结论最新周择时观点主板坚定做多，建议维持高仓位持有；创业板受IPO减速正面示范作用，建议继续维持高仓位持有不变，市场风格维持创业板占优不变；涨跌停统计当日(2019-11-22)涨停家数环比减少。共有59只股票触及涨停，涨停被砸概率40.68%。35只涨停股票中，自然涨停25只，一字涨停8只，一字回封2只。共有19只股票触及跌停，跌停打开概率31.58%，15只跌停股票中，自然跌停13只，一字跌停2只，一字回封0只。会很快翻转，关注景气度回升的行业",
        moment,
        showCancle:true,
        showConfirm:true,
        dataSource:{ },
        name:"",
+       f:'22222',
 
       }
 
@@ -132,7 +128,11 @@ import '@/style/Details.css'
 
     },
 
-
+    mounted(){
+      this.src.then(pdf => {
+          this.numPages = pdf.numPages;
+      });
+    },
   computed:{
 
     title(){
@@ -147,6 +147,24 @@ import '@/style/Details.css'
   },
 
     methods:{
+      async loadPdfHandler () {
+        //src为你服务器上存放pdf的路径
+        this.pdfUrl = pdf.createLoadingTask(this.src);
+        this.pdfUrl.then(pdf => {
+          this.numPages = pdf.numPages
+        })
+      },
+
+      change1(){
+     if(this.currentPage>1){
+       this.currentPage--
+     }
+   },
+   change2(){
+     if(this.currentPage < this.pageCount){
+       this.currentPage++
+     }
+   },
      showModal(){
         this.$refs.modal.show = true;
         this.$refs.modal.title="选择下载方式"
