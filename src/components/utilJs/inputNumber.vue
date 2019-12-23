@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-icon type="caret-left" slot="prefix" @click="sub"/>
+    <a-icon type="caret-left" v-show="!disabled" slot="prefix" @click="sub"/>
     <a-input-number
       :value="number"
       :min="min"
@@ -11,7 +11,7 @@
       :disabled="disabled"
       @change="change"
     />
-    <a-icon type="caret-right" slot="suffix" @click="add"/>
+    <a-icon type="caret-right" v-show="!disabled" slot="suffix" @click="add"/>
   </div>
 </template>
 

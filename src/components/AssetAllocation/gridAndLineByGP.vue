@@ -124,6 +124,7 @@
         params(value){
           let {stylePreference,isIndexEnhanced,sizeRequirement} = this.params;
           // table数据
+          this.$emit("input",[]);
           this.$http.get(this.$url.fofRecommendStockFund + "/"+stylePreference+"/"+ sizeRequirement+"/"+isIndexEnhanced+"").then(result => {
             this.initData(result);
           });

@@ -97,6 +97,7 @@
       watch:{
 
         params(value){
+          this.$emit("input",[]);
           this.$http.get(this.$url.fofRecommendBondFund + "/"+value+"").then(result => {
             this.initData(result);
           });

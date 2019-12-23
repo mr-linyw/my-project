@@ -18,11 +18,11 @@
               <div class="ordertables">
                 <a-form layout="inline">
                          <a-form-item label="股票(%):">
-                           <InputNumber width="80px" :disabled="gpNumber===0 && !isUserCustom" v-model="gpNumber"></InputNumber>
+                           <InputNumber width="80px" :disabled="stockTableData.length<1" v-model="gpNumber"></InputNumber>
                          </a-form-item>
 
                          <a-form-item label="债券(%):">
-                           <InputNumber width="80px" :disabled="zqNumber===0 && !isUserCustom" v-model="zqNumber" ></InputNumber>
+                           <InputNumber width="80px" :disabled="bondTableData.length<1" v-model="zqNumber" ></InputNumber>
                         </a-form-item>
                     <br/>
                    <div class="span-class">
@@ -35,7 +35,7 @@
                           <div class="ordertable">
                             <a-table v-show="stockTableData.length>0" :columns="stockcolumns" :dataSource="stockTableData" :pagination='false' @change="handleChange" bordered>
                               <template slot="stockoperation" slot-scope="text, record">
-                                <InputNumber v-model="record.latestSize" width="75px" ></InputNumber>
+                                <InputNumber v-model="record.countQz" width="75px" ></InputNumber>
                               </template>
                             </a-table>
                             <span class="orderNoData" v-show="!stockTableData.length>0">无构建基金组合</span>
@@ -49,7 +49,7 @@
                         <div class="ordertable">
                           <a-table v-show="bondTableData.length>0" :columns="bondcolumns" :dataSource="bondTableData" :pagination='false' @change="handleChange" bordered>
                             <template slot="bondoperation" slot-scope="text, record">
-                              <InputNumber v-model="record.latestSize" width="75px" ></InputNumber>
+                              <InputNumber v-model="record.countQz" width="75px" ></InputNumber>
                             </template>
                           </a-table>
                           <span class="orderNoData" v-show="!bondTableData.length>0">无构建基金组合</span>
@@ -149,6 +149,18 @@ export default {
       },
       deep:true
     },
+    gpNumber(val){
+      let f_count = Number(parseFloat(val) / 5).toFixed(2);
+      for (let item of this.stockTableData){
+        item.countQz = f_count
+      }
+    },
+    zqNumber(val){
+      let f_count = Number(parseFloat(val) / 5).toFixed(2);
+      for (let item of this.bondTableData){
+        item.countQz = f_count
+      }
+    },
     stockTableData:{
       handler(val){
         this.checkRule2(val,this.bondTableData)
@@ -166,6 +178,7 @@ export default {
   },
     data () {
        return {
+         numberState:0,
          isUserCustom:true,
          errorRule2:false,
          gpNumber:0,
@@ -274,7 +287,7 @@ export default {
           let scount = 0;
           if(stockTable.length>0){
             for (let item of stockTable){
-              scount += parseFloat(item.latestSize);
+              scount += parseFloat(item.countQz);
             }
           }
 
@@ -282,10 +295,10 @@ export default {
 
           if(bondTableData.length>0){
             for (let item of bondTableData){
-              wcount += parseFloat(item.latestSize);
+              wcount += parseFloat(item.countQz);
             }
           }
-          if( parseFloat(scount) === parseFloat(this.gpNumber) && parseFloat(wcount) === parseFloat(this.zqNumber)){
+          if(parseFloat(scount).toFixed(2) === parseFloat(this.gpNumber).toFixed(2) && parseFloat(wcount).toFixed(2) === parseFloat(this.zqNumber).toFixed(2)){
             this.errorRule2 = false;
           }else {
             this.errorRule2 = true;
@@ -294,18 +307,39 @@ export default {
         doOrderData(data){
           this.isUserCustom = false;
           let gpData = data.stockTableData,zqData = data.bondTableData;
-          if(gpData.length>0){
-            this.gpNumber = 50;
-          }else{
-            this.gpNumber = 0;
-            this.zqNumber = 100
-          }
+          // if(gpData.length>0){
+          //   this.gpNumber = 50;
+          // }else{
+          //   this.gpNumber = 0;
+          //   this.zqNumber = 100
+          // }
+          //
+          // if(zqData.length>0){
+          //   this.zqNumber = 50;
+          // }else{
+          //   this.zqNumber = 0;
+          //   this.gpNumber = 100
+          // }
 
-          if(zqData.length>0){
+          if(gpData.length>0 && zqData.length>0){
+            this.gpNumber = 50;
             this.zqNumber = 50;
           }else{
-            this.zqNumber = 0;
-            this.gpNumber = 100
+            if(gpData.length<1){
+              this.gpNumber = 0;
+              this.zqNumber = 100;
+            }
+            if(zqData.length<1){
+              this.zqNumber = 0;
+              this.gpNumber = 100;
+            }
+          }
+
+          for (let item of zqData){
+            item["countQz"] = parseFloat(this.zqNumber / 5).toFixed(2);
+          }
+          for (let item of gpData){
+            item["countQz"] =  parseFloat(this.gpNumber / 5).toFixed(2);
           }
 
           this.stockTableData = JSON.parse(JSON.stringify(gpData));

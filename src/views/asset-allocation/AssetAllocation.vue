@@ -130,7 +130,7 @@
             <div class="infoContent" slot="body">
               <div style="text-align: left" v-if="gpData.length<1"><span style="font-weight: bold">股票型</span>资产未构建FOF组合,是否继续下单?</div>
               <div style="text-align: left" v-if="zqData.length<1"><span style="font-weight: bold">债券型</span>资产未构建FOF组合,是否继续下单?</div>
-              <div style="text-align: left"><span style="font-weight: bold">商品型</span>资产未构建FOF组合,是否继续下单?</div>
+              <!--<div style="text-align: left"><span style="font-weight: bold">商品型</span>资产未构建FOF组合,是否继续下单?</div>-->
             </div>
           </Modal>
 
@@ -517,6 +517,8 @@
       configClick(){
         this.zhikong++;
         this.$set(this,'zhikong',this.zhikong); //置空FOF组合
+        this.gpData = [];
+        this.zqData = [];
         this.isQuery=true;//设置构建FOF权限
           if(localStorage.getItem("testContentShow") !== "0"){
             this.infoContentCheckbox = false;
@@ -598,8 +600,13 @@
           this.$message.error('请先配置');
           return;
         }
-        this.isShowWarning = true;
-        // this.orderShow=true;
+
+        if(this.gpData.length<1 || this.zqData.length<1){
+          this.isShowWarning = true;
+        }else{
+          this.orderShow=true;
+          this.orderData = this.do_orderData();
+        }
       },
      orderClose(){
        this.orderShow=false;

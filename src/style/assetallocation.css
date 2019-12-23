@@ -200,3 +200,6 @@ form .ant-input-number-handler-wrap{
 .AssetAllocation .ordermodal td,.AssetAllocation .ordermodal th,.AssetAllocation .ordermodal table{
   border-color: #bbb !important;
 }
+.AssetAllocation .ant-form-inline .ant-form-item{
+  margin-right: 8px;
+}

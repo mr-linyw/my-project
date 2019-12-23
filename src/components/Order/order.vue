@@ -34,7 +34,7 @@
                           <!-- <el-input-number v-model="num" @change="handleChange" :min="1" :max="10"></el-input-number> -->
 
                           <!-- 自己封装的插件 -->
-                          <InputNumber width="80px" :disabled="gpNumber===0 && isUserCustom" v-model="gpNumber"></InputNumber>
+                          <InputNumber width="80px" :disabled="stockTableData.length<1" v-model="gpNumber"></InputNumber>
 
                         </a-form-item>
 
@@ -47,7 +47,7 @@
                             :parser="value => value.replace('%', '')"
                             @change="onChange"
                           /> -->
-                            <InputNumber width="80px" :disabled="zqNumber===0 && isUserCustom" v-model="zqNumber" ></InputNumber>
+                            <InputNumber width="80px" :disabled="bondTableData.length<1" v-model="zqNumber" ></InputNumber>
                         </a-form-item>
 
                          <a-form-item label="现金(%):">
@@ -59,11 +59,11 @@
                             :parser="value => value.replace('%', '')"
                             @change="onChange"
                           /> -->
-                            <InputNumber width="80px" :disabled="spNumber===0" v-model="spNumber"  ></InputNumber>
+                            <InputNumber width="80px" :disabled="xjNumber===0" v-model="xjNumber"  ></InputNumber>
                         </a-form-item>
 
                          <a-form-item label="商品(%):">
-                          <span>0</span>
+                           <InputNumber width="80px" :disabled="true" v-model="spNumber"  ></InputNumber>
                         </a-form-item>
                     <br/>
                    <div class="span-class">
@@ -200,12 +200,24 @@ import InputNumber from '@/components/utiljs/inputNumber'
       },
       deep:true
     },
-    spNumber(val){
+    xjNumber(val){
       this.windTableData = [{
         fundCode:'070008.OF',
         fundName:'嘉实货币基金',
-        quanzhong:val+"%"
+        quanzhong:parseFloat(parseFloat(val*100).toFixed(2))+"%"
       }]
+    },
+    gpNumber(val){
+        let f_count = Number(parseFloat(val) / 5).toFixed(2);
+        for (let item of this.stockTableData){
+          item.latestSize = f_count
+        }
+    },
+    zqNumber(val){
+      let f_count = Number(parseFloat(val) / 5).toFixed(2);
+      for (let item of this.bondTableData){
+        item.latestSize = f_count
+      }
     },
     stockTableData:{
       handler(val){
@@ -228,6 +240,7 @@ import InputNumber from '@/components/utiljs/inputNumber'
          gpNumber:0,
          zqNumber:0,
          spNumber:0,
+         xjNumber:0,
          showorder:false,
          title:"一键下单",
          //股票table
@@ -248,7 +261,7 @@ import InputNumber from '@/components/utiljs/inputNumber'
      //最大权重验证规则
         errorRule1(){
           this.checkRule2(this.stockTableData,this.bondTableData);
-          return (parseFloat(this.gpNumber) + parseFloat(this.zqNumber) +parseFloat(this.spNumber))!==100 && this.isUserCustom;
+          return (parseFloat(this.gpNumber) + parseFloat(this.zqNumber) +parseFloat(this.spNumber)+parseFloat(this.xjNumber))!==100 && this.isUserCustom;
         },
         stockcolumns(){
           let _t = this;
@@ -345,7 +358,7 @@ import InputNumber from '@/components/utiljs/inputNumber'
               wcount += parseFloat(item.latestSize);
             }
           }
-          if( parseFloat(scount) === parseFloat(this.gpNumber) && parseFloat(wcount) === parseFloat(this.zqNumber)){
+          if( parseFloat(scount).toFixed(2) === parseFloat(this.gpNumber).toFixed(2) && parseFloat(wcount).toFixed(2) === parseFloat(this.zqNumber).toFixed(2)){
             this.errorRule2 = false;
           }else{
             if(this.isUserCustom){
@@ -361,6 +374,7 @@ import InputNumber from '@/components/utiljs/inputNumber'
               this.gpNumber = Number(allocationResult[1].value*100).toFixed(2);
               this.zqNumber = Number(allocationResult[2].value*100).toFixed(2);
               this.spNumber = Number(allocationResult[3].value*100).toFixed(2);
+              this.xjNumber =  Number(allocationResult[0].value*100).toFixed(2);
               this.stockTableData = JSON.parse(JSON.stringify(data.gpData));
               this.bondTableData = JSON.parse(JSON.stringify(data.zqData));
               if(this.stockTableData.length<1){
