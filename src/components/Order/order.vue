@@ -1,7 +1,7 @@
 <!-- modal模板，内置slot，可随意替换，直接引用，不需要再新建页面 -->
 <template>
   <transition name="modal-fade">
-    <div class="modal-backdrop" @click="close" v-show="show"  >
+    <div class="modal-backdrop"  @click="close" v-show="show"  >
       <div class="ordermodal" @click.stop role="dialog" aria-labelledby="modalTile" arial-describedby="modalDescription" >
         <div class="modal-header" id="modalTitle">
         <slot name="header">
@@ -9,8 +9,9 @@
             <a-icon type="close-circle" class="modal-header-title" :style="{ fontSize: '16px', color: '#111111'}" @click="close" aria-label="Close modal"/>
         </slot>
       </div>
-      <div class="modal-body" id="modalDescription" style="height:700px;overflow-y:scroll">
-        <div style="height:520px;" >
+      <div class="modal-body" id="modalDescription" style="min-height: 500px;
+    max-height: 700px;">
+        <div style="max-height: 520px;min-height: 500px" >
             <div class="formclass">
               <div class="p-class">
                 <p>您将提交如下交易信息，您可修改资产权重与资金组合权重。</p>
@@ -33,7 +34,7 @@
                           <!-- <el-input-number v-model="num" @change="handleChange" :min="1" :max="10"></el-input-number> -->
 
                           <!-- 自己封装的插件 -->
-                          <InputNumber :InputNumberData="InputNumber"></InputNumber>
+                          <InputNumber width="80px" :disabled="gpNumber===0 && isUserCustom" v-model="gpNumber"></InputNumber>
 
                         </a-form-item>
 
@@ -46,7 +47,7 @@
                             :parser="value => value.replace('%', '')"
                             @change="onChange"
                           /> -->
-                            <InputNumber :InputNumberData="InputNumber"></InputNumber>
+                            <InputNumber width="80px" :disabled="zqNumber===0 && isUserCustom" v-model="zqNumber" ></InputNumber>
                         </a-form-item>
 
                          <a-form-item label="现金(%):">
@@ -58,7 +59,7 @@
                             :parser="value => value.replace('%', '')"
                             @change="onChange"
                           /> -->
-                            <InputNumber :InputNumberData="InputNumber"></InputNumber>
+                            <InputNumber width="80px" :disabled="spNumber===0" v-model="spNumber"  ></InputNumber>
                         </a-form-item>
 
                          <a-form-item label="商品(%):">
@@ -66,21 +67,25 @@
                         </a-form-item>
                     <br/>
                    <div class="span-class">
-                     <span :style="{ fontSize: '15px', color: '#999999' }">*各类资产权重值之和应为100%</span>
+                     <span v-bind:class="{'zx-errorInfo':errorRule1}" :style="{ fontSize: '15px', color: '#999999' }">*各类资产权重值之和应为100%</span>
                    </div>
                     <el-divider></el-divider>
                     <div class="orderleft">
                       <div class="order-shang">
                         <span ><strong>股票型组合</strong></span>
                           <div class="ordertable">
-                            <a-table :columns="stockcolumns" :dataSource="stockTableData" :pagination='false' @change="handleChange" bordered>
+                            <a-table v-show="stockTableData.length>0" :columns="stockcolumns" :dataSource="stockTableData" :pagination='false' @change="handleChange" bordered>
+                              <template slot="stockoperation" slot-scope="text, record">
+                                <InputNumber v-model="record.latestSize" width="75px" ></InputNumber>
+                              </template>
                             </a-table>
+                            <span class="orderNoData" v-show="!stockTableData.length>0">无构建基金组合</span>
                           </div>
                       </div>
                       <div class="order-xia">
                         <span ><strong>商品组合</strong></span>
                         <div class="span-class">
-                          <span :style="{ fontSize: '15px', color: '#999999' }">无构建基金组合</span>
+                          <span class="orderNoData">无构建基金组合</span>
                         </div>
                       </div>
                     </div>
@@ -88,14 +93,18 @@
                       <div class="order-shang">
                         <span><strong>债券型组合</strong></span>
                         <div class="ordertable">
-                          <a-table :columns="bondcolumns" :dataSource="bondTableData" :pagination='false' @change="handleChange" bordered>
+                          <a-table v-show="bondTableData.length>0" :columns="bondcolumns" :dataSource="bondTableData" :pagination='false' @change="handleChange" bordered>
+                            <template slot="bondoperation" slot-scope="text, record">
+                               <InputNumber v-model="record.latestSize" width="75px" ></InputNumber>
+                            </template>
                           </a-table>
+                          <span class="orderNoData" v-show="!bondTableData.length>0">无构建基金组合</span>
                         </div>
                       </div>
                       <div class="order-xia">
                         <span><strong>现金组合</strong></span>
                         <div class="ordertable">
-                          <a-table :columns="windcolumns" :dataSource="windTableData" :pagination='false' @change="handleChange" bordered>
+                          <a-table  :columns="windcolumns" :dataSource="windTableData" :pagination='false' @change="handleChange" bordered>
                           </a-table>
                         </div>
                       </div>
@@ -110,7 +119,7 @@
           </div>
           <div class="aa" >
             <!-- 金权重值之和应为该类资产权重值 -->
-            <span :style="{ fontSize: '15px'}">*各基金权重值之和应为该类资产权重值</span>
+            <span v-bind:class="{'zx-errorInfo':errorRule2}" :style="{float:'left', fontSize: '15px',color:'#999'}">*各基金权重值之和应为该类资产权重值</span>
           </div>
           <div class="order-details">
             <span :style="{ fontSize: '13px', color: 'red' }">*</span><span>确认下单表示您以知晓相关风险。
@@ -160,10 +169,16 @@
  import '@/style/orderModal.css'
 import '@/style/modal.css'
 import InputNumber from '@/components/utiljs/inputNumber'
-export default {
+
+ export default {
    name: 'orderModal',
    components : {
     InputNumber
+   },
+   provide(){
+      return {
+        instance:this
+      }
    },
     // props: ['show'],
     props:{
@@ -177,12 +192,42 @@ export default {
       type: Boolean,
       default: false,
     },
-
-
+  },
+  watch:{
+    orderData:{
+      handler:function(newvalue, oldvalue) {
+        this.doOrderData(newvalue);
+      },
+      deep:true
+    },
+    spNumber(val){
+      this.windTableData = [{
+        fundCode:'070008.OF',
+        fundName:'嘉实货币基金',
+        quanzhong:val+"%"
+      }]
+    },
+    stockTableData:{
+      handler(val){
+        this.checkRule2(val,this.bondTableData)
+      },
+      deep:true
+    },
+    bondTableData:{
+        handler(val){
+          this.checkRule2(this.stockTableData,val)
+        },
+        deep:true
+    }
   },
     data () {
        return {
-         InputNumber:1,
+         errorRule2:false,
+         isUserCustom:false, // 如果用户只要手动调整过，就按照字面保留两位计算；否则按照原始数据5位进行计算；后台返回的数据第一次默认就是通过的；
+         max:100,
+         gpNumber:0,
+         zqNumber:0,
+         spNumber:0,
          showorder:false,
          title:"一键下单",
          //股票table
@@ -191,15 +236,22 @@ export default {
          bondTableData:[],
          //现金table
          windTableData:[
-           { fundCode:'070008.OF',
+           {
+             fundCode:'070008.OF',
              fundName:'嘉实货币基金',
-             quanzhong:'10'
-            }
+             quanzhong:""
+           }
          ],
         }
       },
       computed:{
+     //最大权重验证规则
+        errorRule1(){
+          this.checkRule2(this.stockTableData,this.bondTableData);
+          return (parseFloat(this.gpNumber) + parseFloat(this.zqNumber) +parseFloat(this.spNumber))!==100 && this.isUserCustom;
+        },
         stockcolumns(){
+          let _t = this;
          const stockcolumns = [
           {
             title: '基金代码',
@@ -213,12 +265,13 @@ export default {
             dataIndex: 'fundName',
             key:'fundName',
           },
-          {
-            title: '权重(%)',
-            align:'center',
-            dataIndex: 'fundType',
-            key: 'fundType',
-          },
+           {
+             title: '基金权重',
+             dataIndex: 'stockoperation',
+             scopedSlots: { customRender: 'stockoperation' },
+             width:130,
+             align:"center"
+           }
         ];
           return stockcolumns;
         },
@@ -239,12 +292,13 @@ export default {
           key:'fundName',
 
         },
-        {
-          title: '权重(%)',
-          align:'center',
-          dataIndex: 'fundType',
-          key: 'fundType',
-        },
+         {
+           title: '基金权重',
+           dataIndex: 'bondoperation',
+           scopedSlots: { customRender: 'bondoperation' },
+           width:130,
+           align:"center"
+         }
       ];
         return bondcolumns;
       },
@@ -276,18 +330,69 @@ export default {
       },
     },
       methods: {
-        // Change事件
+        checkRule2(stockTable,bondTableData){
+          let scount = 0;
+          if(stockTable.length>0){
+            for (let item of stockTable){
+              scount += parseFloat(item.latestSize);
+            }
+          }
+
+          let wcount = 0;
+
+          if(bondTableData.length>0){
+            for (let item of bondTableData){
+              wcount += parseFloat(item.latestSize);
+            }
+          }
+          if( parseFloat(scount) === parseFloat(this.gpNumber) && parseFloat(wcount) === parseFloat(this.zqNumber)){
+            this.errorRule2 = false;
+          }else{
+            if(this.isUserCustom){
+              this.errorRule2 = true;
+            }else{
+              this.errorRule2 = false;
+            }
+          }
+        },
+        doOrderData(data){
+              this.isUserCustom = false;
+              let allocationResult = data.allocationResult,gpData = data.gpData,zqData = data.zqData;
+              this.gpNumber = Number(allocationResult[1].value*100).toFixed(2);
+              this.zqNumber = Number(allocationResult[2].value*100).toFixed(2);
+              this.spNumber = Number(allocationResult[3].value*100).toFixed(2);
+              this.stockTableData = JSON.parse(JSON.stringify(data.gpData));
+              this.bondTableData = JSON.parse(JSON.stringify(data.zqData));
+              if(this.stockTableData.length<1){
+                this.gpNumber=0;
+                this.isUserCustom = true;
+              }
+              if(this.bondTableData.length<1){
+                this.zqNumber=0;
+                this.isUserCustom = true;
+              }
+              let spnumber =this.spNumber;
+              this.windTableData = [{
+                fundCode:'070008.OF',
+                fundName:'嘉实货币基金',
+                quanzhong:spnumber+"%"
+              }]
+        },
+ // Change事件
         handleChange(){},
         onChange(){},
         // 确定按钮事件
         confirm:function() {
+          if(!this.errorRule2&&!this.errorRule1){
             this.$emit('confirm',this.typeValue);
+          }
         },
         close: function () {
           this.$emit('close');
 
         },
         reset:function(){
+          this.doOrderData(this.orderData);
           this.$emit('reset');
         },
         viewDetails(){
@@ -299,3 +404,9 @@ export default {
       }
     }
 </script>
+<style scoped>
+  .orderNoData{
+    color: #999;
+    font-size: 15px;
+  }
+</style>

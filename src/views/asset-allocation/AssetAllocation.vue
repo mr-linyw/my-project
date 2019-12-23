@@ -60,7 +60,7 @@
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
           <a-collapse-panel header="股票型" key="1" >
-            <grid-and-line-by-g-p v-if="reFresh" :isQuery="isQuery" :hushenData="hushenData"></grid-and-line-by-g-p>
+            <grid-and-line-by-g-p v-model="gpData" v-if="reFresh" :isQuery="isQuery" :hushenData="hushenData"></grid-and-line-by-g-p>
           </a-collapse-panel>
         </a-collapse>
         <a-collapse  v-model="activeKey" >
@@ -68,7 +68,7 @@
             <a-icon type="caret-right" :rotate="props.isActive ? 90 : 0" />
           </template>
           <a-collapse-panel header="债券型" key="2" >
-            <grid-and-line-by-z-q v-if="reFresh" :isQuery="isQuery" :govBondTriData="govBondTriData"></grid-and-line-by-z-q>
+            <grid-and-line-by-z-q v-model="zqData" v-if="reFresh" :isQuery="isQuery" :govBondTriData="govBondTriData"></grid-and-line-by-z-q>
           </a-collapse-panel>
         </a-collapse>
         <a-collapse  v-model="activeKey" >
@@ -124,6 +124,15 @@
                 </div>
               </div>
             </Modal>
+
+          <!--提示信息-->
+          <Modal :show="isShowWarning" @confirm="warningModalOK" @close="warningModalClose" confirmText="继续下单" :showConfirm="true" :showCancle="true" title="免责声明">
+            <div class="infoContent" slot="body">
+              <div style="text-align: left" v-if="gpData.length<1"><span style="font-weight: bold">股票型</span>资产未构建FOF组合,是否继续下单?</div>
+              <div style="text-align: left" v-if="zqData.length<1"><span style="font-weight: bold">债券型</span>资产未构建FOF组合,是否继续下单?</div>
+              <div style="text-align: left"><span style="font-weight: bold">商品型</span>资产未构建FOF组合,是否继续下单?</div>
+            </div>
+          </Modal>
 
             <!-- 风险提示modal模板 -->
             <modal-scroll  :show="isShowModals" @confirm="modalOKs" @close="modalCloses" :showConfirm="true" :showCancle="true"  title="风险提示">
@@ -187,8 +196,11 @@
     },
     data() {
       return {
+        gpData:[],
+        zqData:[],
         title:"资产配置服务-资产配置",
-        //下单
+        isShowWarning:false,
+        orderStatus:false,
         orderData:{},
         orderShow:false,
         typeValue:'zc',
@@ -291,6 +303,21 @@
        }
      },
     methods:{
+      warningModalOK(){
+        this.isShowWarning =false;
+        this.orderData = this.do_orderData();
+        this.orderShow=true;
+      },
+      warningModalClose(){
+          this.isShowWarning = false;
+      },
+      do_orderData(){
+         let obj = {};
+         obj.allocationResult = this.pieData["series"][0].data;
+         obj.gpData = this.gpData;
+         obj.zqData=this.zqData;
+         return obj;
+      },
       //数据处理操作
       do_pieData(result){
         this.hushenData=result['hushen'];//股票
@@ -567,7 +594,12 @@
       },
       //下单操作
       order(){
-        this.orderShow=true;
+        if(!this.isQuery){
+          this.$message.error('请先配置');
+          return;
+        }
+        this.isShowWarning = true;
+        // this.orderShow=true;
       },
      orderClose(){
        this.orderShow=false;
