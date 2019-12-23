@@ -56,7 +56,7 @@
     methods: {
       login() {
         if(this.userName && this.password){
-            this.btnText();
+            // this.btnText();
             this.$router.replace('/views/Home');
         }else{
           if (!this.userName) {
