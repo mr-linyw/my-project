@@ -6,8 +6,8 @@ import router from '@/router'
 axios.defaults.withCredentials = true;// 跨域携带cookie
 //创建axios实例
 var service = axios.create({
-    // baseURL: '/index', //请求的后台域名
-    baseURL:'http://125.208.12.66:9877/',
+    baseURL: '/index', //请求的后台域名
+    // baseURL:'http://125.208.12.66:9877/',
     timeout: 5000,
         headers: {
         'content-type': 'application/json',
