@@ -269,6 +269,7 @@
                latestSize:  num
              });
            }
+           this.$emit("input",d);
          }
       }
     }

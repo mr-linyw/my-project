@@ -101,7 +101,7 @@
         </div>
        </div>
        <div class="fof-order" >
-           <el-button size="mini" type="danger" style="width:200px;" class="btn-fof" @click="order">下单</el-button>
+           <el-button :disabled="isDisableOrder" size="mini" type="danger" style="width:200px;" class="btn-fof" @click="order">下单</el-button>
            <p><span style="color:gray;">点击'下单按钮'，可调整资产组合权重</span></p>
        </div>
        <!-- 提示 -->
@@ -134,6 +134,15 @@
       </div>
     </div>
   </modal>
+
+    <!--提示信息-->
+    <modal :show="isShowWarning" @confirm="warningModalOK" @close="warningModalClose" confirmText="继续下单" :showConfirm="true" :showCancle="true" title="免责声明">
+      <div class="infoContent" slot="body">
+        <div style="text-align: left" v-if="stockTableData.length<1"><span style="font-weight: bold">股票型</span>资产未构建FOF组合,是否继续下单?</div>
+        <div style="text-align: left" v-if="bondTableData.length<1"><span style="font-weight: bold">债券型</span>资产未构建FOF组合,是否继续下单?</div>
+      </div>
+    </modal>
+
   <!-- 风险提示modal模板 -->
     <modal-scroll  :show="isShowModals" @confirm="modalOKs" @close="modalCloses" :showConfirm="true" :showCancle="true"  title="风险提示">
       <div class="infoContent" slot="body">
@@ -171,6 +180,7 @@ import modalScroll from '@/modal/modalScroll'
 import FOForder from '@/components/Order/FOForder'
 import {twoOption} from '@/echartsUtil/echartsOptions'
 import InputNumber from '@/components/utiljs/inputNumber'
+import warningInfo from "../../components/AssetAllocation/warningInfo";
   export default {
     components : {
       echartsUtil,modal,modalScroll,InputNumber,FOForder
@@ -183,7 +193,7 @@ import InputNumber from '@/components/utiljs/inputNumber'
         orderData:{},
         orderShow:false,
         typeValue:'FOF',
-
+        isShowWarning:false,
         InputNumber:1,
         stylePreferenceOption:[{key:0,value:"大盘型"},{key:1,value:"中盘型"},{key:2,value:"小盘型"}],
         sizeRequirementOption:[{key:0,value:"无要求"},{key:1,value:"2亿以上"},{key:2,value:"10亿以上"}],
@@ -194,8 +204,6 @@ import InputNumber from '@/components/utiljs/inputNumber'
           bondSizeRequirement:0,
           isIndexEnhanced:1,
          },
-        stockTableData:[],//股票型table
-        bondTableData:[],//债券型table
         moment,
         infoContentCheckbox:false,
         isShowInfoModal:false,
@@ -203,13 +211,27 @@ import InputNumber from '@/components/utiljs/inputNumber'
         //图表数据
         stockdata:[],
         stockOption:{},
-        bonddata:[],
+        stockTableData:[],
+        bondTableData:[],
         bondOption:{},
         typeValue:'',
         isStock:false,
         isBond:false,
+        isDisableOrder:true
     }
   },
+    watch:{
+      stockTableData(val){
+          if(val.length>0){
+            this.isDisableOrder = false;
+          }
+      },
+      bondTableData(val){
+        if(val.length>0){
+          this.isDisableOrder = false;
+        }
+      },
+    },
     computed:{
       stockcolumns(){
        const stockcolumns = [
@@ -361,6 +383,14 @@ import InputNumber from '@/components/utiljs/inputNumber'
     created(){
     },
     methods:{
+      warningModalOK(){
+        this.isShowWarning =false;
+        this.orderData = this.do_orderData();
+        this.orderShow=true;
+      },
+      warningModalClose(){
+        this.isShowWarning = false;
+      },
       stockloadData(){
         let that = this;
         //股票型table数据
@@ -370,6 +400,7 @@ import InputNumber from '@/components/utiljs/inputNumber'
           res.forEach(item=>{
             item.lastMonthReturn=Number(item.lastMonthReturn*100).toFixed(2)+'%'
             item.issueDate=moment(item.issueDate).format("YYYY/MM/DD");
+            item.latestSize=Number(item.latestSize).toFixed(2)+'%'
           })
           that.stockTableData=res;
           if(res.length>0){
@@ -394,6 +425,7 @@ import InputNumber from '@/components/utiljs/inputNumber'
           res.forEach(item=>{
             item.lastQuarterReturn=Number(item.lastQuarterReturn*100).toFixed(2)+'%'
             item.issueDate=moment(item.issueDate).format("YYYY/MM/DD");
+            item.latestSize = Number(item.latestSize).toFixed(2)+'%'
           })
           that.bondTableData=res;
           if(res.length>0){
@@ -545,9 +577,22 @@ import InputNumber from '@/components/utiljs/inputNumber'
        this.filteredInfo = filters;
        this.sortedInfo = sorter;
      },
+      do_orderData(){
+        let bondTableData = this.bondTableData ;
+        let stockTableData = this.stockTableData ;
+        return {
+          bondTableData:bondTableData,
+          stockTableData:stockTableData
+        };
+      },
      //下单操作
      order(){
-       this.orderShow=true;
+       if(this.bondTableData.length>0 && this.stockTableData.length>0){
+         this.orderShow=true;
+         this.orderData = this.do_orderData();
+       }else{
+          this.isShowWarning = true;
+       }
      },
     orderClose(){
       this.orderShow=false;

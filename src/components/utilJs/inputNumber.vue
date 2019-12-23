@@ -1,43 +1,66 @@
 <template>
-  <div style="margin-bottom: 16px">
-     <a-input class="text" v-model.number="number"
-      style="width:100px;">
-
-    <a-icon type="caret-left" slot="prefix" @click="number--"/>
-    <a-icon type="caret-right" slot="suffix" @click="number++"/>
-
-     </a-input>
-   </div>
-
-
-  <!-- <div class="InputNumber">
-
-     <a-button :disabled="number <= min"><a-icon type="caret-left"/></a-button>
-        <input type="text" v-model.number="number"
-         :formatter="value => '${value}%'"
-         :parser="value => value.replace('%', '')"
-         @blur="outInput">
-
-     <a-button :disabled="number >= max" @click="number++"><a-icon type="caret-right"/></a-button>
-  </div> -->
+  <div>
+    <a-icon type="caret-left" slot="prefix" @click="sub"/>
+    <a-input-number
+      :value="number"
+      :min="min"
+      :max="max"
+      :formatter="value => `${value}%`"
+      :parser="value => value.replace('%', '')"
+      :style="{width}"
+      :disabled="disabled"
+      @change="change"
+    />
+    <a-icon type="caret-right" slot="suffix" @click="add"/>
+  </div>
 </template>
 
 <script>
-export default {
-  props: [ 'InputNumberData', 'max', 'min' ],
-  data () {
-    return {
-      number: this.InputNumberData
-    }
-  },
-  methods: {
-    outInput () {
-      if (this.number > this.max) this.number = this.max
-      if (this.number < this.min) this.number = this.min
+  export default {
+    props: [ 'value','width','disabled'],
+    inject:["instance"],
+    data () {
+      return {
+        max:100,
+        min:0,
+        number: 0
+      }
     },
+    watch:{
+      value:{
+        handler(val){
+          this.number = parseFloat(val);
+        },
+        immediate: true
+      },
+      number(val){
+        // if (this.number > this.max) this.number = this.max;
+        // if (this.number < this.min) this.number = this.min;
+        this.$emit("input",val);
+      }
+    },
+    methods: {
+      change(val){
+         if(!val)val=0;
+         this.number = val;
+        this.$emit("input",val);
+        this.instance.isUserCustom = true;
+      },
+      sub(){
+        if ((this.number-1) > this.min){
+          this.number = parseFloat(this.number-1).toFixed(2);
+          this.instance.isUserCustom = true;
+        }
+      },
+      add(){
+        if ((this.number+1) <= this.max){
+          this.number =  parseFloat(this.number+1).toFixed(2);
+          this.instance.isUserCustom = true;
+        }
+      }
+    }
   }
-}
 </script>
-<style  scoped>
+<style scoped>
   .text{text-align: center;}
 </style>
