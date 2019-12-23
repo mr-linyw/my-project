@@ -122,6 +122,10 @@ import '@/style/Details.css'
             this.title = "资产配置研报-"+res.title
             this.name=this.$route.query.name;
          });
+         //get toKen
+         this.$http.post(this.$url.toKenUrl).then(token=>{
+           console.log(token);
+         })
       // 有时PDF文件地址会出现跨域的情况,这里最好处理一下
 　　　　this.src = pdf.createLoadingTask(this.src);
       // this.data=this.$route.params.data;
