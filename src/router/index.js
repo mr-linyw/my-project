@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Routers from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
-import Login from '@/components/Login'
+import Login from '@/Login'
 import Home from '@/views/Home'
 import AssetAllocation from '@/views/asset-allocation/AssetAllocation'
 import FOFbuild from '@/views/asset-allocation/FOFbuild'
@@ -19,7 +19,8 @@ export default new Routers({
         path: '/',
         name: 'Login',
         component: Login,
-        redirect:"/views/Home",//默认跳转到首页
+        // redirect:"/views/Home",//默认跳转到首页
+      
       },
       {
             path:"/views/Home",

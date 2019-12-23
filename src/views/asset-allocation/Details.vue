@@ -111,28 +111,64 @@ import '@/style/Details.css'
        dataSource:{ },
        name:"",
        f:'22222',
+       toKen:'',
+       submitter:{
+         'user':'CSC99999',
+         'department':'b',
+         'group':'c',
+         'role':'d',
+         'post ':'e'
+       },
+        id:'',
 
-      }
-
+    }
     },
     created(){
-         //获取数据
-         this.$http.get(this.$url.reportUrl+"/"+this.$route.query.id).then(res=>{
-            this.dataSource = res;
-            this.title = "资产配置研报-"+res.title
-            this.name=this.$route.query.name;
-         });
-         //get toKen
-         this.$http.post(this.$url.toKenUrl).then(token=>{
-           console.log(token);
-         })
-      // 有时PDF文件地址会出现跨域的情况,这里最好处理一下
-　　　　this.src = pdf.createLoadingTask(this.src);
-      // this.data=this.$route.params.data;
+      //get token
+      this.$http.post(this.$url.toKenUrl,{}).then(res=>{
+        this.toKen=res;
+      })
+
 
     },
+   watch:{
+     //初始化加载文件
+      id(id){
+        if(id!=""){
+          let  getFileData="<?xml version='1.0' encoding='UTF-8'?><ESBREQ><HEADER><SERVICE_CODE>s-000531</SERVICE_CODE><VERSION>1</VERSION><CONSUMER_CODE>CS-1/65/S0133-080</CONSUMER_CODE><PASSWORD>ff808081543ee9f301559a97e857306a</PASSWORD><MESSAGE_ID>OA-TYGL-007-id_list</MESSAGE_ID><DTSEND>20150108011000000</DTSEND><EXT1></EXT1><EXT2></EXT2><EXT3></EXT3></HEADER><XMLDATA><![CDATA[<root><appId>1</appId><token>"
+                            +this.toKen
+                            +"</token><submitter>{'user':'CSC99999','department':'b','group':'c','role':'d','post ':'e'}</submitter><id>"
+                             +this.id
+                            // +"Cu0EbFkiOr6AdLOgAAACDJ2FL8w890"
+                            +"</id></root>]]></XMLDATA></ESBREQ>"
 
+          this.$http.get(this.$url.fileUrl,getFileData).then(res=>{
+
+          })
+        }
+      }
+   },
     mounted(){
+      //获取数据
+      this.$http.get(this.$url.reportUrl+"/"+this.$route.query.id).then(res=>{
+         this.dataSource = res;
+
+         //设置pdf   id
+           if(res.reportPdfId!=null){
+             this.id=res.reportPdfId
+           }else{
+             if(res.reportFileId!=null){
+                 this.id=res.reportFileId
+             }
+           }
+         //设置  标题
+         this.title = "资产配置研报-"+res.title
+         this.name=this.$route.query.name;
+      });
+
+   // 有时PDF文件地址会出现跨域的情况,这里最好处理一下
+　　　　this.src = pdf.createLoadingTask(this.src);
+   // this.data=this.$route.params.data;
       this.src.then(pdf => {
           this.numPages = pdf.numPages;
       });
